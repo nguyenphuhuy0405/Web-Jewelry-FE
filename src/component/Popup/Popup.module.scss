@@ -1,0 +1,10 @@
+.wrapper {
+    padding: 0px 10px;
+    text-align: left;
+    .item {
+        padding: 5px 10px;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        color: var(--white-color);
+    }
+}

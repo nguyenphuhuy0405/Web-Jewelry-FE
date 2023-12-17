@@ -1,0 +1,27 @@
+.wrapper {
+    padding: 100px 70px;
+    background-color: var(--black-color);
+    color: var(--white-color);
+    display: flex;
+}
+
+.column {
+    padding: 0 20px;
+    text-align: left;
+    flex: 1;
+    .title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+    .content {
+        p {
+            margin-bottom: 8px;
+        }
+        .item {
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+    }
+}

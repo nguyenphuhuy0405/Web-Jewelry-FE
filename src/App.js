@@ -1,25 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom'
+import { publicRoutes } from './routes/routes'
+import { Fragment } from 'react'
+import { useContext, useEffect } from 'react'
+
+import './App.css'
+import { DefaultLayout } from '~/layouts'
+import * as userServices from '~/services/userServices'
+import { UserContext } from '~/context/UserContext'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { setUser } = useContext(UserContext)
+
+    //Get user info when refresh website
+    useEffect(() => {
+        const fetchApi = async () => {
+            const accessToken = localStorage.getItem('accessToken')
+            if (accessToken) {
+                const res = await userServices.getUserInfo(accessToken)
+                if (res && res.data.name) {
+                    setUser({
+                        name: res.data.name,
+                        auth: true,
+                    })
+                }
+            }
+        }
+        fetchApi()
+    }, [])
+
+    return (
+        <div className="App">
+            <Routes>
+                {publicRoutes.map((route, index) => {
+                    const Page = route.component
+
+                    let Layout = DefaultLayout
+                    if (route.layout) {
+                        Layout = route.layout
+                    } else if (route.layout === null) {
+                        Layout = Fragment
+                    }
+
+                    return (
+                        <Route
+                            key={index}
+                            path={route.path}
+                            element={
+                                <Layout>
+                                    <Page />
+                                </Layout>
+                            }
+                        />
+                    )
+                })}
+            </Routes>
+        </div>
+    )
 }
 
-export default App;
+export default App

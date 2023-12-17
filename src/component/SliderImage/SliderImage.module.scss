@@ -1,0 +1,15 @@
+.wrapper {
+    background-color: var(--black-color);
+}
+
+.slider-image {
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .slider-image-bullet {
+        background-color: var(--white-color);
+    }
+}

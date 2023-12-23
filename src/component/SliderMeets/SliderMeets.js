@@ -19,8 +19,6 @@ function SliderMeets() {
                 lazy={true}
                 spaceBetween={30}
                 slidesPerView={3.2}
-                onSlideChange={() => console.log('slide change')}
-                onSwiper={(swiper) => console.log(swiper)}
                 className={cx('slider-meets')}
                 navigation={true}
                 scrollbar={true}

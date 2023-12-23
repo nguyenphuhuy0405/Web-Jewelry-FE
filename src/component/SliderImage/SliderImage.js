@@ -31,8 +31,6 @@ function SliderImage() {
                 }}
                 modules={[Autoplay, Pagination]}
                 slidesPerView={1}
-                onSlideChange={() => console.log('slide change')}
-                onSwiper={(swiper) => console.log(swiper)}
                 className={cx('slider-image')}
             >
                 {images.sliders.map((item, index) => (

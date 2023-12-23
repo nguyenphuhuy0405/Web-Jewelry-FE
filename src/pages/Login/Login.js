@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/fontawesome-free-solid'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames/bind'
 
+import { UserContext } from '~/context/UserContext'
 import * as userService from '~/services/userServices'
 import styles from './Login.module.scss'
-import { useContext } from 'react'
-import { UserContext } from '~/context/UserContext'
 
 const cx = classNames.bind(styles)
 

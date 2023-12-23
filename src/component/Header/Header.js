@@ -1,8 +1,8 @@
 import classNames from 'classnames/bind'
 import { Link } from 'react-router-dom'
 import TippyHeadless from '@tippyjs/react/headless'
-import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
 
 import { UserContext } from '~/context/UserContext'
 import { Wrapper as PopperWrapper } from '~/component/Popper/Popper'
@@ -12,6 +12,9 @@ import { CartIcon, SearchIcon } from '../Icons/Icons'
 import Popup from '~/component/Popup/Popup'
 import Button from '~/component/Button/Button'
 import Image from '~/component/Image/Image'
+
+//Test
+import * as userServices from '~/services/userServices'
 
 const cx = classNames.bind(styles)
 
@@ -62,7 +65,13 @@ function Header() {
     console.log('>>>> user: ', user)
     let navigate = useNavigate()
 
-    const handleLogout = () => {
+    console.log()
+    const test = async () => {
+        const res = await userServices.getUserInfo()
+        console.log('>>>Lấy tên: ', res.data.name)
+    }
+
+    const handleLogout = async () => {
         logout()
         navigate('/')
     }
@@ -83,6 +92,9 @@ function Header() {
                     <div className={cx('action')}>
                         <Button to="/search" small leftIcon={<SearchIcon />} />
                         <Button to="/cart" small leftIcon={<CartIcon />} />
+                        <Button small onClick={test}>
+                            Lấy tên
+                        </Button>
                         {user && user.auth === true ? (
                             <>
                                 <div className={cx('user-info')}>

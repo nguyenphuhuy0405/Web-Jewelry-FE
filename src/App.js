@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 import { publicRoutes } from './routes/routes'
 import { Fragment } from 'react'
-import { useContext, useEffect } from 'react'
+import { useEffect, useContext } from 'react'
 
+import { UserContext } from '~/context/UserContext'
 import './App.css'
 import { DefaultLayout } from '~/layouts'
 import * as userServices from '~/services/userServices'
-import { UserContext } from '~/context/UserContext'
 
 function App() {
     const { setUser } = useContext(UserContext)
@@ -14,15 +14,18 @@ function App() {
     //Get user info when refresh website
     useEffect(() => {
         const fetchApi = async () => {
-            const accessToken = localStorage.getItem('accessToken')
-            if (accessToken) {
-                const res = await userServices.getUserInfo(accessToken)
-                if (res && res.data.name) {
-                    setUser({
-                        name: res.data.name,
-                        auth: true,
-                    })
-                }
+            const res = await userServices.getUserInfo()
+            console.log('>>>res: ', res)
+            if (res && res.data.name) {
+                setUser({
+                    name: res.data.name,
+                    auth: true,
+                })
+            } else if (res?.status >= 400) {
+                setUser({
+                    name: '',
+                    auth: false,
+                })
             }
         }
         fetchApi()

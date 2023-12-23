@@ -21,8 +21,6 @@ function SliderCategory() {
                 lazy={true}
                 spaceBetween={30}
                 slidesPerView={3.2}
-                onSlideChange={() => console.log('slide change')}
-                onSwiper={(swiper) => console.log(swiper)}
                 className={cx('slider-category')}
                 navigation={true}
                 scrollbar={true}

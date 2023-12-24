@@ -32,8 +32,6 @@ axiosPrivate.interceptors.response.use(
             prevRequest.sent = true
             //Get new access token
             const newAccessToken = await useRefreshToken()
-            //Set new access token in local storage
-            localStorage.setItem('accessToken', newAccessToken)
             console.log('newAccessToken: ', newAccessToken)
             prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
             return axiosPrivate(prevRequest)

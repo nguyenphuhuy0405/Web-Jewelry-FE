@@ -69,6 +69,10 @@ function Header() {
     const test = async () => {
         const res = await userServices.getUserInfo()
         console.log('>>>Lấy tên: ', res.data.name)
+        if (res?.status >= 400) {
+            logout()
+            navigate('/login')
+        }
     }
 
     const handleLogout = async () => {

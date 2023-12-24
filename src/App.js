@@ -9,7 +9,7 @@ import { DefaultLayout } from '~/layouts'
 import * as userServices from '~/services/userServices'
 
 function App() {
-    const { setUser } = useContext(UserContext)
+    const { setUser, logout } = useContext(UserContext)
 
     //Get user info when refresh website
     useEffect(() => {
@@ -22,10 +22,7 @@ function App() {
                     auth: true,
                 })
             } else if (res?.status >= 400) {
-                setUser({
-                    name: '',
-                    auth: false,
-                })
+                logout()
             }
         }
         fetchApi()

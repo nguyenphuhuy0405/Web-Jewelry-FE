@@ -65,16 +65,6 @@ function Header() {
     console.log('>>>> user: ', user)
     let navigate = useNavigate()
 
-    console.log()
-    const test = async () => {
-        const res = await userServices.getUserInfo()
-        console.log('>>>Lấy tên: ', res.data.name)
-        if (res?.status >= 400) {
-            logout()
-            navigate('/login')
-        }
-    }
-
     const handleLogout = async () => {
         logout()
         navigate('/')
@@ -96,9 +86,6 @@ function Header() {
                     <div className={cx('action')}>
                         <Button to="/search" small leftIcon={<SearchIcon />} />
                         <Button to="/cart" small leftIcon={<CartIcon />} />
-                        <Button small onClick={test}>
-                            Lấy tên
-                        </Button>
                         {user && user.auth === true ? (
                             <>
                                 <div className={cx('user-info')}>

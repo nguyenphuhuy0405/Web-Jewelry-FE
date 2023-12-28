@@ -26,7 +26,7 @@ function App() {
             }
         }
         fetchApi()
-    }, [])
+    }, [setUser])
 
     return (
         <div className="App">

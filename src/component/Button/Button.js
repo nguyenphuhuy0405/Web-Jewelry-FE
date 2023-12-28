@@ -13,6 +13,7 @@ function Button({
     normal,
     large,
     uppercase,
+    disabled,
     leftIcon,
     rightIcon,
     onClick,
@@ -28,6 +29,7 @@ function Button({
         normal,
         large,
         uppercase,
+        disabled,
     })
     let props = {
         onClick,
@@ -40,6 +42,15 @@ function Button({
     } else if (href) {
         Component = 'a'
         props.href = href
+    }
+
+    //Remove event if disable
+    if (disabled) {
+        Object.keys(props).forEach((key) => {
+            if (key.startsWith('on') || typeof props[key] === 'function') {
+                delete props[key]
+            }
+        })
     }
 
     return (

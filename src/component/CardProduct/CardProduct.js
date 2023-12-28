@@ -6,6 +6,11 @@ import styles from './CardProduct.module.scss'
 const cx = classNames.bind(styles)
 
 function ProductCard({ title, price, img }) {
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    })
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('img-wrapper')}>
@@ -13,7 +18,7 @@ function ProductCard({ title, price, img }) {
             </div>
             <div className={cx('info')}>
                 <div className={cx('name')}>{title}</div>
-                <div className={cx('price')}>{price}</div>
+                <div className={cx('price')}>{VND.format(price)}</div>
                 <Button large primary className={cx('btn')}>
                     Add to cart
                 </Button>

@@ -1,13 +1,12 @@
 import axios from '~/utils/axios'
 import { axiosPrivate } from '~/utils/axios'
-import { useNavigate } from 'react-router-dom'
 
 let accessToken = localStorage.getItem('accessToken')
 
 export const login = async (email, password) => {
     try {
         const res = await axios.post(
-            '/auth/login',
+            '/api/auth/login',
             {
                 email,
                 password,
@@ -35,7 +34,7 @@ export const login = async (email, password) => {
 
 export const register = async (name, email, password, address, phoneNumber) => {
     try {
-        const res = await axios.post('/auth/register', {
+        const res = await axios.post('/api/auth/register', {
             name,
             email,
             password,
@@ -61,7 +60,7 @@ export const register = async (name, email, password, address, phoneNumber) => {
 
 export const logout = async () => {
     try {
-        const res = await axios.get('/auth/logout', {
+        const res = await axios.get('/api/auth/logout', {
             withCredentials: true,
         })
         console.log('data:', res.data)
@@ -83,7 +82,7 @@ export const logout = async () => {
 
 export const getUserInfo = async () => {
     try {
-        const res = await axiosPrivate.get('/user/info')
+        const res = await axiosPrivate.get('/api/user/info')
         console.log('data:', res.data)
         return res.data
     } catch (error) {
@@ -103,7 +102,7 @@ export const getUserInfo = async () => {
 
 export const refreshToken = async () => {
     try {
-        const res = await axios.get('/auth/refresh', {
+        const res = await axios.get('/api/auth/refresh', {
             withCredentials: true,
         })
         console.log('data:', res.data)

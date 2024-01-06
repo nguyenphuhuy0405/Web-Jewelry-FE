@@ -4,16 +4,29 @@
 }
 .img-wrapper {
     width: 100%;
+    max-height: 277px;
     .img {
         width: 100%;
         height: auto;
         object-fit: cover;
+    }
+    .img2 {
+        display: none;
+    }
+    &:hover {
+        .img1 {
+            display: none;
+        }
+        .img2 {
+            display: block;
+        }
     }
 }
 .info {
     padding-top: 12px;
     text-align: left;
     font-size: 1.6rem;
+    color: var(--white-color);
     .name {
         display: -webkit-box;
         -webkit-box-orient: vertical;

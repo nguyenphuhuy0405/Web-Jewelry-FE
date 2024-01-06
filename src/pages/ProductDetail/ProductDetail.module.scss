@@ -1,0 +1,38 @@
+.wrapper {
+    padding: 40px 0 40px 70px;
+}
+.slider-image {
+    padding: 40px;
+}
+.image {
+}
+.info {
+    padding-top: 40px;
+    padding-left: 70px;
+    .name {
+        text-align: left;
+    }
+    .price {
+        text-align: left;
+        font-size: 2rem;
+    }
+    .action {
+        display: flex;
+        padding-top: 20px;
+        .btn-add {
+            margin-left: 16px;
+        }
+    }
+    .buy {
+        padding-top: 20px;
+        .btn-buy {
+            width: 100%;
+        }
+    }
+    .description {
+        text-align: left;
+        margin-top: 50px;
+        max-height: 300px;
+        overflow: auto;
+    }
+}

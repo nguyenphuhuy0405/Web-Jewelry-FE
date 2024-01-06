@@ -8,6 +8,7 @@ import {
     CollectionsPage,
     LoginPage,
     RegisterPage,
+    ProductDetailPage,
 } from '~/pages'
 
 export const publicRoutes = [
@@ -42,6 +43,10 @@ export const publicRoutes = [
     {
         path: config.routes.register,
         component: RegisterPage,
+    },
+    {
+        path: config.routes.productsDetail,
+        component: ProductDetailPage,
     },
 ]
 

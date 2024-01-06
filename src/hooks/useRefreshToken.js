@@ -1,6 +1,3 @@
-import { useContext } from 'react'
-
-import { UserContext } from '~/context/UserContext'
 import * as userServices from '~/services/userServices'
 
 const useRefreshToken = async () => {

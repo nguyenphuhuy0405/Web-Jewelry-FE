@@ -7,6 +7,7 @@ const routes = {
     accessories: '/accessories',
     login: '/login',
     register: '/register',
+    productsDetail: '/products/:slug',
     categories: {
         bracelet: '/products/vong-tay',
         ring: '/products/nhan',

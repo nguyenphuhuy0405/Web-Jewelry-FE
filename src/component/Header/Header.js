@@ -13,9 +13,6 @@ import Popup from '~/component/Popup/Popup'
 import Button from '~/component/Button/Button'
 import Image from '~/component/Image/Image'
 
-//Test
-import * as userServices from '~/services/userServices'
-
 const cx = classNames.bind(styles)
 
 const categoryItems = [

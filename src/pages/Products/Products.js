@@ -12,7 +12,6 @@ function Products() {
     const [totalPage, setTotalPage] = useState(0)
     const [pages, setPages] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    console.log('pages: ', pages)
 
     useEffect(() => {
         for (let i = 1; i <= totalPage; i++) {
@@ -39,9 +38,11 @@ function Products() {
                     products.map((product) => (
                         <div className="col l-3 m-4 c-6" key={product._id}>
                             <CardProduct
+                                slug={product.slug}
                                 title={product.title}
                                 price={product.price}
-                                img={process.env.REACT_APP_BASE_URL + product.images[0]}
+                                img1={product.images[0]}
+                                img2={product.images[1]}
                             />
                         </div>
                     ))
@@ -52,17 +53,25 @@ function Products() {
 
             <div className={cx('pagination')}>
                 {pages.length > 1 ? (
-                    pages.map((page, index) => (
-                        <Button
-                            key={index}
-                            small
-                            primary
-                            disabled={page === currentPage}
-                            onClick={() => setCurrentPage(page)}
-                        >
-                            {page}
+                    <>
+                        <Button small primary onClick={() => setCurrentPage(1)}>
+                            &lt;&lt;
                         </Button>
-                    ))
+                        {pages.map((page, index) => (
+                            <Button
+                                key={index}
+                                small
+                                primary
+                                disabled={page === currentPage}
+                                onClick={() => setCurrentPage(page)}
+                            >
+                                {page}
+                            </Button>
+                        ))}
+                        <Button small primary onClick={() => setCurrentPage(totalPage)}>
+                            &gt;&gt;
+                        </Button>
+                    </>
                 ) : (
                     <></>
                 )}

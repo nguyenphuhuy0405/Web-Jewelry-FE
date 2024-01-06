@@ -16,7 +16,7 @@ function App() {
         const fetchApi = async () => {
             const res = await userServices.getUserInfo()
             console.log('>>>res: ', res)
-            if (res && res.data.name) {
+            if (res && res?.data?.name) {
                 setUser({
                     name: res.data.name,
                     auth: true,

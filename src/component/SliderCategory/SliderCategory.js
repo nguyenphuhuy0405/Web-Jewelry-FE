@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import config from '~/config'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Scrollbar } from 'swiper/modules'
 import 'swiper/css'
@@ -18,7 +17,6 @@ function SliderCategory() {
         <div className={cx('wrapper')}>
             <h2 className={cx('name')}>Danh mục sản phẩm</h2>
             <Swiper
-                lazy={true}
                 spaceBetween={30}
                 slidesPerView={3.2}
                 className={cx('slider-category')}
@@ -27,7 +25,7 @@ function SliderCategory() {
                 modules={[Navigation, Scrollbar]}
             >
                 <SwiperSlide>
-                    <Link className={cx('item')} to={config.routes.categories.ring}>
+                    <Link className={cx('item')} to={'/collections/nhan'}>
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[0]} alt="ring" />
                         </div>
@@ -35,7 +33,7 @@ function SliderCategory() {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link className={cx('item')} to={config.routes.categories.ring}>
+                    <Link className={cx('item')} to={'/collections/day-chuyen'}>
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[1]} alt="ring" />
                         </div>
@@ -43,7 +41,7 @@ function SliderCategory() {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link className={cx('item')} to={config.routes.categories.ring}>
+                    <Link className={cx('item')} to={'/collections/khuyen-tai'}>
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[2]} alt="ring" />
                         </div>
@@ -51,7 +49,7 @@ function SliderCategory() {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link className={cx('item')} to={config.routes.categories.ring}>
+                    <Link className={cx('item')} to={'/collections/vong-tay'}>
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[3]} alt="ring" />
                         </div>

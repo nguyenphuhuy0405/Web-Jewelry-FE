@@ -1,4 +1,3 @@
-import config from '~/config'
 import {
     HomePage,
     ProductsPage,
@@ -13,40 +12,44 @@ import {
 
 export const publicRoutes = [
     {
-        path: config.routes.home,
+        path: '/',
         component: HomePage,
     },
     {
-        path: config.routes.products,
+        path: '/products',
         component: ProductsPage,
     },
     {
-        path: config.routes.gift,
+        path: '/products/:slug',
+        component: ProductDetailPage,
+    },
+    {
+        path: '/gift',
         component: GiftPage,
     },
     {
-        path: config.routes.sale,
+        path: '/sale',
         component: SalePage,
     },
     {
-        path: config.routes.collections,
+        path: '/collections',
         component: CollectionsPage,
     },
     {
-        path: config.routes.accessories,
+        path: '/collections/:slug',
+        component: ProductDetailPage,
+    },
+    {
+        path: '/accessories',
         component: AccessoriesPage,
     },
     {
-        path: config.routes.login,
+        path: '/login',
         component: LoginPage,
     },
     {
-        path: config.routes.register,
+        path: '/register',
         component: RegisterPage,
-    },
-    {
-        path: config.routes.productsDetail,
-        component: ProductDetailPage,
     },
 ]
 

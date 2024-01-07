@@ -16,7 +16,6 @@ function SliderMeets() {
         <div className={cx('wrapper')}>
             <h2 className={cx('name')}>Helios Meets</h2>
             <Swiper
-                lazy={true}
                 spaceBetween={30}
                 slidesPerView={3.2}
                 className={cx('slider-meets')}

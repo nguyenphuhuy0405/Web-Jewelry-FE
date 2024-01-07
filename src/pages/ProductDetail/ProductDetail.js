@@ -17,16 +17,24 @@ function ProductDetail() {
         const fetchApi = async () => {
             const res = await productServices.getProductDetail(slug)
             console.log('res: ', res)
-            setProduct(res.data)
+            if (res.status > 400) {
+                setProduct(null)
+            } else {
+                setProduct(res.data)
+            }
         }
         fetchApi()
     }, [slug])
-    return (
+
+    let description = product?.description ? product?.description.split('\n') : null
+    console.log('description: ', description)
+
+    return product ? (
         <div className={`row no-gutters ${cx('wrapper')}`}>
-            <div className={`col l-7 m-7 c-12 ${cx('slider-image')}`}>
+            <div className={`col l-7 m-12 c-12 ${cx('slider-image')}`}>
                 <SlideProduct images={product?.images} />
             </div>
-            <div className={`col l-5 m-5 c-12 ${cx('info')}`}>
+            <div className={`col l-5 m-12 c-12 ${cx('info')}`}>
                 <h1 className={cx('name')}>{product.title}</h1>
                 <div className={cx('price')}>{formatPrice(product.price)}</div>
                 <div className={cx('action')}>
@@ -40,9 +48,13 @@ function ProductDetail() {
                         Buy now
                     </Button>
                 </div>
-                <div className={cx('description')}>{product.description}</div>
+                <div className={cx('description')}>
+                    {description && description.map((item, index) => <p key={index}>{item}</p>)}
+                </div>
             </div>
         </div>
+    ) : (
+        <h1>Không có sản phẩm này</h1>
     )
 }
 

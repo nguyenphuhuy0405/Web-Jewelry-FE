@@ -7,8 +7,7 @@
 .image {
 }
 .info {
-    padding-top: 40px;
-    padding-left: 70px;
+    padding: 40px 70px 0 40px !important;
     .name {
         text-align: left;
     }
@@ -26,7 +25,7 @@
     .buy {
         padding-top: 20px;
         .btn-buy {
-            width: 100%;
+            width: 400px;
         }
     }
     .description {

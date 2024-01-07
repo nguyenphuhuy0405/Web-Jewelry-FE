@@ -7,7 +7,6 @@ import { useContext } from 'react'
 import { UserContext } from '~/context/UserContext'
 import { Wrapper as PopperWrapper } from '~/component/Popper/Popper'
 import styles from './Header.module.scss'
-import config from '~/config'
 import { CartIcon, SearchIcon } from '../Icons/Icons'
 import Popup from '~/component/Popup/Popup'
 import Button from '~/component/Button/Button'
@@ -18,42 +17,42 @@ const cx = classNames.bind(styles)
 const categoryItems = [
     {
         title: 'Vòng tay',
-        path: config.routes.categories.bracelet,
+        path: '/collections/vong-tay',
     },
     {
         title: 'Nhẫn',
-        path: config.routes.categories.ring,
+        path: '/collections/nhan',
     },
     {
         title: 'Dây chuyền',
-        path: config.routes.categories.earring,
+        path: '/collections/day-chuyen',
     },
     {
         title: 'Khuyên tai',
-        path: config.routes.categories.pendant,
+        path: '/collections/khuyen-tai',
     },
     {
         title: 'Gold Jewelry',
-        path: config.routes.categories.gold,
+        path: '/collections/gold-jewelry',
     },
 ]
 
 const giftItems = [
     {
         title: 'Quà tặng cho nam',
-        path: config.routes.giftes.male,
+        path: '/gift/male',
     },
     {
         title: 'Quà tặng cho nữ',
-        path: config.routes.giftes.female,
+        path: '/gift/female',
     },
     {
         title: 'Quà sinh nhật',
-        path: config.routes.giftes.birthday,
+        path: '/gift/birthday',
     },
     {
         title: 'Cặp đôi',
-        path: config.routes.giftes.couple,
+        path: '/gift/couple',
     },
 ]
 
@@ -72,7 +71,7 @@ function Header() {
             <div className={cx('header')}>
                 <div className={cx('container')}>
                     <div className={cx('logo')}>
-                        <Link to={config.routes.home}>
+                        <Link to={'/'}>
                             <img
                                 className={cx('logo-img')}
                                 src="https://heliosjewels.vn/cdn/shop/files/logo_500x.png?v=1652960279"
@@ -137,7 +136,7 @@ function Header() {
                                 </div>
                             )}
                         >
-                            <Link className={cx('navbar-item')} to={config.routes.products}>
+                            <Link className={cx('navbar-item')} to={'/products'}>
                                 Jewelry
                             </Link>
                         </TippyHeadless>
@@ -156,19 +155,19 @@ function Header() {
                                 </div>
                             )}
                         >
-                            <Link className={cx('navbar-item')} to={config.routes.gift}>
+                            <Link className={cx('navbar-item')} to={'/gift'}>
                                 Gift
                             </Link>
                         </TippyHeadless>
                     </div>
 
-                    <Link className={cx('navbar-item')} to={config.routes.sale}>
+                    <Link className={cx('navbar-item')} to={'/sale'}>
                         Sale off
                     </Link>
-                    <Link className={cx('navbar-item')} to={config.routes.collections}>
+                    <Link className={cx('navbar-item')} to={'/collections'}>
                         Collection
                     </Link>
-                    <Link className={cx('navbar-item')} to={config.routes.accessories}>
+                    <Link className={cx('navbar-item')} to={'/accessories'}>
                         Accessories
                     </Link>
                 </ul>

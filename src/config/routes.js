@@ -8,13 +8,7 @@ const routes = {
     login: '/login',
     register: '/register',
     productsDetail: '/products/:slug',
-    categories: {
-        bracelet: '/products/vong-tay',
-        ring: '/products/nhan',
-        earring: '/products/day-chuyen',
-        pendant: '/products/khuyen-tai',
-        gold: '/products/gold-jewelry',
-    },
+    categories: '/collections/:slug',
     giftes: {
         male: '/gift/male',
         female: '/gift/female',

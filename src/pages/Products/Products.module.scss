@@ -1,6 +1,32 @@
 .wrapper {
     padding: 30px 70px;
 }
+.filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    .filterSelect {
+        margin: 0 8px;
+        height: 36px;
+        outline: none;
+    }
+    .search {
+        display: flex;
+        align-items: center;
+        .searchInput {
+            max-width: 200px;
+            height: 36px;
+            outline: none;
+            padding: 6px;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+        .searchBtn {
+            height: 36px;
+        }
+    }
+}
 .pagination {
     margin-top: 12px;
     display: flex;

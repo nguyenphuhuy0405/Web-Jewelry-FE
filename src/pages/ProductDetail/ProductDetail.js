@@ -6,6 +6,7 @@ import Button from '~/component/Button/Button'
 import SlideProduct from '~/component/SliderProduct/SliderProduct'
 import * as productServices from '~/services/productServices'
 import formatPrice from '~/hooks/formatPrice'
+import * as cartServices from '~/services/cartServices'
 import styles from '../ProductDetail/ProductDetail.module.scss'
 
 const cx = classNames.bind(styles)
@@ -26,6 +27,16 @@ function ProductDetail() {
         fetchApi()
     }, [slug])
 
+    const handleAddToCart = async (event, productId) => {
+        event.preventDefault()
+        const res = await cartServices.addToCart(productId)
+        if (res.status > 400) {
+            console.log('error: ', res.data.message)
+        } else {
+            console.log('res: ', res)
+        }
+    }
+
     let description = product?.description ? product?.description.split('\n') : null
     console.log('description: ', description)
 
@@ -39,7 +50,12 @@ function ProductDetail() {
                 <div className={cx('price')}>{formatPrice(product.price)}</div>
                 <div className={cx('action')}>
                     <input className={cx('quantity')} type="number" defaultValue={1} />
-                    <Button primary large className={cx('btn-add')}>
+                    <Button
+                        primary
+                        large
+                        className={cx('btn-add')}
+                        onClick={(event) => handleAddToCart(event, product._id)}
+                    >
                         Add to cart
                     </Button>
                 </div>

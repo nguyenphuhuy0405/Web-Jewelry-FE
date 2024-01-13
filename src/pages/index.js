@@ -1,6 +1,6 @@
 export { default as HomePage } from './Home/Home'
 export { default as ProductsPage } from './Products/Products'
-export { default as AccessoriesPage } from './Accessories/Accessories'
+export { default as CartPage } from './Cart/Cart'
 export { default as CollectionsPage } from './Collections/Collections'
 export { default as SalePage } from './Sale/Sale'
 export { default as GiftPage } from './Gift/Gift'

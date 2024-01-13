@@ -80,7 +80,7 @@ function Header() {
                         </Link>
                     </div>
                     <div className={cx('action')}>
-                        <Button to="/search" small leftIcon={<SearchIcon />} />
+                        <Button to="/products" small leftIcon={<SearchIcon />} />
                         <Button to="/cart" small leftIcon={<CartIcon />} />
                         {user && user.auth === true ? (
                             <>
@@ -166,9 +166,6 @@ function Header() {
                     </Link>
                     <Link className={cx('navbar-item')} to={'/collections'}>
                         Collection
-                    </Link>
-                    <Link className={cx('navbar-item')} to={'/accessories'}>
-                        Accessories
                     </Link>
                 </ul>
             </div>

@@ -34,11 +34,10 @@
 
 //Color
 .primary {
-    background-color: var(--white-color);
-    color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--white-color);
     &:hover {
-        background-color: var(--primary-color);
-        color: var(--white-color);
+        opacity: 0.8;
     }
 }
 
@@ -46,6 +45,13 @@
     &:hover {
         background-color: var(--white-color);
         color: var(--primary-color);
+    }
+}
+.danger {
+    background-color: var(--danger-color);
+    color: var(--white-color);
+    &:hover {
+        opacity: 0.8;
     }
 }
 

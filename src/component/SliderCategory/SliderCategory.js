@@ -29,7 +29,6 @@ function SliderCategory() {
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[0]} alt="ring" />
                         </div>
-                        <div className={cx('title')}>Nhẫn</div>
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -37,7 +36,6 @@ function SliderCategory() {
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[1]} alt="ring" />
                         </div>
-                        <div className={cx('title')}>Dây chuyền</div>
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -45,7 +43,6 @@ function SliderCategory() {
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[2]} alt="ring" />
                         </div>
-                        <div className={cx('title')}>Khuyên tai</div>
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -53,7 +50,6 @@ function SliderCategory() {
                         <div className={cx('wrapper-img')}>
                             <img className={cx('img')} src={images.categories[3]} alt="ring" />
                         </div>
-                        <div className={cx('title')}>Vòng tay</div>
                     </Link>
                 </SwiperSlide>
             </Swiper>

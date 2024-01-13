@@ -1,0 +1,20 @@
+.wrapper {
+    table,
+    th,
+    td {
+        border: 1px solid #333;
+        border-collapse: collapse;
+    }
+}
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    img {
+        max-width: 100px;
+    }
+    p {
+        margin-left: 16px;
+    }
+}

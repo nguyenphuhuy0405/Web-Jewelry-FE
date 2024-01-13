@@ -18,6 +18,9 @@
     .action {
         display: flex;
         padding-top: 20px;
+        .quantity {
+            width: 100px;
+        }
         .btn-add {
             margin-left: 16px;
         }

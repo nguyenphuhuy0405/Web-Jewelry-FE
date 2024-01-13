@@ -4,10 +4,21 @@ import { Link } from 'react-router-dom'
 import styles from './CardProduct.module.scss'
 import Button from '~/component/Button/Button'
 import formatPrice from '~/hooks/formatPrice'
+import * as cartServices from '~/services/cartServices'
 
 const cx = classNames.bind(styles)
 
-function CardProduct({ slug, title, price, img1, img2 }) {
+function CardProduct({ id, slug, title, price, img1, img2 }) {
+    const handleAddToCart = async (event, productId) => {
+        event.preventDefault()
+        const res = await cartServices.addToCart(productId)
+        if (res.status > 400) {
+            console.log('error: ', res.data.message)
+        } else {
+            console.log('res: ', res)
+        }
+    }
+
     return (
         <div className={cx('wrapper')}>
             <Link to={`/products/${slug}`}>
@@ -18,9 +29,14 @@ function CardProduct({ slug, title, price, img1, img2 }) {
                 <div className={cx('info')}>
                     <div className={cx('name')}>{title}</div>
                     <div className={cx('price')}>{formatPrice(price)}</div>
-                    <Button large primary className={cx('btn')}>
-                        Add to cart
-                    </Button>
+                    <div className={cx('action')}>
+                        <Button large primary onClick={(e) => handleAddToCart(e, id)}>
+                            Add to cart
+                        </Button>
+                        <Button large primary>
+                            Buy now
+                        </Button>
+                    </div>
                 </div>
             </Link>
         </div>

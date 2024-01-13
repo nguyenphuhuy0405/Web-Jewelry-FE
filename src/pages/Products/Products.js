@@ -1,8 +1,15 @@
 import classNames from 'classnames/bind'
+import { useEffect, useState } from 'react'
+import Pagination from '@mui/material/Pagination'
+import Stack from '@mui/material/Stack'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import styles from './Products.module.scss'
 import CardProduct from '~/component/CardProduct/CardProduct'
-import { useEffect, useState } from 'react'
 import * as productServices from '~/services/productServices'
 import Button from '~/component/Button/Button'
 
@@ -10,17 +17,10 @@ const cx = classNames.bind(styles)
 function Products() {
     const [products, setProducts] = useState([])
     const [totalPage, setTotalPage] = useState(0)
-    const [pages, setPages] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState(null)
     const [search, setSearch] = useState(null)
     const [searchValue, setSearchValue] = useState(null)
-
-    useEffect(() => {
-        for (let i = 1; i <= totalPage; i++) {
-            setPages((pages) => [...pages, i])
-        }
-    }, [totalPage])
 
     const handleChangeFilter = (e) => {
         switch (e.target.value) {
@@ -37,9 +37,15 @@ function Products() {
                 setFilter({ name: 'price', value: 'desc' })
                 break
             default:
+                setFilter(null)
                 break
         }
     }
+
+    const handleChange = (e, value) => {
+        setCurrentPage(value)
+    }
+
     const handleSearch = (e) => {
         e.preventDefault()
         // Thay thế khoảng trắng bằng dấu "-" và biến thành viết thường
@@ -64,15 +70,18 @@ function Products() {
             <div className="row sm-gutter">
                 <div className={`col l-12 m-12 c-12`}>
                     <div className={cx('filter')}>
-                        <select className={cx('filterSelect')} onChange={handleChangeFilter}>
-                            <option value={''} hidden>
-                                Sắp xếp theo
-                            </option>
-                            <option value={'nameAsc'}>Sắp xếp theo tên từ a - z</option>
-                            <option value={'nameDesc'}>Sắp xếp theo tên từ z - a</option>
-                            <option value={'priceAsc'}>Sắp xếp theo giá từ thấp đến cao</option>
-                            <option value={'priceDesc'}>Sắp xếp theo giá từ cao đến thấp</option>
-                        </select>
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                            <InputLabel>Sắp xếp theo</InputLabel>
+                            <Select value={filter} label="Age" onChange={handleChangeFilter}>
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={'nameAsc'}>Sắp xếp theo tên từ a - z</MenuItem>
+                                <MenuItem value={'nameDesc'}>Sắp xếp theo tên từ z - a</MenuItem>
+                                <MenuItem value={'priceAsc'}>Sắp xếp theo giá từ thấp đến cao</MenuItem>
+                                <MenuItem value={'priceDesc'}>Sắp xếp theo giá từ cao đến thấp</MenuItem>
+                            </Select>
+                        </FormControl>
                         <div className={cx('search')}>
                             <input
                                 className={cx('searchInput')}
@@ -92,6 +101,7 @@ function Products() {
                     products.map((product) => (
                         <div className="col l-3 m-4 c-6" key={product._id}>
                             <CardProduct
+                                id={product._id}
                                 slug={product.slug}
                                 title={product.title}
                                 price={product.price}
@@ -105,7 +115,18 @@ function Products() {
                 )}
             </div>
 
-            <div className={cx('pagination')}>
+            <Stack alignItems="center">
+                <Pagination
+                    count={totalPage}
+                    color="primary"
+                    size="large"
+                    shape="rounded"
+                    page={currentPage}
+                    onChange={handleChange}
+                />
+            </Stack>
+
+            {/* <div className={cx('pagination')}>
                 {pages.length > 1 ? (
                     <>
                         <Button small primary onClick={() => setCurrentPage(1)}>
@@ -129,7 +150,7 @@ function Products() {
                 ) : (
                     <></>
                 )}
-            </div>
+            </div> */}
         </div>
     )
 }

@@ -1,6 +1,8 @@
 .wrapper {
     width: 100%;
-    padding: 10px;
+    margin: 10px;
+    margin-bottom: 10px;
+    background-color: var(--secondary-color);
 }
 .img-wrapper {
     width: 100%;
@@ -23,10 +25,11 @@
     }
 }
 .info {
-    padding-top: 12px;
+    margin-top: 12px;
+    padding: 10px;
     text-align: left;
     font-size: 1.6rem;
-    color: var(--white-color);
+    color: var(--text-color);
     .name {
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -37,7 +40,9 @@
         margin-top: 6px;
         font-size: 1.4rem;
     }
-    .btn {
+    .action {
         margin-top: 12px;
+        display: flex;
+        align-items: center;
     }
 }

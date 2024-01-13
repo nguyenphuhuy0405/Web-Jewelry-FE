@@ -8,6 +8,7 @@ function Button({
     to,
     href,
     primary,
+    danger,
     hover,
     small,
     normal,
@@ -24,6 +25,7 @@ function Button({
     const classes = cx('wrapper', {
         [className]: className,
         primary,
+        danger,
         hover,
         small,
         normal,

@@ -3,7 +3,7 @@ import {
     ProductsPage,
     GiftPage,
     SalePage,
-    AccessoriesPage,
+    CartPage,
     CollectionsPage,
     LoginPage,
     RegisterPage,
@@ -40,8 +40,8 @@ export const publicRoutes = [
         component: ProductDetailPage,
     },
     {
-        path: '/accessories',
-        component: AccessoriesPage,
+        path: '/cart',
+        component: CartPage,
     },
     {
         path: '/login',

@@ -4,7 +4,6 @@ const routes = {
     gift: '/gift',
     sale: '/sale',
     collections: '/collections',
-    accessories: '/accessories',
     login: '/login',
     register: '/register',
     productsDetail: '/products/:slug',

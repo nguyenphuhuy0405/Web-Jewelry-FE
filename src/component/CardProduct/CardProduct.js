@@ -33,7 +33,7 @@ function CardProduct({ id, slug, title, price, img1, img2 }) {
                         <Button large primary onClick={(e) => handleAddToCart(e, id)}>
                             Add to cart
                         </Button>
-                        <Button large primary>
+                        <Button large primary ml>
                             Buy now
                         </Button>
                     </div>

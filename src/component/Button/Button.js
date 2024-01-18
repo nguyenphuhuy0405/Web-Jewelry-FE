@@ -15,6 +15,7 @@ function Button({
     large,
     uppercase,
     disabled,
+    ml,
     leftIcon,
     rightIcon,
     onClick,
@@ -32,6 +33,7 @@ function Button({
         large,
         uppercase,
         disabled,
+        ml,
     })
     let props = {
         onClick,

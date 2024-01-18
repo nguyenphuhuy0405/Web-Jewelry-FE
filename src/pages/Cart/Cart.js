@@ -56,9 +56,7 @@ function Cart() {
     const handleRemove = async (event, productId) => {
         event.preventDefault()
         const res = await cartServices.removeToCart(productId)
-        if (res.status > 400) {
-            console.log('error: ', res.data.message)
-        } else {
+        if (res.status === 200) {
             await getCartApi()
         }
     }
@@ -118,6 +116,7 @@ function Cart() {
                                             <Button
                                                 danger
                                                 normal
+                                                ml
                                                 leftIcon={<CloseIcon />}
                                                 onClick={(event) => handleRemove(event, product?.productId?._id)}
                                             >

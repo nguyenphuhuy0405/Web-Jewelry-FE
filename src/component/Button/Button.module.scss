@@ -9,7 +9,7 @@
     background-color: var(--primary-color);
     color: var(--white-color);
     transition: all 0.2s linear;
-    + .wrapper {
+    + .wrapper.ml {
         margin-left: 16px;
     }
     &.disabled {
@@ -67,6 +67,9 @@
 
 .large {
     padding: 15px 20px;
+}
+.w-100 {
+    width: 100%;
 }
 
 //Text

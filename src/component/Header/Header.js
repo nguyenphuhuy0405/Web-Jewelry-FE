@@ -57,8 +57,8 @@ function Header() {
                     </div>
                     <div className={cx('action')}>
                         <Button to="/products" small leftIcon={<SearchIcon />} />
-                        <Button to="/cart" small leftIcon={<CartIcon />} />
-                        {user && user.auth === true ? (
+                        <Button to="/cart" small ml leftIcon={<CartIcon />} />
+                        {user?.auth === true ? (
                             <>
                                 <div className={cx('user-info')}>
                                     <span className={cx('user-name')}>{user && user.name}</span>
@@ -69,6 +69,11 @@ function Header() {
                                         render={(attrs) => (
                                             <div className={cx('user-menu')} tabIndex="-1" {...attrs}>
                                                 <PopperWrapper>
+                                                    {user?.isAdmin && (
+                                                        <Button to="/admin" hover normal uppercase>
+                                                            Admin
+                                                        </Button>
+                                                    )}
                                                     <Button hover normal uppercase onClick={handleLogout}>
                                                         Logout
                                                     </Button>

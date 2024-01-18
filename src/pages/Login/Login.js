@@ -40,12 +40,12 @@ function Login() {
 
             const res = await userService.login(email, password)
             console.log('res: ', res)
-            if (res && res.accessToken) {
-                login(res.data.name, res.accessToken)
+            if (res?.accessToken) {
+                login(res.data.name, res.accessToken, res.data.role === 'admin' ? true : false)
                 setError('')
                 navigate('/')
             } else {
-                if (res && res.status === 400) {
+                if (res?.status === 400) {
                     console.log('error: ', res.data.message)
                     setError(`${res.data.message}`)
                 }

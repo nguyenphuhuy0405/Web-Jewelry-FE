@@ -7,6 +7,7 @@ import {
     LoginPage,
     RegisterPage,
     ProductDetailPage,
+    AdminPage,
 } from '~/pages'
 
 export const publicRoutes = [
@@ -48,4 +49,10 @@ export const publicRoutes = [
     },
 ]
 
-export const privateRoutes = {}
+export const adminPrivateRoutes = [
+    {
+        path: '/admin',
+        component: AdminPage,
+        layout: null,
+    },
+]

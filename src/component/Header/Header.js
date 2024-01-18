@@ -2,7 +2,7 @@ import classNames from 'classnames/bind'
 import { Link } from 'react-router-dom'
 import TippyHeadless from '@tippyjs/react/headless'
 import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { UserContext } from '~/context/UserContext'
 import { Wrapper as PopperWrapper } from '~/component/Popper/Popper'
@@ -11,55 +11,31 @@ import { CartIcon, SearchIcon } from '../Icons/Icons'
 import Popup from '~/component/Popup/Popup'
 import Button from '~/component/Button/Button'
 import Image from '~/component/Image/Image'
+import * as categoryServices from '~/services/categoryServices'
 
 const cx = classNames.bind(styles)
 
-const categoryItems = [
-    {
-        title: 'Vòng tay',
-        path: '/collections/vong-tay',
-    },
-    {
-        title: 'Nhẫn',
-        path: '/collections/nhan',
-    },
-    {
-        title: 'Dây chuyền',
-        path: '/collections/day-chuyen',
-    },
-    {
-        title: 'Khuyên tai',
-        path: '/collections/khuyen-tai',
-    },
-    {
-        title: 'Gold Jewelry',
-        path: '/collections/gold-jewelry',
-    },
-]
-
-const giftItems = [
-    {
-        title: 'Quà tặng cho nam',
-        path: '/gift/male',
-    },
-    {
-        title: 'Quà tặng cho nữ',
-        path: '/gift/female',
-    },
-    {
-        title: 'Quà sinh nhật',
-        path: '/gift/birthday',
-    },
-    {
-        title: 'Cặp đôi',
-        path: '/gift/couple',
-    },
-]
-
 function Header() {
     const { user, logout } = useContext(UserContext)
+    const [categories, setCategories] = useState([])
     console.log('>>>> user: ', user)
     let navigate = useNavigate()
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            const res = await categoryServices.getListOfCategory()
+            if (res?.status === 200) {
+                let categories = res?.data
+                categories.map((item) => {
+                    return (item.path = `/collections/${item._id}`)
+                })
+                setCategories(categories)
+            }
+        }
+
+        fetchApi()
+    }, [])
+    console.log('>>>categoryItems', categories)
 
     const handleLogout = async () => {
         logout()
@@ -131,32 +107,13 @@ function Header() {
                             render={(attrs) => (
                                 <div className={cx('navbar-popup')} tabIndex="-1" {...attrs}>
                                     <PopperWrapper>
-                                        <Popup data={categoryItems} />
+                                        <Popup data={categories} />
                                     </PopperWrapper>
                                 </div>
                             )}
                         >
                             <Link className={cx('navbar-item')} to={'/products'}>
                                 Jewelry
-                            </Link>
-                        </TippyHeadless>
-                    </div>
-
-                    <div>
-                        <TippyHeadless
-                            placement="bottom"
-                            interactive
-                            delay={[200, 200]}
-                            render={(attrs) => (
-                                <div className={cx('navbar-popup')} tabIndex="-1" {...attrs}>
-                                    <PopperWrapper>
-                                        <Popup data={giftItems} />
-                                    </PopperWrapper>
-                                </div>
-                            )}
-                        >
-                            <Link className={cx('navbar-item')} to={'/gift'}>
-                                Gift
                             </Link>
                         </TippyHeadless>
                     </div>

@@ -1,7 +1,6 @@
 import {
     HomePage,
     ProductsPage,
-    GiftPage,
     SalePage,
     CartPage,
     CollectionsPage,
@@ -24,8 +23,8 @@ export const publicRoutes = [
         component: ProductDetailPage,
     },
     {
-        path: '/gift',
-        component: GiftPage,
+        path: '/collections/:id',
+        component: ProductsPage,
     },
     {
         path: '/sale',
@@ -34,10 +33,6 @@ export const publicRoutes = [
     {
         path: '/collections',
         component: CollectionsPage,
-    },
-    {
-        path: '/collections/:slug',
-        component: ProductDetailPage,
     },
     {
         path: '/cart',

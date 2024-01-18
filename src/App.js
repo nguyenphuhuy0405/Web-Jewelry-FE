@@ -1,34 +1,11 @@
 import { Routes, Route } from 'react-router-dom'
 import { publicRoutes } from './routes/routes'
 import { Fragment } from 'react'
-import { useEffect, useContext } from 'react'
 
-import { UserContext } from '~/context/UserContext'
 import './App.css'
 import { DefaultLayout } from '~/layouts'
-import * as userServices from '~/services/userServices'
 
 function App() {
-    const { setUser, logout } = useContext(UserContext)
-
-    //Get user info when refresh website
-    useEffect(() => {
-        const fetchApi = async () => {
-            const res = await userServices.getUserInfo()
-            console.log('>>>res: ', res)
-            if (res && res?.data?.name) {
-                setUser({
-                    name: res.data.name,
-                    auth: true,
-                })
-            } else if (res?.status >= 400) {
-                logout()
-            }
-        }
-        fetchApi()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setUser])
-
     return (
         <div className="App">
             <Routes>

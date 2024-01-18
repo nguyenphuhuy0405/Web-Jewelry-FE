@@ -21,12 +21,13 @@ function Register() {
         e.preventDefault()
 
         const fetchApi = async () => {
+            if (name === '' && email === '' && password === '' && address === '' && phone === '') {
+                setError('Please enter your information')
+                return
+            }
             const res = await userService.register(name, email, password, address, phone)
             console.log('res: ', res)
-            if (res && res.status > 400) {
-                console.log('error: ', res.data.message)
-                setError(`${res.data.message}`)
-            } else {
+            if (res?.status === 200) {
                 navigate('/login')
             }
         }

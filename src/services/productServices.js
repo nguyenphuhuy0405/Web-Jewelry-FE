@@ -1,6 +1,6 @@
 import axios from '~/utils/axios'
 
-export const getListOfProduct = async (page, filter, search) => {
+export const getListOfProduct = async (page, filter, search, categoryId) => {
     try {
         let query = ''
         if (page) {
@@ -11,6 +11,9 @@ export const getListOfProduct = async (page, filter, search) => {
         }
         if (search) {
             query += `&q=${search}`
+        }
+        if (categoryId) {
+            query += `&categoryId=${categoryId}`
         }
         const res = await axios.get(`/api/product/?${query}`)
         console.log('data:', res.data)

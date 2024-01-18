@@ -6,12 +6,12 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 
 import styles from './Products.module.scss'
 import CardProduct from '~/component/CardProduct/CardProduct'
 import * as productServices from '~/services/productServices'
 import Button from '~/component/Button/Button'
+import { useParams } from 'react-router'
 
 const cx = classNames.bind(styles)
 function Products() {
@@ -21,6 +21,8 @@ function Products() {
     const [filter, setFilter] = useState(null)
     const [search, setSearch] = useState(null)
     const [searchValue, setSearchValue] = useState(null)
+    const { id } = useParams()
+    console.log('>>>id: ', id)
 
     const handleChangeFilter = (e) => {
         switch (e.target.value) {
@@ -55,7 +57,7 @@ function Products() {
 
     useEffect(() => {
         let fetchApi = async () => {
-            let res = await productServices.getListOfProduct(currentPage, filter, searchValue)
+            let res = await productServices.getListOfProduct(currentPage, filter, searchValue, id)
             console.log('res: ', res)
             if (res?.data) {
                 setProducts(res.data)
@@ -63,7 +65,7 @@ function Products() {
             }
         }
         fetchApi()
-    }, [currentPage, filter, searchValue])
+    }, [currentPage, filter, searchValue, id])
 
     return (
         <div className={cx('wrapper')}>

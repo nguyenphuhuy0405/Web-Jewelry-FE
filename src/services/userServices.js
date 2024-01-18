@@ -13,6 +13,7 @@ export const login = async (email, password) => {
                 withCredentials: true,
             },
         )
+        res.data.status = res.status
         console.log('data:', res.data)
         return res.data
     } catch (error) {
@@ -39,6 +40,7 @@ export const register = async (name, email, password, address, phoneNumber) => {
             address,
             phoneNumber,
         })
+        res.data.status = res.status
         console.log('data:', res.data)
         return res.data
     } catch (error) {
@@ -61,6 +63,7 @@ export const logout = async () => {
         const res = await axios.get('/api/auth/logout', {
             withCredentials: true,
         })
+        res.data.status = res.status
         console.log('data:', res.data)
         return res.data
     } catch (error) {
@@ -81,6 +84,7 @@ export const logout = async () => {
 export const getUserInfo = async () => {
     try {
         const res = await axiosPrivate.get('/api/user/info')
+        res.data.status = res.status
         console.log('data:', res.data)
         return res.data
     } catch (error) {
@@ -103,6 +107,7 @@ export const refreshToken = async () => {
         const res = await axios.get('/api/auth/refresh', {
             withCredentials: true,
         })
+        res.data.status = res.status
         console.log('data:', res.data)
         return res.data
     } catch (error) {

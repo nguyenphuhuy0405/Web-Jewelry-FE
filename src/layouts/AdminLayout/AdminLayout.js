@@ -1,13 +1,14 @@
 import classNames from 'classnames/bind'
+import Header from '~/component/Header/Header'
+
 import styles from './AdminLayout.module.scss'
-import * as React from 'react'
 
 const cx = classNames.bind(styles)
 
 function AdminLayout({ children }) {
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('nav')}></div>
+            <Header />
             <div className={cx('container')}>{children}</div>
         </div>
     )

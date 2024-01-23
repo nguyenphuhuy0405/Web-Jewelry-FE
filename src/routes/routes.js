@@ -1,7 +1,7 @@
 import {
     HomePage,
     ProductsPage,
-    SalePage,
+    NotFoundPage,
     CartPage,
     CollectionsPage,
     LoginPage,
@@ -31,10 +31,6 @@ export const publicRoutes = [
         component: ProductsPage,
     },
     {
-        path: '/sale',
-        component: SalePage,
-    },
-    {
         path: '/collections',
         component: CollectionsPage,
     },
@@ -46,16 +42,18 @@ export const publicRoutes = [
         path: '/register',
         component: RegisterPage,
     },
-]
 
-export const privateRoutes = [
     {
-        path: '/cart',
-        component: CartPage,
+        path: '*',
+        component: <NotFoundPage />,
     },
     {
         path: '/checkout/:id',
         component: CheckoutPage,
+    },
+    {
+        path: '/cart',
+        component: CartPage,
     },
     {
         path: '/bill/:id',
@@ -63,7 +61,7 @@ export const privateRoutes = [
     },
 ]
 
-export const adminPrivateRoutes = [
+export const privateRoutes = [
     {
         path: '/admin',
         component: AdminPage,

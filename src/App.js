@@ -1,13 +1,35 @@
 import { Routes, Route } from 'react-router-dom'
-import { publicRoutes, privateRoutes, adminPrivateRoutes } from './routes/routes'
-import { Fragment } from 'react'
+import { publicRoutes, privateRoutes } from './routes/routes'
+import { Fragment, useContext, useEffect } from 'react'
 
 import './App.css'
 import { DefaultLayout } from '~/layouts'
-import AdminPrivateRoutes from './routes/AdminPrivateRoutes'
 import PrivateRoutes from './routes/PrivateRoutes'
+import * as userServices from '~/services/userServices'
+import { UserContext } from '~/context/UserContext'
 
 function App() {
+    const { setUser, logout } = useContext(UserContext)
+    //Get user info when refresh website
+    useEffect(() => {
+        const fetchApi = async () => {
+            const res = await userServices.getUserInfo()
+            console.log('>>>res: ', res)
+            if (res && res?.data?.name) {
+                setUser({
+                    name: res.data.name,
+                    auth: true,
+                    isAdmin: res.data.role === 'admin' ? true : false,
+                    address: res.data.address,
+                    phoneNumber: res.data.phoneNumber,
+                })
+            } else if (res?.status >= 400) {
+                logout()
+            }
+        }
+        fetchApi()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setUser])
     return (
         <div className="App">
             <Routes>
@@ -38,32 +60,6 @@ function App() {
                 {/* Private routes */}
                 <Route element={<PrivateRoutes />}>
                     {privateRoutes.map((route, index) => {
-                        const Page = route.component
-
-                        let Layout = DefaultLayout
-                        if (route.layout) {
-                            Layout = route.layout
-                        } else if (route.layout === null) {
-                            Layout = Fragment
-                        }
-
-                        return (
-                            <Route
-                                key={index}
-                                path={route.path}
-                                element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
-                                }
-                            />
-                        )
-                    })}
-                </Route>
-
-                {/* Admin private routes */}
-                <Route element={<AdminPrivateRoutes />}>
-                    {adminPrivateRoutes.map((route, index) => {
                         const Page = route.component
 
                         let Layout = DefaultLayout

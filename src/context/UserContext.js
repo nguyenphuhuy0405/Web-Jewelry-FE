@@ -7,26 +7,6 @@ const UserContext = createContext({ name: '', auth: false, isAdmin: false })
 function UserProvider({ children }) {
     const [user, setUser] = useState({ name: '', auth: false, isAdmin: false, address: '', phoneNumber: '' })
     console.log('>>>user: ', user)
-    //Get user info when refresh website
-    useEffect(() => {
-        const fetchApi = async () => {
-            const res = await userServices.getUserInfo()
-            console.log('>>>res: ', res)
-            if (res && res?.data?.name) {
-                setUser({
-                    name: res.data.name,
-                    auth: true,
-                    isAdmin: res.data.role === 'admin' ? true : false,
-                    address: res.data.address,
-                    phoneNumber: res.data.phoneNumber,
-                })
-            } else if (res?.status >= 400) {
-                logout()
-            }
-        }
-        fetchApi()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setUser])
 
     const login = (name, token, isAdmin, address, phoneNumber) => {
         setUser((user) => ({

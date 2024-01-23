@@ -4,7 +4,7 @@ import { UserContext } from '~/context/UserContext'
 
 function PrivateRoutes() {
     const { user } = useContext(UserContext)
-    return user.auth ? <Outlet /> : <Navigate to="/login" />
+    return user.isAdmin ? <Outlet /> : <Navigate to="/login" />
 }
 
 export default PrivateRoutes

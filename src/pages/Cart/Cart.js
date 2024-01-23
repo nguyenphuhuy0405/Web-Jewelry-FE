@@ -13,6 +13,7 @@ const cx = classNames.bind(styles)
 
 function Cart() {
     const [products, setProducts] = useState([])
+    const [cartId, setCartId] = useState('')
     const { user } = useContext(UserContext)
     const totalPrice = useMemo(() => {
         return (
@@ -29,6 +30,7 @@ function Cart() {
         console.log('cart res: ', res)
         if (res.status === 200) {
             setProducts(res?.data?.products)
+            setCartId(res?.data?._id)
         }
     }
 
@@ -66,7 +68,7 @@ function Cart() {
             <h1>Giỏ hàng</h1>
             {user?.auth ? (
                 products.length > 0 ? (
-                    <table style={{ width: '100%' }}>
+                    <table className={cx('table')}>
                         <tr>
                             <th>Sản phẩm</th>
                             <th>Giá</th>
@@ -80,6 +82,7 @@ function Cart() {
                                     <td>
                                         <div className={cx('item')}>
                                             <img
+                                                width={100}
                                                 src={process.env.REACT_APP_BASE_URL + product?.productId?.images[0]}
                                                 alt="img"
                                             />
@@ -133,11 +136,9 @@ function Cart() {
                                 </div>
                             </td>
                             <td colSpan={4} align="center">
-                                <div className={cx('item')}>
-                                    <Button primary normal>
-                                        Thanh toán
-                                    </Button>
-                                </div>
+                                <Button primary normal to={'/checkout/' + cartId}>
+                                    Thanh toán
+                                </Button>
                             </td>
                         </tr>
                     </table>
@@ -152,11 +153,9 @@ function Cart() {
                     </Link>
                 </h2>
             )}
-            <div className={cx('item')}>
-                <Button to="/products" primary normal>
-                    Tiếp tục mua hàng
-                </Button>
-            </div>
+            <Button to="/products" primary large>
+                Tiếp tục mua hàng
+            </Button>
         </div>
     )
 }

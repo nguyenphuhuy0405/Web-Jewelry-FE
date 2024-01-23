@@ -104,31 +104,14 @@ function Header() {
                 </div>
 
                 <ul className={cx('navbar')}>
-                    <div>
-                        <TippyHeadless
-                            placement="bottom"
-                            interactive
-                            delay={[200, 200]}
-                            render={(attrs) => (
-                                <div className={cx('navbar-popup')} tabIndex="-1" {...attrs}>
-                                    <PopperWrapper>
-                                        <Popup data={categories} />
-                                    </PopperWrapper>
-                                </div>
-                            )}
-                        >
-                            <Link className={cx('navbar-item')} to={'/products'}>
-                                Jewelry
-                            </Link>
-                        </TippyHeadless>
-                    </div>
-
-                    <Link className={cx('navbar-item')} to={'/sale'}>
-                        Sale off
+                    <Link className={cx('navbar-item')} to={'/products'}>
+                        Jewelry
                     </Link>
-                    <Link className={cx('navbar-item')} to={'/collections'}>
-                        Collection
-                    </Link>
+                    {categories.map((item) => (
+                        <Link className={cx('navbar-item')} to={item.path}>
+                            {item.title}
+                        </Link>
+                    ))}
                 </ul>
             </div>
         </header>

@@ -41,7 +41,13 @@ function Login() {
             const res = await userService.login(email, password)
             console.log('res: ', res)
             if (res?.accessToken) {
-                login(res.data.name, res.accessToken, res.data.role === 'admin' ? true : false)
+                login(
+                    res.data.name,
+                    res.accessToken,
+                    res.data.role === 'admin' ? true : false,
+                    res.data.address,
+                    res.data.phoneNumber,
+                )
                 setError('')
                 navigate('/')
             } else {

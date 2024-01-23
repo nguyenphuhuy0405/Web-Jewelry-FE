@@ -5,8 +5,8 @@ import * as userServices from '~/services/userServices'
 const UserContext = createContext({ name: '', auth: false, isAdmin: false })
 
 function UserProvider({ children }) {
-    const [user, setUser] = useState({ name: '', auth: false, isAdmin: false })
-
+    const [user, setUser] = useState({ name: '', auth: false, isAdmin: false, address: '', phoneNumber: '' })
+    console.log('>>>user: ', user)
     //Get user info when refresh website
     useEffect(() => {
         const fetchApi = async () => {
@@ -17,6 +17,8 @@ function UserProvider({ children }) {
                     name: res.data.name,
                     auth: true,
                     isAdmin: res.data.role === 'admin' ? true : false,
+                    address: res.data.address,
+                    phoneNumber: res.data.phoneNumber,
                 })
             } else if (res?.status >= 400) {
                 logout()
@@ -26,11 +28,13 @@ function UserProvider({ children }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setUser])
 
-    const login = (name, token, isAdmin) => {
+    const login = (name, token, isAdmin, address, phoneNumber) => {
         setUser((user) => ({
             name: name,
             auth: true,
             isAdmin: isAdmin,
+            address: address,
+            phoneNumber: phoneNumber,
         }))
         localStorage.setItem('accessToken', token)
     }
@@ -43,6 +47,8 @@ function UserProvider({ children }) {
             name: '',
             auth: false,
             isAdmin: false,
+            address: '',
+            phoneNumber: '',
         }))
     }
 

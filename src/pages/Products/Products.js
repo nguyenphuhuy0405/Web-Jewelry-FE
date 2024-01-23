@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import Grid from '@mui/material/Unstable_Grid2'
 
 import styles from './Products.module.scss'
 import CardProduct from '~/component/CardProduct/CardProduct'
@@ -100,18 +101,20 @@ function Products() {
                 </div>
 
                 {products.length > 0 ? (
-                    products.map((product) => (
-                        <div className="col l-3 m-4 c-6" key={product._id}>
-                            <CardProduct
-                                id={product._id}
-                                slug={product.slug}
-                                title={product.title}
-                                price={product.price}
-                                img1={product.images[0]}
-                                img2={product.images[1]}
-                            />
-                        </div>
-                    ))
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                        {products.map((product) => (
+                            <Grid xs={6} sm={6} md={3} key={product._id}>
+                                <CardProduct
+                                    id={product._id}
+                                    slug={product.slug}
+                                    title={product.title}
+                                    price={product.price}
+                                    img1={product.images[0]}
+                                    img2={product.images[1]}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
                 ) : (
                     <div>Chưa có sản phẩm</div>
                 )}
@@ -127,32 +130,6 @@ function Products() {
                     onChange={handleChange}
                 />
             </Stack>
-
-            {/* <div className={cx('pagination')}>
-                {pages.length > 1 ? (
-                    <>
-                        <Button small primary onClick={() => setCurrentPage(1)}>
-                            &lt;&lt;
-                        </Button>
-                        {pages.map((page, index) => (
-                            <Button
-                                key={index}
-                                small
-                                primary
-                                disabled={page === currentPage}
-                                onClick={() => setCurrentPage(page)}
-                            >
-                                {page}
-                            </Button>
-                        ))}
-                        <Button small primary onClick={() => setCurrentPage(totalPage)}>
-                            &gt;&gt;
-                        </Button>
-                    </>
-                ) : (
-                    <></>
-                )}
-            </div> */}
         </div>
     )
 }

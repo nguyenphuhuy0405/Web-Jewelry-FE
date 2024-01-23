@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { publicRoutes, adminPrivateRoutes } from './routes/routes'
+import { publicRoutes, privateRoutes, adminPrivateRoutes } from './routes/routes'
 import { Fragment } from 'react'
 
 import './App.css'
@@ -10,8 +10,8 @@ import PrivateRoutes from './routes/PrivateRoutes'
 function App() {
     return (
         <div className="App">
-            {/* Public routes */}
             <Routes>
+                {/* Public routes */}
                 {publicRoutes.map((route, index) => {
                     const Page = route.component
 
@@ -37,31 +37,54 @@ function App() {
 
                 {/* Private routes */}
                 <Route element={<PrivateRoutes />}>
-                    {/* Admin private routes */}
-                    <Route element={<AdminPrivateRoutes />}>
-                        {adminPrivateRoutes.map((route, index) => {
-                            const Page = route.component
+                    {privateRoutes.map((route, index) => {
+                        const Page = route.component
 
-                            let Layout = DefaultLayout
-                            if (route.layout) {
-                                Layout = route.layout
-                            } else if (route.layout === null) {
-                                Layout = Fragment
-                            }
+                        let Layout = DefaultLayout
+                        if (route.layout) {
+                            Layout = route.layout
+                        } else if (route.layout === null) {
+                            Layout = Fragment
+                        }
 
-                            return (
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        <Layout>
-                                            <Page />
-                                        </Layout>
-                                    }
-                                />
-                            )
-                        })}
-                    </Route>
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        )
+                    })}
+                </Route>
+
+                {/* Admin private routes */}
+                <Route element={<AdminPrivateRoutes />}>
+                    {adminPrivateRoutes.map((route, index) => {
+                        const Page = route.component
+
+                        let Layout = DefaultLayout
+                        if (route.layout) {
+                            Layout = route.layout
+                        } else if (route.layout === null) {
+                            Layout = Fragment
+                        }
+
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        )
+                    })}
                 </Route>
             </Routes>
         </div>

@@ -1,13 +1,14 @@
 import classNames from 'classnames/bind'
 import styles from './Footer.module.scss'
+import Grid from '@mui/material/Unstable_Grid2'
 
 const cx = classNames.bind(styles)
 
 function Footer() {
     return (
         <div className={cx('wrapper')}>
-            <div className="row sm-gutter">
-                <div className="col l-3 m-4 c-6">
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid xs={6} sm={6} md={3}>
                     <div className={cx('item')}>
                         <div className={cx('title')}>Kết nối với chúng tôi</div>
                         <div className={cx('content')}>
@@ -29,8 +30,8 @@ function Footer() {
                             <p>Email: support@heliosjewels.vn</p>
                         </div>
                     </div>
-                </div>
-                <div className="col l-3 m-4 c-6">
+                </Grid>
+                <Grid xs={6} sm={6} md={3}>
                     <div className={cx('item')}>
                         <div className={cx('title')}>Chăm sóc khách hàng</div>
                         <ul className={cx('content')}>
@@ -40,8 +41,8 @@ function Footer() {
                             <li className={cx('item')}>Chính sách bảo mật</li>
                         </ul>
                     </div>
-                </div>
-                <div className="col l-3 m-4 c-6">
+                </Grid>
+                <Grid xs={6} sm={6} md={3}>
                     <div className={cx('item')}>
                         <div className={cx('title')}>Về chúng tôi</div>
                         <ul className={cx('content')}>
@@ -51,8 +52,8 @@ function Footer() {
                             <li className={cx('item')}>Membership by Helios</li>
                         </ul>
                     </div>
-                </div>
-                <div className="col l-3 m-4 c-6">
+                </Grid>
+                <Grid xs={6} sm={6} md={3}>
                     <div className={cx('item')}>
                         <div className={cx('title')}>Dành cho khách hàng</div>
                         <ul className={cx('content')}>
@@ -62,8 +63,8 @@ function Footer() {
                             <li className={cx('item')}>Hướng dẫn bảo quản sản phẩm</li>
                         </ul>
                     </div>
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         </div>
     )
 }

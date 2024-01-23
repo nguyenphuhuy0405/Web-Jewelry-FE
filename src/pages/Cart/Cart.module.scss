@@ -1,20 +1,19 @@
 .wrapper {
-    table,
-    th,
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #666;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    tr {
+        border-bottom: 1px solid #ececec;
+    }
     td {
-        border: 1px solid #333;
-        border-collapse: collapse;
+        padding: 8px;
     }
 }
 .item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 10px 0;
-    img {
-        max-width: 100px;
-    }
-    p {
-        margin-left: 16px;
-    }
 }

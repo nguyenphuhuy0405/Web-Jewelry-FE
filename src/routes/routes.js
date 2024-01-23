@@ -8,7 +8,10 @@ import {
     RegisterPage,
     ProductDetailPage,
     AdminPage,
+    CheckoutPage,
+    BillPage,
 } from '~/pages'
+import AdminLayout from '~/layouts/AdminLayout/AdminLayout'
 
 export const publicRoutes = [
     {
@@ -36,10 +39,6 @@ export const publicRoutes = [
         component: CollectionsPage,
     },
     {
-        path: '/cart',
-        component: CartPage,
-    },
-    {
         path: '/login',
         component: LoginPage,
     },
@@ -49,10 +48,25 @@ export const publicRoutes = [
     },
 ]
 
+export const privateRoutes = [
+    {
+        path: '/cart',
+        component: CartPage,
+    },
+    {
+        path: '/checkout/:id',
+        component: CheckoutPage,
+    },
+    {
+        path: '/bill/:id',
+        component: BillPage,
+    },
+]
+
 export const adminPrivateRoutes = [
     {
         path: '/admin',
         component: AdminPage,
-        layout: null,
+        layout: AdminLayout,
     },
 ]

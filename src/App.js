@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { publicRoutes, privateRoutes } from './routes/routes'
-import { Fragment, useContext, useEffect } from 'react'
+import { Fragment, useContext, useEffect, Suspense } from 'react'
 
 import './App.css'
 import { DefaultLayout } from '~/layouts'
@@ -32,34 +32,10 @@ function App() {
     }, [setUser])
     return (
         <div className="App">
-            <Routes>
-                {/* Public routes */}
-                {publicRoutes.map((route, index) => {
-                    const Page = route.component
-
-                    let Layout = DefaultLayout
-                    if (route.layout) {
-                        Layout = route.layout
-                    } else if (route.layout === null) {
-                        Layout = Fragment
-                    }
-
-                    return (
-                        <Route
-                            key={index}
-                            path={route.path}
-                            element={
-                                <Layout>
-                                    <Page />
-                                </Layout>
-                            }
-                        />
-                    )
-                })}
-
-                {/* Private routes */}
-                <Route element={<PrivateRoutes />}>
-                    {privateRoutes.map((route, index) => {
+            <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                    {/* Public routes */}
+                    {publicRoutes.map((route, index) => {
                         const Page = route.component
 
                         let Layout = DefaultLayout
@@ -81,8 +57,34 @@ function App() {
                             />
                         )
                     })}
-                </Route>
-            </Routes>
+
+                    {/* Private routes */}
+                    <Route element={<PrivateRoutes />}>
+                        {privateRoutes.map((route, index) => {
+                            const Page = route.component
+
+                            let Layout = DefaultLayout
+                            if (route.layout) {
+                                Layout = route.layout
+                            } else if (route.layout === null) {
+                                Layout = Fragment
+                            }
+
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    }
+                                />
+                            )
+                        })}
+                    </Route>
+                </Routes>
+            </Suspense>
         </div>
     )
 }

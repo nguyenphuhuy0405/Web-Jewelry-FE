@@ -25,16 +25,16 @@ function Cart() {
     }, [products])
 
     console.log('products', products)
-    const getCartApi = async () => {
-        const res = await cartServices.getCart()
-        console.log('cart res: ', res)
-        if (res.status === 200) {
-            setProducts(res?.data?.products)
-            setCartId(res?.data?._id)
-        }
-    }
 
     useEffect(() => {
+        const getCartApi = async () => {
+            const res = await cartServices.getCart()
+            console.log('cart res: ', res)
+            if (res.status === 200) {
+                setProducts(res?.data?.products)
+                setCartId(res?.data?._id)
+            }
+        }
         getCartApi()
     }, [])
 
@@ -49,18 +49,28 @@ function Cart() {
 
     const handleUpdate = async (event, productId, quantity) => {
         event.preventDefault()
-        const res = await cartServices.updateCart(productId, quantity)
-        if (res.status === 200) {
-            await getCartApi()
+        const updateCartApi = async () => {
+            const res = await cartServices.updateCart(productId, quantity)
+            if (res?.status === 200) {
+                setProducts(
+                    products.map((product) =>
+                        product.productId._id === productId ? { ...product, quantity } : product,
+                    ),
+                )
+            }
         }
+        await updateCartApi()
     }
 
     const handleRemove = async (event, productId) => {
         event.preventDefault()
-        const res = await cartServices.removeToCart(productId)
-        if (res.status === 200) {
-            await getCartApi()
+        const deleteCartApi = async () => {
+            const res = await cartServices.removeToCart(productId)
+            if (res.status === 200) {
+                setProducts(products.filter((product) => product.productId._id !== productId))
+            }
         }
+        await deleteCartApi()
     }
 
     return (

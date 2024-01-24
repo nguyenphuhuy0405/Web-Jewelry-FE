@@ -51,8 +51,10 @@ function Products() {
 
     const handleSearch = (e) => {
         e.preventDefault()
-        // Thay thế khoảng trắng bằng dấu "-" và biến thành viết thường
-        const formatSearch = search.toLowerCase().replace(/\s+/g, '-')
+        const formatSearch = search
+            .toLowerCase() //Thay viết hoa thành viết thường
+            .replace(/\s+/g, '-') //Thay thế khoảng trắng bằng dấu "-"
+            .replace(/[\u0300-\u036f]/g, '') //Thay có dấu tiếng việt thành không dấu
         setSearchValue(formatSearch)
     }
 

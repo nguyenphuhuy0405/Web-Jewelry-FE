@@ -11,7 +11,6 @@ import {
     CheckoutPage,
     BillPage,
 } from '~/pages'
-import AdminLayout from '~/layouts/AdminLayout/AdminLayout'
 
 export const publicRoutes = [
     {
@@ -65,6 +64,6 @@ export const privateRoutes = [
     {
         path: '/admin',
         component: AdminPage,
-        layout: AdminLayout,
+        layout: null,
     },
 ]

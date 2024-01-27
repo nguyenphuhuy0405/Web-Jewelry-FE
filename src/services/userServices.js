@@ -126,7 +126,7 @@ export const refreshToken = async () => {
 
 export const getListOfUser = async () => {
     try {
-        const res = await axiosPrivate.get('/api/user/list')
+        const res = await axiosPrivate.get('/api/user')
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data
@@ -147,7 +147,7 @@ export const getListOfUser = async () => {
 
 export const updateUser = async (id, name, address) => {
     try {
-        const res = await axiosPrivate.put(`/api/user/update/${id}`, {
+        const res = await axiosPrivate.put(`/api/user/${id}`, {
             name,
             address,
         })
@@ -171,7 +171,7 @@ export const updateUser = async (id, name, address) => {
 
 export const deleteUser = async (id) => {
     try {
-        const res = await axiosPrivate.delete(`/api/user/update/${id}`)
+        const res = await axiosPrivate.delete(`/api/user/${id}`)
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data

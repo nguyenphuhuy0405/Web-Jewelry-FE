@@ -8,7 +8,6 @@ import { UserContext } from '~/context/UserContext'
 import { Wrapper as PopperWrapper } from '~/component/Popper/Popper'
 import styles from './Header.module.scss'
 import { CartIcon, SearchIcon } from '../Icons/Icons'
-import Popup from '~/component/Popup/Popup'
 import Button from '~/component/Button/Button'
 import Image from '~/component/Image/Image'
 import * as categoryServices from '~/services/categoryServices'
@@ -71,11 +70,11 @@ function Header() {
                                                 <PopperWrapper>
                                                     {user?.isAdmin && (
                                                         <Button to="/admin" hover normal uppercase>
-                                                            Admin
+                                                            Quản lý
                                                         </Button>
                                                     )}
                                                     <Button hover normal uppercase onClick={handleLogout}>
-                                                        Logout
+                                                        Đăng xuất
                                                     </Button>
                                                 </PopperWrapper>
                                             </div>
@@ -93,10 +92,10 @@ function Header() {
                         ) : (
                             <>
                                 <Button to="/login" primary normal uppercase>
-                                    Login
+                                    Đăng nhập
                                 </Button>
                                 <Button to="/register" primary normal uppercase>
-                                    Register
+                                    Đăng ký
                                 </Button>
                             </>
                         )}
@@ -105,7 +104,7 @@ function Header() {
 
                 <ul className={cx('navbar')}>
                     <Link className={cx('navbar-item')} to={'/products'}>
-                        Jewelry
+                        Sản phẩm
                     </Link>
                     {categories.map((item) => (
                         <Link className={cx('navbar-item')} to={item.path}>

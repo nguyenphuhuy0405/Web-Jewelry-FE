@@ -37,9 +37,9 @@ function Register() {
     return (
         <div className={cx('wrapper')}>
             <form className={cx('form-register')}>
-                <h3>Register Here</h3>
+                <h3>Đăng ký</h3>
                 <label htmlFor="name" className={cx('label')}>
-                    Name
+                    Tên
                 </label>
                 <input
                     className={cx('input')}
@@ -62,7 +62,7 @@ function Register() {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="password" className={cx('label')}>
-                    Password
+                    Mật khẩu
                 </label>
                 <input
                     type="password"
@@ -74,7 +74,7 @@ function Register() {
                 />
 
                 <label htmlFor="address" className={cx('label')}>
-                    Address
+                    Địa chỉ
                 </label>
                 <input
                     className={cx('input')}
@@ -86,7 +86,7 @@ function Register() {
                 />
 
                 <label htmlFor="phone" className={cx('label')}>
-                    Phone
+                    Số điện thoại
                 </label>
                 <input
                     className={cx('input')}
@@ -100,7 +100,7 @@ function Register() {
                 <p className={cx('error')}>{error}</p>
 
                 <button type="submit" onClick={handleRegister} className={cx('btn-submit')}>
-                    Register
+                    Đăng ký
                 </button>
             </form>
         </div>

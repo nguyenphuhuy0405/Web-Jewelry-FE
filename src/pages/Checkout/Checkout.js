@@ -25,17 +25,21 @@ function Checkout() {
         phoneNumber: user.phoneNumber,
         notes: '',
     })
+    const [loading, setLoading] = useState(false)
     const { payment, name, address, phoneNumber, notes } = data
     useEffect(() => {
-        const getCartApi = async () => {
-            const res = await cartServices.getCart()
-            console.log('cart res: ', res)
-            if (res.status === 200) {
-                setProducts(res?.data?.products)
-            }
-        }
         getCartApi()
     }, [])
+
+    const getCartApi = async () => {
+        setLoading(true)
+        const res = await cartServices.getCart()
+        console.log('cart res: ', res)
+        if (res.status === 200) {
+            setProducts(res?.data?.products)
+        }
+        setLoading(false)
+    }
 
     const totalPrice = useMemo(() => {
         return (
@@ -72,148 +76,158 @@ function Checkout() {
         fetchApi()
     }
     return (
-        <div className={cx('wrapper')}>
-            {products.length > 0 ? (
-                <div className={cx('container')}>
-                    <div className={cx('information')}>
-                        <h3 className={cx('header')}>THÔNG TIN THANH TOÁN</h3>
-                        <div className={cx('form')}>
-                            <div className={cx('box')}>
-                                <p className={cx('text')}>Họ và tên</p>
-                                <input
-                                    className={cx('input')}
-                                    type="text"
-                                    value={name}
-                                    name="name"
-                                    onChange={handleChange}
-                                    placeholder="Họ và tên"
-                                />
-                            </div>
-                            <div className={cx('box')}>
-                                <p className={cx('text')}>Địa chỉ</p>
-                                <input
-                                    className={cx('input')}
-                                    type="text"
-                                    value={address}
-                                    name="address"
-                                    onChange={handleChange}
-                                    placeholder="Địa chỉ"
-                                />
-                            </div>
-                            <div className={cx('box')}>
-                                <p className={cx('text')}>Số điện thoại</p>
-                                <input
-                                    className={cx('input')}
-                                    type="text"
-                                    value={phoneNumber}
-                                    name="phoneNumber"
-                                    onChange={handleChange}
-                                    placeholder="Số điện thoại"
-                                />
-                            </div>
+        <>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <div className={cx('wrapper')}>
+                    {products.length > 0 ? (
+                        <div className={cx('container')}>
+                            <div className={cx('information')}>
+                                <h3 className={cx('header')}>THÔNG TIN THANH TOÁN</h3>
+                                <div className={cx('form')}>
+                                    <div className={cx('box')}>
+                                        <p className={cx('text')}>Họ và tên</p>
+                                        <input
+                                            className={cx('input')}
+                                            type="text"
+                                            value={name}
+                                            name="name"
+                                            onChange={handleChange}
+                                            placeholder="Họ và tên"
+                                        />
+                                    </div>
+                                    <div className={cx('box')}>
+                                        <p className={cx('text')}>Địa chỉ</p>
+                                        <input
+                                            className={cx('input')}
+                                            type="text"
+                                            value={address}
+                                            name="address"
+                                            onChange={handleChange}
+                                            placeholder="Địa chỉ"
+                                        />
+                                    </div>
+                                    <div className={cx('box')}>
+                                        <p className={cx('text')}>Số điện thoại</p>
+                                        <input
+                                            className={cx('input')}
+                                            type="text"
+                                            value={phoneNumber}
+                                            name="phoneNumber"
+                                            onChange={handleChange}
+                                            placeholder="Số điện thoại"
+                                        />
+                                    </div>
 
-                            <div className={cx('box')}>
-                                <p className={cx('text')}>Ghi chú đơn hàng (tuỳ chọn)</p>
-                                <textarea
-                                    rows="5"
-                                    className={cx('input', 'input-are')}
-                                    value={notes}
-                                    name="note"
-                                    type="text"
-                                    onChange={handleChange}
-                                    placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
-                                />
+                                    <div className={cx('box')}>
+                                        <p className={cx('text')}>Ghi chú đơn hàng (tuỳ chọn)</p>
+                                        <textarea
+                                            rows="5"
+                                            className={cx('input', 'input-are')}
+                                            value={notes}
+                                            name="notes"
+                                            type="text"
+                                            onChange={handleChange}
+                                            placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."
+                                        />
+                                    </div>
+                                    <p className={cx('error')} style={{ color: 'red' }}>
+                                        {error}
+                                    </p>
+                                </div>
                             </div>
-                            <p className={cx('error')} style={{ color: 'red' }}>
-                                {error}
-                            </p>
-                        </div>
-                    </div>
-                    <div className={cx('bill')}>
-                        <div className={cx('wrapper-bill')}>
-                            <div className={cx('bill-info')}>
-                                <div className={cx('data-table')}>
-                                    <h3>ĐƠN HÀNG CỦA BẠN</h3>
-                                    <table className={cx('table')}>
-                                        <thead>
-                                            <tr className={cx('boder-bold', 'primary')}>
-                                                <th>SẢN PHẨM</th>
-                                                <th>TỔNG</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {products.map((product, index) => {
-                                                return (
-                                                    <tr key={index}>
-                                                        <td className={cx('product-item')}>
-                                                            <p className={cx('product-title')}>
-                                                                {product?.productId?.title}
-                                                            </p>
-                                                            <div
-                                                                className={cx('quantity')}
-                                                            >{` × ${product?.quantity}`}</div>
-                                                        </td>
-                                                        <td className={cx('bold')}>
-                                                            {formatPrice(product.productId.price * product.quantity)}
+                            <div className={cx('bill')}>
+                                <div className={cx('wrapper-bill')}>
+                                    <div className={cx('bill-info')}>
+                                        <div className={cx('data-table')}>
+                                            <h3>ĐƠN HÀNG CỦA BẠN</h3>
+                                            <table className={cx('table')}>
+                                                <thead>
+                                                    <tr className={cx('boder-bold', 'primary')}>
+                                                        <th>SẢN PHẨM</th>
+                                                        <th>TỔNG</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {products.map((product, index) => {
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td className={cx('product-item')}>
+                                                                    <p className={cx('product-title')}>
+                                                                        {product?.productId?.title}
+                                                                    </p>
+                                                                    <div
+                                                                        className={cx('quantity')}
+                                                                    >{` × ${product?.quantity}`}</div>
+                                                                </td>
+                                                                <td className={cx('bold')}>
+                                                                    {formatPrice(
+                                                                        product.productId.price * product.quantity,
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                    <tr>
+                                                        <td className={cx('primary')}>Tổng phụ</td>
+                                                        <td className={cx('bold')}>{formatPrice(totalPrice)}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className={cx('bold', 'not-back')}>Giao hàng</td>
+                                                        <td>Giao hàng miễn phí</td>
+                                                    </tr>
+                                                    <tr className={cx('boder-bold', 'primary')}>
+                                                        <td>Tổng</td>
+                                                        <td className={cx('bold')}>{formatPrice(totalPrice)}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colSpan={2} className={cx('bold')}>
+                                                            Phương thức giao hàng
+                                                            <div>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment"
+                                                                    value="Thanh toán khi nhận hàng"
+                                                                    onChange={handleChange}
+                                                                    checked
+                                                                />
+                                                                Thanh toán khi nhận hàng
+                                                            </div>
+                                                            <div>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment"
+                                                                    value="Thanh toán trước"
+                                                                    onChange={handleChange}
+                                                                />
+                                                                Thanh toán trước
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                )
-                                            })}
-                                            <tr>
-                                                <td className={cx('primary')}>Tổng phụ</td>
-                                                <td className={cx('bold')}>{formatPrice(totalPrice)}</td>
-                                            </tr>
-                                            <tr>
-                                                <td className={cx('bold', 'not-back')}>Giao hàng</td>
-                                                <td>Giao hàng miễn phí</td>
-                                            </tr>
-                                            <tr className={cx('boder-bold', 'primary')}>
-                                                <td>Tổng</td>
-                                                <td className={cx('bold')}>{formatPrice(totalPrice)}</td>
-                                            </tr>
-                                            <tr>
-                                                <td colSpan={2} className={cx('bold')}>
-                                                    Phương thức giao hàng
-                                                    <div>
-                                                        <input
-                                                            type="radio"
-                                                            name="payment"
-                                                            value="Thanh toán khi nhận hàng"
-                                                            onChange={handleChange}
-                                                            checked
-                                                        />
-                                                        Thanh toán khi nhận hàng
-                                                    </div>
-                                                    <div>
-                                                        <input
-                                                            type="radio"
-                                                            name="payment"
-                                                            value="Thanh toán trước"
-                                                            onChange={handleChange}
-                                                        />
-                                                        Thanh toán trước
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <button className={cx('btn-pay')} type="submit" onClick={handleCheckout}>
-                                        Đặt hàng
-                                    </button>
+                                                </tbody>
+                                            </table>
+                                            <button className={cx('btn-pay')} type="submit" onClick={handleCheckout}>
+                                                Đặt hàng
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            ) : (
-                <div className={cx('empty')}>
-                    <p className={cx('text-empty')}>Không thể thanh toán khi không có sản phẩm nào trong giỏ hàng.</p>
-                    <Link to="/">
-                        <button className={cx('btn-back')}>Quay về cửa hàng</button>
-                    </Link>
+                    ) : (
+                        <div className={cx('empty')}>
+                            <p className={cx('text-empty')}>
+                                Không thể thanh toán khi không có sản phẩm nào trong giỏ hàng.
+                            </p>
+                            <Link to="/">
+                                <button className={cx('btn-back')}>Quay về cửa hàng</button>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             )}
-        </div>
+        </>
     )
 }
 export default Checkout

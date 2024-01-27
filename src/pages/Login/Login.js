@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/fontawesome-free-solid'
+import PendingIcon from '@mui/icons-material/Pending'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames/bind'
 
@@ -66,7 +65,7 @@ function Login() {
     return (
         <div className={cx('wrapper')}>
             <form className={cx('form-login')}>
-                <h3>Login Here</h3>
+                <h3>Đăng nhập ở đây</h3>
                 <label htmlFor="email" className={cx('label')}>
                     Email
                 </label>
@@ -79,7 +78,7 @@ function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <label htmlFor="password" className={cx('label')}>
-                    Password
+                    Mật khẩu
                 </label>
                 <input
                     type="password"
@@ -91,8 +90,8 @@ function Login() {
                 />
                 <p className={cx('error')}>{error}</p>
                 <button type="submit" onClick={handleSubmit} className={cx('btn-submit')}>
-                    {loading && <FontAwesomeIcon icon={faSpinner} className={cx('loading')} />}
-                    Log In
+                    {loading && <PendingIcon fontSize="medium" />}
+                    Đăng nhập
                 </button>
             </form>
         </div>

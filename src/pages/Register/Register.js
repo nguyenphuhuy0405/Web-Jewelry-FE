@@ -29,6 +29,8 @@ function Register() {
             console.log('res: ', res)
             if (res?.status === 200) {
                 navigate('/login')
+            } else {
+                setError(res?.data?.message)
             }
         }
         fetchApi()

@@ -14,6 +14,7 @@ function AddForm({ closeEvent, getUserApi }) {
         address: '',
         phoneNumber: '',
     })
+    const [error, setError] = useState('')
     const { name, email, password, address, phoneNumber } = data
 
     const addUserApi = async () => {
@@ -21,6 +22,8 @@ function AddForm({ closeEvent, getUserApi }) {
         if (res?.status === 200) {
             getUserApi()
             closeEvent()
+        } else {
+            setError(res?.data?.message)
         }
     }
 
@@ -41,7 +44,7 @@ function AddForm({ closeEvent, getUserApi }) {
                 <Grid item xs={12}>
                     <TextField
                         name="name"
-                        label="Name"
+                        label="Tên người dùng"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         value={name}
@@ -61,7 +64,7 @@ function AddForm({ closeEvent, getUserApi }) {
                 <Grid item xs={12}>
                     <TextField
                         name="password"
-                        label="Password"
+                        label="Mật khẩu"
                         type="password"
                         variant="outlined"
                         sx={{ width: '100%' }}
@@ -72,7 +75,7 @@ function AddForm({ closeEvent, getUserApi }) {
                 <Grid item xs={12}>
                     <TextField
                         name="phoneNumber"
-                        label="Phone Number"
+                        label="Số điện thoại"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         value={phoneNumber}
@@ -82,7 +85,7 @@ function AddForm({ closeEvent, getUserApi }) {
                 <Grid item xs={12}>
                     <TextField
                         name="address"
-                        label="Address"
+                        label="Địa chỉ"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         value={address}
@@ -90,7 +93,12 @@ function AddForm({ closeEvent, getUserApi }) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="error" onClick={closeEvent}>
+                    <Typography color="error" variant="h6" component="h6">
+                        {error}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" style={{ backgroundColor: 'gray' }} onClick={closeEvent}>
                         Huỷ
                     </Button>
                     <Button

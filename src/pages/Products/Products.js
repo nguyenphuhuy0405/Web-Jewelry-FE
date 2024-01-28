@@ -62,7 +62,7 @@ function Products() {
     useEffect(() => {
         const getProductsApi = async () => {
             setLoading(true)
-            let res = await productServices.getListOfProduct(currentPage, filter, searchValue, id)
+            let res = await productServices.getProducts(currentPage, filter, searchValue, id)
             console.log('res: ', res)
             if (res?.data) {
                 setProducts(res.data)

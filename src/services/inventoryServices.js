@@ -1,8 +1,8 @@
-import { axiosPrivate } from '~/utils/axios'
+import axios, { axiosPrivate } from '~/utils/axios'
 
-export const getOrder = async (id) => {
+export const getInventory = async (productId) => {
     try {
-        const res = await axiosPrivate.get(`/api/order/${id}`)
+        const res = await axios.get(`/api/inventory/${productId}`)
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data
@@ -21,9 +21,9 @@ export const getOrder = async (id) => {
     }
 }
 
-export const getOrders = async () => {
+export const getInventories = async () => {
     try {
-        const res = await axiosPrivate.get(`/api/order`)
+        const res = await axiosPrivate.get(`/api/inventory/`)
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data
@@ -42,15 +42,11 @@ export const getOrders = async () => {
     }
 }
 
-export const orderFromCart = async (cartId, payment, name, address, phoneNumber, notes) => {
+export const createInventories = async (productId, quantity) => {
     try {
-        const res = await axiosPrivate.post(`/api/order/order-from-cart`, {
-            cartId,
-            payment,
-            name,
-            address,
-            phoneNumber,
-            notes,
+        const res = await axiosPrivate.post(`/api/inventory/`, {
+            productId,
+            quantity,
         })
         res.data.status = res.status
         console.log('data:', res.data)
@@ -70,9 +66,11 @@ export const orderFromCart = async (cartId, payment, name, address, phoneNumber,
     }
 }
 
-export const confirmOrder = async (id) => {
+export const updateInventory = async (id, quantity) => {
     try {
-        const res = await axiosPrivate.put(`/api/order/confirm-order/${id}`)
+        const res = await axiosPrivate.put(`/api/inventory/${id}`, {
+            quantity,
+        })
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data
@@ -91,9 +89,9 @@ export const confirmOrder = async (id) => {
     }
 }
 
-export const cancelOrder = async (id) => {
+export const deleteInventory = async (id) => {
     try {
-        const res = await axiosPrivate.put(`/api/order/cancel-order/${id}`)
+        const res = await axiosPrivate.delete(`/api/inventory/${id}`)
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data

@@ -39,7 +39,7 @@ function Login() {
 
             const res = await userService.login(email, password)
             console.log('res: ', res)
-            if (res?.accessToken) {
+            if (res?.status === 200) {
                 login(
                     res.data.name,
                     res.accessToken,
@@ -50,10 +50,7 @@ function Login() {
                 setError('')
                 navigate('/')
             } else {
-                if (res?.status === 400) {
-                    console.log('error: ', res.data.message)
-                    setError(`${res.data.message}`)
-                }
+                setError(res?.data?.message)
             }
 
             //Set loading false

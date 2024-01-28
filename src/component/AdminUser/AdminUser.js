@@ -40,6 +40,13 @@ const columns = [
         minWidth: 130,
         align: 'right',
     },
+    {
+        id: 'action',
+        label: 'Thao tác',
+        minWidth: 130,
+        align: 'center',
+        action: true,
+    },
 ]
 const style = {
     position: 'absolute',
@@ -56,10 +63,11 @@ export default function AdminUser() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [rows, setRows] = useState([])
+    const [loading, setLoading] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
     const [openAdd, setOpenAdd] = useState(false)
-    const [selectedRow, setSelectedRow] = useState({})
+    const [selectedRow, setSelectedRow] = useState(null)
     const handleOpenAdd = () => setOpenAdd(true)
     const handleCloseAdd = () => setOpenAdd(false)
 
@@ -68,7 +76,10 @@ export default function AdminUser() {
         setSelectedRow(rows.find((user) => user._id === id))
         setOpenEdit(true)
     }
-    const handleCloseEdit = () => setOpenEdit(false)
+    const handleCloseEdit = () => {
+        setSelectedRow(null)
+        setOpenEdit(false)
+    }
 
     const handleOpenDelete = (id) => {
         setSelectedRow(rows.find((user) => user._id === id))
@@ -81,11 +92,13 @@ export default function AdminUser() {
     }, [])
 
     const getUserApi = async () => {
-        const res = await userServices.getListOfUser()
+        setLoading(true)
+        const res = await userServices.getUsers()
         if (res?.status === 200) {
             console.log('>>>res: ', res?.data)
             setRows(res?.data)
         }
+        setLoading(false)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -99,100 +112,119 @@ export default function AdminUser() {
 
     return (
         <>
-            {/* Modal Add */}
-            <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenAdd} sx={{ marginBottom: '16px' }}>
-                Thêm mới
-            </Button>
-            <Modal open={openAdd} onClose={handleCloseAdd}>
-                <Box sx={style}>
-                    <AddForm closeEvent={handleCloseAdd} getUserApi={getUserApi} />
-                </Box>
-            </Modal>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <>
+                    {/* Modal Add */}
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        onClick={handleOpenAdd}
+                        sx={{ marginBottom: '16px' }}
+                    >
+                        Thêm mới
+                    </Button>
+                    <Modal open={openAdd} onClose={handleCloseAdd}>
+                        <Box sx={style}>
+                            <AddForm closeEvent={handleCloseAdd} getUserApi={getUserApi} />
+                        </Box>
+                    </Modal>
 
-            {/* Modal Edit */}
-            <Modal open={openEdit} onClose={handleCloseEdit}>
-                <Box sx={style}>
-                    <EditForm closeEvent={handleCloseEdit} data={selectedRow} getUserApi={getUserApi} />
-                </Box>
-            </Modal>
+                    {/* Modal Edit */}
+                    <Modal open={openEdit} onClose={handleCloseEdit}>
+                        <Box sx={style}>
+                            <EditForm closeEvent={handleCloseEdit} data={selectedRow} getUserApi={getUserApi} />
+                        </Box>
+                    </Modal>
 
-            {/* Modal Delete */}
-            <Modal open={openDelete} onClose={handleCloseDelete}>
-                <Box sx={style}>
-                    <DeleteForm closeEvent={handleCloseDelete} data={selectedRow} getUserApi={getUserApi} />
-                </Box>
-            </Modal>
+                    {/* Modal Delete */}
+                    <Modal open={openDelete} onClose={handleCloseDelete}>
+                        <Box sx={style}>
+                            <DeleteForm closeEvent={handleCloseDelete} data={selectedRow} getUserApi={getUserApi} />
+                        </Box>
+                    </Modal>
 
-            {/* Table */}
-            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column, index) => (
-                                    <TableCell
-                                        key={index}
-                                        align={column.align}
-                                        style={{ minWidth: column.minWidth, fontSize: '14px' }}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
-                                        {columns.map((column) => {
-                                            const value = row[column.id]
-                                            return (
-                                                <TableCell
-                                                    key={column.id}
-                                                    align={column.align}
-                                                    sx={{ fontSize: '14px' }}
-                                                >
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
-                                                </TableCell>
-                                            )
-                                        })}
-                                        <TableCell align="left">
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                startIcon={<EditIcon />}
-                                                onClick={() => handleOpenEdit(row?._id)}
+                    {/* Table */}
+                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <TableContainer sx={{ maxHeight: 440 }}>
+                            <Table stickyHeader aria-label="sticky table">
+                                <TableHead>
+                                    <TableRow>
+                                        {columns.map((column, index) => (
+                                            <TableCell
+                                                key={index}
+                                                align={column.align}
+                                                style={{ minWidth: column.minWidth, fontSize: '14px' }}
                                             >
-                                                Sửa
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="error"
-                                                startIcon={<DeleteIcon />}
-                                                onClick={() => handleOpenDelete(row?._id)}
-                                                sx={{ marginLeft: '10px' }}
-                                            >
-                                                Xoá
-                                            </Button>
-                                        </TableCell>
+                                                {column.label}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
+                                                {columns.map((column) => {
+                                                    const value = row[column.id]
+                                                    if (column.action) {
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={column.align}
+                                                                sx={{ fontSize: '14px' }}
+                                                            >
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    startIcon={<EditIcon />}
+                                                                    onClick={() => handleOpenEdit(row?._id)}
+                                                                >
+                                                                    Sửa
+                                                                </Button>
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="error"
+                                                                    startIcon={<DeleteIcon />}
+                                                                    onClick={() => handleOpenDelete(row?._id)}
+                                                                    sx={{ marginLeft: '10px' }}
+                                                                >
+                                                                    Xoá
+                                                                </Button>
+                                                            </TableCell>
+                                                        )
+                                                    }
+                                                    return (
+                                                        <TableCell
+                                                            key={column.id}
+                                                            align={column.align}
+                                                            sx={{ fontSize: '14px' }}
+                                                        >
+                                                            {column.format && typeof value === 'number'
+                                                                ? column.format(value)
+                                                                : value}
+                                                        </TableCell>
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        )
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 25, 100]}
+                            component="div"
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </Paper>
+                </>
+            )}
         </>
     )
 }

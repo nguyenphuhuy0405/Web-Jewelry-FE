@@ -12,7 +12,6 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Grid'
 
 import styles from './AdminOrder.module.scss'
@@ -66,6 +65,13 @@ const columns = [
         typeof: 'number',
         align: 'right',
     },
+    {
+        id: 'action',
+        label: 'Thao tác',
+        minWidth: 150,
+        align: 'center',
+        action: true,
+    },
 ]
 
 const style = {
@@ -83,18 +89,20 @@ function AdminOrder() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [rows, setRows] = useState([])
+    const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const [selectedRow, setSelectedRow] = useState({})
+    const [selectedRow, setSelectedRow] = useState(null)
     const { _id, name, phoneNumber, address, status, shipping, shippingPrice, payment, products, totalPrice, notes } =
-        selectedRow
+        selectedRow || {}
     console.log('>>>selectedRow: ', selectedRow)
 
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
-
-    const handleDetail = (id) => {
+    const handleOpen = (id) => {
         setSelectedRow(rows.find((order) => order._id === id))
-        handleOpen(true)
+        setOpen(true)
+    }
+    const handleClose = () => {
+        setSelectedRow(null)
+        setOpen(false)
     }
 
     const confirmOrderApi = async (id) => {
@@ -140,10 +148,12 @@ function AdminOrder() {
     }, [])
 
     const getOrderApi = async () => {
-        const res = await orderServices.getListOfOrder()
+        setLoading(true)
+        const res = await orderServices.getOrders()
         if (res?.status === 200) {
             setRows(res?.data)
         }
+        setLoading(false)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -157,186 +167,209 @@ function AdminOrder() {
 
     return (
         <>
-            {/* Modal Detail */}
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h4" component="h4">
-                        Thông tin đơn hàng
-                    </Typography>
-                    <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ marginTop: '8px' }}>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Mã đơn hàng: {_id}
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <>
+                    {/* Modal Detail */}
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h4" component="h4">
+                                Thông tin đơn hàng
                             </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Tên: {name}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Số điện thoại: {phoneNumber}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Địa chỉ: {address}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Trang thái: {status}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Giao hàng: {shipping}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Phí ship: {shippingPrice}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Phương thức thanh toán: {payment}
-                            </Typography>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Sản phẩm:
-                            </Typography>
-                            <table style={{ width: '100%', fontSize: '14px' }}>
-                                <tr>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Số lượng</th>
-                                </tr>
-                                {products &&
-                                    products.map((product) => (
-                                        <tr>
-                                            <td>{product?.productId?.title}</td>
-                                            <td>{product?.quantity}</td>
-                                        </tr>
-                                    ))}
-                            </table>
-                            {/* {products &&
-                                products.map((product) => (
-                                    <Typography key={product._id} variant="h6" component="h6">
-                                        {product?.productId?.title + 'x' + product?.quantity}
+                            <Grid
+                                container
+                                rowSpacing={2}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                sx={{ marginTop: '8px' }}
+                            >
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Mã đơn hàng: {_id}
                                     </Typography>
-                                ))} */}
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Tổng tiền: {totalPrice}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" component="h6">
-                                Ghi chú: {notes}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button variant="contained" color="error" onClick={handleClose}>
-                                Đóng
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Modal>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Tên: {name}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Số điện thoại: {phoneNumber}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Địa chỉ: {address}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Trang thái: {status}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Giao hàng: {shipping}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Phí ship: {shippingPrice}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Phương thức thanh toán: {payment}
+                                    </Typography>
+                                </Grid>
 
-            {/* Table */}
-            <div className={cx('wrapper')}>
-                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                    <TableContainer sx={{ maxHeight: 440 }}>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column, index) => (
-                                        <TableCell
-                                            key={index}
-                                            align={column.align}
-                                            style={{ minWidth: column.minWidth, fontSize: '14px' }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
-                                            {columns.map((column) => {
-                                                const value = row[column.id]
-                                                let stylesStatus
-                                                if (row['status'] === 'Đang xử lý') {
-                                                    stylesStatus = stylesPending
-                                                } else if (row['status'] === 'Đã giao hàng') {
-                                                    stylesStatus = stylesSuccess
-                                                } else if (row['status'] === 'Đã huỷ') {
-                                                    stylesStatus = stylesError
-                                                }
-                                                return (
-                                                    <TableCell key={column.id} align={column.align} sx={stylesStatus}>
-                                                        {column.format && typeof value === 'number'
-                                                            ? column.format(value)
-                                                            : value}
-                                                    </TableCell>
-                                                )
-                                            })}
-                                            <TableCell align="left">
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => handleDetail(row._id)}
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Sản phẩm:
+                                    </Typography>
+                                    <table style={{ width: '100%', fontSize: '14px' }}>
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số lượng</th>
+                                        </tr>
+                                        {products &&
+                                            products.map((product) => (
+                                                <tr>
+                                                    <td>{product?.productId?.title}</td>
+                                                    <td>{product?.quantity}</td>
+                                                </tr>
+                                            ))}
+                                    </table>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Tổng tiền: {totalPrice}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" component="h6">
+                                        Ghi chú: {notes}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant="contained"
+                                        style={{ backgroundColor: 'gray' }}
+                                        onClick={handleClose}
+                                    >
+                                        Đóng
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Modal>
+
+                    {/* Table */}
+                    <div className={cx('wrapper')}>
+                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                            <TableContainer sx={{ maxHeight: 440 }}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                            {columns.map((column, index) => (
+                                                <TableCell
+                                                    key={index}
+                                                    align={column.align}
+                                                    style={{ minWidth: column.minWidth, fontSize: '14px' }}
                                                 >
-                                                    Chi tiết
-                                                </Button>
-                                                <Button
-                                                    disabled={row['status'] === 'Đã giao hàng'}
-                                                    variant="contained"
-                                                    color="success"
-                                                    sx={{ marginLeft: '10px' }}
-                                                    onClick={() => handleConfirm(row._id)}
-                                                >
-                                                    Xác nhận
-                                                </Button>
-                                                <Button
-                                                    disabled={row['status'] === 'Đã huỷ'}
-                                                    variant="contained"
-                                                    color="error"
-                                                    sx={{ marginLeft: '10px' }}
-                                                    onClick={() => handleCancel(row._id)}
-                                                >
-                                                    Huỷ
-                                                </Button>
-                                            </TableCell>
+                                                    {column.label}
+                                                </TableCell>
+                                            ))}
                                         </TableRow>
-                                    )
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper>
-            </div>
+                                    </TableHead>
+                                    <TableBody>
+                                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                            return (
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
+                                                    {columns.map((column) => {
+                                                        const value = row[column.id]
+                                                        let stylesStatus
+                                                        if (row['status'] === 'Đang xử lý') {
+                                                            stylesStatus = stylesPending
+                                                        } else if (row['status'] === 'Đã giao hàng') {
+                                                            stylesStatus = stylesSuccess
+                                                        } else if (row['status'] === 'Đã huỷ') {
+                                                            stylesStatus = stylesError
+                                                        }
+
+                                                        if (column.action) {
+                                                            return (
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    align={column.align}
+                                                                    sx={{ fontSize: '14px' }}
+                                                                >
+                                                                    <Button
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                        onClick={() => handleOpen(row._id)}
+                                                                    >
+                                                                        Chi tiết
+                                                                    </Button>
+                                                                    <Button
+                                                                        disabled={row['status'] === 'Đã giao hàng'}
+                                                                        variant="contained"
+                                                                        color="success"
+                                                                        sx={{ marginLeft: '10px' }}
+                                                                        onClick={() => handleConfirm(row._id)}
+                                                                    >
+                                                                        Xác nhận
+                                                                    </Button>
+                                                                    <Button
+                                                                        disabled={row['status'] === 'Đã huỷ'}
+                                                                        variant="contained"
+                                                                        color="error"
+                                                                        sx={{ marginLeft: '10px' }}
+                                                                        onClick={() => handleCancel(row._id)}
+                                                                    >
+                                                                        Huỷ
+                                                                    </Button>
+                                                                </TableCell>
+                                                            )
+                                                        }
+
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={column.align}
+                                                                sx={stylesStatus}
+                                                            >
+                                                                {column.format && typeof value === 'number'
+                                                                    ? column.format(value)
+                                                                    : value}
+                                                            </TableCell>
+                                                        )
+                                                    })}
+                                                </TableRow>
+                                            )
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 25, 100]}
+                                component="div"
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </Paper>
+                    </div>
+                </>
+            )}
         </>
     )
 }

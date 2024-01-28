@@ -22,7 +22,7 @@ function Header() {
 
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await categoryServices.getListOfCategory()
+            const res = await categoryServices.getCategories()
             if (res?.status === 200) {
                 let categories = res?.data
                 categories.map((item) => {

@@ -1,6 +1,6 @@
 import axios from '~/utils/axios'
 
-export const getListOfCategory = async () => {
+export const getCategories = async () => {
     try {
         const res = await axios.get(`/api/category/`)
         res.data.status = res.status

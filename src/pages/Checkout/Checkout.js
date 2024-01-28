@@ -68,8 +68,10 @@ function Checkout() {
                     data.notes,
                 )
                 console.log('res: ', res)
-                if (res.status === 200) {
+                if (res?.status === 200) {
                     navigate(`/bill/${res.data._id}`)
+                } else {
+                    setError(res?.data?.message)
                 }
             }
         }

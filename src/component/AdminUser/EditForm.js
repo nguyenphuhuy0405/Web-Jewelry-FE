@@ -10,12 +10,15 @@ function EditForm({ closeEvent, data, getUserApi }) {
     const { _id, email, name, address, phoneNumber } = data
     const [editName, setEditName] = useState(name)
     const [editAddress, setEditAddress] = useState(address)
+    const [error, setError] = useState('')
 
     const updateUserApi = async (id, name, address) => {
         const res = await userServices.updateUser(id, name, address)
         if (res?.status === 200) {
             getUserApi()
             closeEvent()
+        } else {
+            setError(res?.data?.message)
         }
     }
 
@@ -29,7 +32,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
             </Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ marginTop: '8px' }}>
                 <Grid item xs={12}>
-                    <TextField disabled label="Id" variant="outlined" sx={{ width: '100%' }} defaultValue={_id} />
+                    <TextField disabled label="id" variant="outlined" sx={{ width: '100%' }} defaultValue={_id} />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField disabled label="Email" variant="outlined" sx={{ width: '100%' }} defaultValue={email} />
@@ -37,7 +40,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
                 <Grid item xs={12}>
                     <TextField
                         disabled
-                        label="Phone Number"
+                        label="Số điện thoại"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         defaultValue={phoneNumber}
@@ -45,7 +48,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        label="Name"
+                        label="Tên người dùng"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         defaultValue={name}
@@ -54,7 +57,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        label="Address"
+                        label="Địa chỉ"
                         variant="outlined"
                         sx={{ width: '100%' }}
                         defaultValue={address}
@@ -62,7 +65,12 @@ function EditForm({ closeEvent, data, getUserApi }) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="error" onClick={closeEvent}>
+                    <Typography color="error" variant="h6" component="h6">
+                        {error}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Button variant="contained" style={{ backgroundColor: 'gray' }} onClick={closeEvent}>
                         Huỷ
                     </Button>
                     <Button

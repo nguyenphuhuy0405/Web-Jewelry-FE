@@ -124,7 +124,7 @@ export const refreshToken = async () => {
     }
 }
 
-export const getListOfUser = async () => {
+export const getUsers = async () => {
     try {
         const res = await axiosPrivate.get('/api/user')
         res.data.status = res.status

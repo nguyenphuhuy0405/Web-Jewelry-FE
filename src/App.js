@@ -23,7 +23,7 @@ function App() {
                 address: res.data.address,
                 phoneNumber: res.data.phoneNumber,
             })
-        } else if (res?.status >= 400) {
+        } else {
             logout()
         }
         setLoading(false)

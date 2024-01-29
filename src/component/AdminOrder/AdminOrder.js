@@ -16,6 +16,7 @@ import Grid from '@mui/material/Grid'
 
 import styles from './AdminOrder.module.scss'
 import * as orderServices from '~/services/orderServices'
+import formatPrice from '~/hooks/formatPrice'
 
 const cx = classNames.bind(styles)
 
@@ -64,6 +65,7 @@ const columns = [
         minWidth: 50,
         typeof: 'number',
         align: 'right',
+        price: true,
     },
     {
         id: 'action',
@@ -105,6 +107,37 @@ function AdminOrder() {
         setOpen(false)
     }
 
+    const handleConfirm = (id) => {
+        confirmOrderApi(id)
+    }
+
+    const handleCancel = (id) => {
+        cancelOrderApi(id)
+    }
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage)
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(event.target.value)
+        setPage(0)
+    }
+
+    useEffect(() => {
+        getOrderApi()
+    }, [])
+
+    // Call API
+    const getOrderApi = async () => {
+        setLoading(true)
+        const res = await orderServices.getOrders()
+        if (res?.status === 200) {
+            setRows(res?.data)
+        }
+        setLoading(false)
+    }
+
     const confirmOrderApi = async (id) => {
         const res = await orderServices.confirmOrder(id)
         if (res?.status === 200) {
@@ -133,36 +166,6 @@ function AdminOrder() {
                 }),
             )
         }
-    }
-
-    const handleConfirm = (id) => {
-        confirmOrderApi(id)
-    }
-
-    const handleCancel = (id) => {
-        cancelOrderApi(id)
-    }
-
-    useEffect(() => {
-        getOrderApi()
-    }, [])
-
-    const getOrderApi = async () => {
-        setLoading(true)
-        const res = await orderServices.getOrders()
-        if (res?.status === 200) {
-            setRows(res?.data)
-        }
-        setLoading(false)
-    }
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(event.target.value)
-        setPage(0)
     }
 
     return (
@@ -335,6 +338,20 @@ function AdminOrder() {
                                                                     >
                                                                         Huỷ
                                                                     </Button>
+                                                                </TableCell>
+                                                            )
+                                                        }
+
+                                                        if (column.price) {
+                                                            return (
+                                                                <TableCell
+                                                                    key={column.id}
+                                                                    align={column.align}
+                                                                    sx={{ fontSize: '14px' }}
+                                                                >
+                                                                    {typeof value === 'number'
+                                                                        ? formatPrice(value)
+                                                                        : value}
                                                                 </TableCell>
                                                             )
                                                         }

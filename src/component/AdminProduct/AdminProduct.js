@@ -16,16 +16,16 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
-import * as inventoryServices from '~/services/inventoryServices'
+import formatPrice from '~/hooks/formatPrice'
 import * as productServices from '~/services/productServices'
+import * as categoryServices from '~/services/categoryServices'
 
 const columns = [
     { id: '_id', label: 'Id', minWidth: 50 },
-    { id: 'id', label: 'Mã sản phẩm', minWidth: 50 },
     {
         id: 'images',
         label: 'Ảnh sản phẩm',
-        minWidth: 100,
+        minWidth: 70,
         image: true,
     },
     {
@@ -34,9 +34,18 @@ const columns = [
         minWidth: 100,
     },
     {
-        id: 'quantity',
-        label: 'Số lượng còn',
+        id: 'price',
+        label: 'Giá bán',
         minWidth: 50,
+        align: 'right',
+        price: true,
+    },
+    {
+        id: 'categoryId',
+        label: 'Loại sản phẩm',
+        minWidth: 50,
+        align: 'right',
+        category: true,
     },
     {
         id: 'action',
@@ -58,57 +67,54 @@ const style = {
     p: 4,
 }
 
-function AdminInventory() {
+function AdminProduct() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [rows, setRows] = useState([])
+    const [categories, setCategories] = useState([])
     const [selectedRow, setSelectedRow] = useState(null)
     const [loading, setLoading] = useState(true)
 
-    //State Model Add
-    const [products, setProducts] = useState([])
+    // State Modal Add
     const [openAdd, setOpenAdd] = useState(false)
-    const [data, setData] = useState({
-        productId: '',
-        quantity: '1',
-    })
     const [error, setError] = useState('')
+    const [data, setData] = useState({
+        title: '',
+        description: '',
+        price: '',
+        categoryId: '',
+        brandId: '',
+    })
+    const [images, setImages] = useState([])
 
-    //State Model Quantity - Decrease
-    const [openQuantity, setOpenQuantity] = useState(false)
-    const [quantity, setQuantity] = useState(1)
-    const [errorQuantity, setErrorQuantity] = useState('')
+    console.log('categories: ', categories)
+    console.log('data: ', data)
+    console.log('images: ', images)
 
-    //State Model Delete
-    const [openDelete, setOpenDelete] = useState(false)
-    // console.log('rows', rows)
-    // console.log('products', products)
-    // console.log('data', data)
-    console.log('selectedRow', selectedRow)
-
-    const handleOpenDelete = (id) => {
-        setSelectedRow(rows.find((item) => item._id === id))
-        setOpenDelete(true)
-    }
-    const handleCloseDelete = () => {
-        setSelectedRow(null)
-        setOpenDelete(false)
+    const handleImageChange = (e) => {
+        const selectedImages = Array.from(e.target.files)
+        setImages((prevImages) => [...prevImages, ...selectedImages])
     }
 
-    const handleOpenAdd = () => setOpenAdd(true)
-    const handleCloseAdd = () => setOpenAdd(false)
-    const handleOpenQuantity = (id) => {
-        setSelectedRow(rows.find((item) => item._id === id))
-        setOpenQuantity(true)
-    }
-    const handleCloseQuantity = () => {
-        setSelectedRow(null)
-        setQuantity(1)
-        setOpenQuantity(false)
+    const handleAdd = () => {
+        createProductsApi()
     }
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
+    }
+
+    const handleOpenAdd = () => setOpenAdd(true)
+    const handleCloseAdd = () => {
+        setData({
+            title: '',
+            description: '',
+            price: '',
+            categoryId: '',
+            brandId: '',
+        })
+        setError('')
+        setOpenAdd(false)
     }
 
     const handleChangePage = (event, newPage) => {
@@ -120,90 +126,45 @@ function AdminInventory() {
         setPage(0)
     }
 
-    const handleAdd = () => {
-        console.log('>>>data: ', data)
-        createInventoryApi()
-    }
-
-    const handleIncrease = () => {
-        let updateQuantity = Number.parseInt(selectedRow?.quantity) + Number.parseInt(quantity)
-        console.log('>>>quantity: ', quantity)
-        console.log('>>>updateQuantity: ', updateQuantity)
-        updateInventoryApi(selectedRow?._id, updateQuantity)
-    }
-
-    const handleDecrease = () => {
-        let updateQuantity = Number.parseInt(selectedRow?.quantity) - Number.parseInt(quantity)
-        console.log('>>>quantity: ', quantity)
-        console.log('>>>updateQuantity: ', updateQuantity)
-        updateInventoryApi(selectedRow?._id, updateQuantity)
-    }
-
-    const handleDelete = () => {
-        deleteInventoryApi(selectedRow?._id)
-    }
-
     useEffect(() => {
-        Promise.all([getProductsApi(), getInventoriesApi()])
+        Promise.all([getCategoriesApi(), getProductsApi()])
             .then((res) => {
                 setLoading(false)
             })
             .catch((error) => console.log(`Error in promises ${error}`))
     }, [])
 
-    // Call API
-    const getProductsApi = async () => {
-        const res = await productServices.getProducts()
-        console.log('>>>res: ', res)
+    const getCategoriesApi = async () => {
+        const res = await categoryServices.getCategories()
         if (res?.status === 200) {
-            setProducts(res?.data)
-        }
-    }
-    const getInventoriesApi = async () => {
-        const res = await inventoryServices.getInventories()
-        if (res?.status === 200) {
-            let rows = res?.data.map((item) => {
-                return {
-                    ...item,
-                    id: item.productId._id,
-                    title: item.productId.title,
-                    images: item.productId.images,
-                }
-            })
-            setRows(rows)
+            setCategories(res?.data)
         }
     }
 
-    const createInventoryApi = async () => {
-        const res = await inventoryServices.createInventories(data.productId, data.quantity)
-        console.log('>>>res: ', res)
+    const getProductsApi = async () => {
+        const res = await productServices.getProducts()
         if (res?.status === 200) {
-            setData({
-                productId: '',
-                quantity: '',
-            })
-            getInventoriesApi()
+            console.log('>>>products: ', res?.data)
+            setRows(res?.data)
+        }
+    }
+
+    const createProductsApi = async () => {
+        const formData = new FormData()
+        formData.append('title', data.title)
+        formData.append('description', data.description)
+        formData.append('price', data.price)
+        formData.append('categoryId', data.categoryId)
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i])
+        }
+        console.log('formData: ', formData)
+        const res = await productServices.createProduct(formData)
+        if (res?.status === 200) {
+            setRows([...rows, res?.data])
             handleCloseAdd()
         } else {
             setError(res?.data?.message)
-        }
-    }
-
-    const updateInventoryApi = async (id, quantity) => {
-        const res = await inventoryServices.updateInventory(id, quantity)
-        if (res?.status === 200) {
-            setRows(rows.map((item) => (item._id === id ? { ...item, quantity } : item)))
-            handleCloseQuantity()
-        } else {
-            setErrorQuantity(res?.data?.message)
-        }
-    }
-
-    const deleteInventoryApi = async (id) => {
-        const res = await inventoryServices.deleteInventory(id)
-        if (res?.status === 200) {
-            setRows(rows.filter((item) => item._id !== id))
-            handleCloseDelete()
         }
     }
 
@@ -226,7 +187,7 @@ function AdminInventory() {
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
                                 <Typography id="modal-modal-title" variant="h4" component="h4">
-                                    Tạo kho
+                                    Thêm sản phẩm
                                 </Typography>
                                 <Grid
                                     container
@@ -236,31 +197,66 @@ function AdminInventory() {
                                 >
                                     <Grid item xs={12}>
                                         <TextField
-                                            name="productId"
-                                            select
-                                            label="Mã sản phẩm"
+                                            name="title"
+                                            label="Tên sản phẩm"
+                                            variant="outlined"
                                             sx={{ width: '100%' }}
+                                            required
+                                            value={data.title}
                                             onChange={handleChange}
-                                        >
-                                            {products.map((product) => (
-                                                <MenuItem key={product._id} value={product._id}>
-                                                    {product.title}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
+                                        />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
-                                            name="quantity"
-                                            label="Số lượng"
-                                            type="number"
+                                            name="description"
+                                            label="Mô tả"
                                             variant="outlined"
                                             sx={{ width: '100%' }}
-                                            inputProps={{ min: 1 }}
-                                            required
-                                            value={data.quantity}
+                                            multiline
+                                            minRows={4}
+                                            maxRows={4}
+                                            value={data.description}
                                             onChange={handleChange}
                                         />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button variant="contained" component="label">
+                                            Tải ảnh lên
+                                            <input
+                                                accept="image/*"
+                                                style={{ display: 'none' }}
+                                                multiple
+                                                type="file"
+                                                onChange={handleImageChange}
+                                            />
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="price"
+                                            label="Giá bán"
+                                            variant="outlined"
+                                            required
+                                            sx={{ width: '100%' }}
+                                            value={data.price}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="categoryId"
+                                            required
+                                            select
+                                            label="Danh mục"
+                                            sx={{ width: '100%' }}
+                                            onChange={handleChange}
+                                        >
+                                            {categories.map((category) => (
+                                                <MenuItem key={category._id} value={category._id}>
+                                                    {category.title}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Typography color="error" variant="h6" component="h6">
@@ -288,98 +284,6 @@ function AdminInventory() {
                             </Box>
                         </Modal>
                     </>
-
-                    {/* Modal Quantity */}
-                    <Modal open={openQuantity} onClose={handleCloseQuantity}>
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h4" component="h4">
-                                Chỉnh số lượng
-                            </Typography>
-                            <Grid
-                                container
-                                rowSpacing={2}
-                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                sx={{ marginTop: '8px' }}
-                            >
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="quantity"
-                                        label="Số lượng"
-                                        type="number"
-                                        variant="outlined"
-                                        sx={{ width: '100%' }}
-                                        inputProps={{ min: 1 }}
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(e.target.value)}
-                                        required
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography color="error" variant="h6" component="h6">
-                                        {errorQuantity}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button
-                                        variant="contained"
-                                        style={{ backgroundColor: 'gray' }}
-                                        onClick={handleCloseQuantity}
-                                    >
-                                        Huỷ
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={handleDecrease}
-                                        sx={{ marginLeft: '16px' }}
-                                    >
-                                        Giảm
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="success"
-                                        sx={{ marginLeft: '16px' }}
-                                        onClick={handleIncrease}
-                                    >
-                                        Tăng
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Modal>
-
-                    {/* Modal Delete */}
-                    <Modal open={openDelete} onClose={handleCloseDelete}>
-                        <Box sx={style}>
-                            <Typography variant="h4" component="h4">
-                                Bạn có chắc chắc muốn xoá?
-                            </Typography>
-                            <Grid
-                                container
-                                rowSpacing={2}
-                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                sx={{ marginTop: '8px' }}
-                            >
-                                <Grid item xs={12}>
-                                    <Button
-                                        variant="contained"
-                                        style={{ backgroundColor: 'gray' }}
-                                        onClick={handleCloseDelete}
-                                    >
-                                        Huỷ
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        sx={{ marginLeft: '16px' }}
-                                        onClick={handleDelete}
-                                    >
-                                        Xoá
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Modal>
 
                     {/* Table */}
                     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -420,6 +324,21 @@ function AdminInventory() {
                                                             </TableCell>
                                                         )
                                                     }
+
+                                                    if (column.category) {
+                                                        const category = categories.find((item) => item?._id === value)
+
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={column.align}
+                                                                sx={{ fontSize: '14px' }}
+                                                            >
+                                                                {category.title}
+                                                            </TableCell>
+                                                        )
+                                                    }
+
                                                     if (column.action) {
                                                         return (
                                                             <TableCell
@@ -427,24 +346,32 @@ function AdminInventory() {
                                                                 align={column.align}
                                                                 sx={{ fontSize: '14px' }}
                                                             >
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    onClick={() => handleOpenQuantity(row._id)}
-                                                                >
-                                                                    Số lượng
+                                                                <Button variant="contained" color="primary">
+                                                                    Sửa
                                                                 </Button>
                                                                 <Button
                                                                     variant="contained"
                                                                     color="error"
                                                                     sx={{ marginLeft: '10px' }}
-                                                                    onClick={() => handleOpenDelete(row._id)}
                                                                 >
                                                                     Xoá
                                                                 </Button>
                                                             </TableCell>
                                                         )
                                                     }
+
+                                                    if (column.price) {
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={column.align}
+                                                                sx={{ fontSize: '14px' }}
+                                                            >
+                                                                {typeof value === 'number' ? formatPrice(value) : value}
+                                                            </TableCell>
+                                                        )
+                                                    }
+
                                                     return (
                                                         <TableCell
                                                             key={column.id}
@@ -479,4 +406,4 @@ function AdminInventory() {
     )
 }
 
-export default AdminInventory
+export default AdminProduct

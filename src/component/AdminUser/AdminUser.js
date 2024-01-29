@@ -87,10 +87,20 @@ export default function AdminUser() {
     }
     const handleCloseDelete = () => setOpenDelete(false)
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage)
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value)
+        setPage(0)
+    }
+
     useEffect(() => {
         getUserApi()
     }, [])
 
+    //Call API
     const getUserApi = async () => {
         setLoading(true)
         const res = await userServices.getUsers()
@@ -99,15 +109,6 @@ export default function AdminUser() {
             setRows(res?.data)
         }
         setLoading(false)
-    }
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value)
-        setPage(0)
     }
 
     return (

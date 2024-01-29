@@ -17,23 +17,11 @@ const cx = classNames.bind(styles)
 function Header() {
     const { user, logout } = useContext(UserContext)
     const [categories, setCategories] = useState([])
-    console.log('>>>> user: ', user)
+    const [loading, setLoading] = useState(false)
+
     let navigate = useNavigate()
 
-    useEffect(() => {
-        const fetchApi = async () => {
-            const res = await categoryServices.getCategories()
-            if (res?.status === 200) {
-                let categories = res?.data
-                categories.map((item) => {
-                    return (item.path = `/collections/${item._id}`)
-                })
-                setCategories(categories)
-            }
-        }
-
-        fetchApi()
-    }, [])
+    console.log('>>>> user: ', user)
     console.log('>>>categoryItems', categories)
 
     const handleLogout = async () => {
@@ -41,79 +29,102 @@ function Header() {
         navigate('/')
     }
 
-    return (
-        <header className={cx('wrapper')}>
-            <div className={cx('header')}>
-                <div className={cx('container')}>
-                    <div className={cx('logo')}>
-                        <Link to={'/'}>
-                            <img
-                                className={cx('logo-img')}
-                                src="https://heliosjewels.vn/cdn/shop/files/logo_500x.png?v=1652960279"
-                                alt="Heliosjewels.vn"
-                            />
-                        </Link>
-                    </div>
-                    <div className={cx('action')}>
-                        <Button to="/products" small leftIcon={<SearchIcon />} />
-                        <Button to="/cart" small ml leftIcon={<CartIcon />} />
-                        {user?.auth === true ? (
-                            <>
-                                <div className={cx('user-info')}>
-                                    <span className={cx('user-name')}>{user && user.name}</span>
-                                    <TippyHeadless
-                                        placement="bottom"
-                                        interactive
-                                        delay={[200, 200]}
-                                        render={(attrs) => (
-                                            <div className={cx('user-menu')} tabIndex="-1" {...attrs}>
-                                                <PopperWrapper>
-                                                    {user?.isAdmin && (
-                                                        <Button to="/admin" hover normal uppercase>
-                                                            Quản lý
-                                                        </Button>
-                                                    )}
-                                                    <Button hover normal uppercase onClick={handleLogout}>
-                                                        Đăng xuất
-                                                    </Button>
-                                                </PopperWrapper>
-                                            </div>
-                                        )}
-                                    >
-                                        <Image
-                                            className={cx('user-avatar')}
-                                            fallback="https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
-                                            alt="Nguyễn Văn A"
-                                            src="https://p16-sign-useast2a.tiktokcdn.com/tos-useast2a-avt-0068-giso/121c8f1f720a8b9a8b6729457abe2d42~c5_100x100.jpeg?x-expires=1699794000&x-signature=Imt8muc%2ByI8bmY0s54n9xfuzuWc%"
-                                        />
-                                    </TippyHeadless>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <Button to="/login" primary normal uppercase>
-                                    Đăng nhập
-                                </Button>
-                                <Button to="/register" primary normal uppercase>
-                                    Đăng ký
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                </div>
+    useEffect(() => {
+        getCategoriesApi()
+    }, [])
 
-                <ul className={cx('navbar')}>
-                    <Link className={cx('navbar-item')} to={'/products'}>
-                        Sản phẩm
-                    </Link>
-                    {categories.map((item) => (
-                        <Link className={cx('navbar-item')} to={item.path}>
-                            {item.title}
-                        </Link>
-                    ))}
-                </ul>
-            </div>
-        </header>
+    const getCategoriesApi = async () => {
+        setLoading(true)
+        const res = await categoryServices.getCategories()
+        if (res?.status === 200) {
+            let categories = res?.data
+            categories.map((item) => {
+                return (item.path = `/collections/${item._id}`)
+            })
+            setCategories(categories)
+        }
+        setLoading(false)
+    }
+
+    return (
+        <>
+            {loading ? (
+                <div>Loading...</div>
+            ) : (
+                <header className={cx('wrapper')}>
+                    <div className={cx('header')}>
+                        <div className={cx('container')}>
+                            <div className={cx('logo')}>
+                                <Link to={'/'}>
+                                    <img
+                                        className={cx('logo-img')}
+                                        src="https://heliosjewels.vn/cdn/shop/files/logo_500x.png?v=1652960279"
+                                        alt="Heliosjewels.vn"
+                                    />
+                                </Link>
+                            </div>
+                            <div className={cx('action')}>
+                                <Button to="/products" small leftIcon={<SearchIcon />} />
+                                <Button to="/cart" small ml leftIcon={<CartIcon />} />
+                                {user?.auth === true ? (
+                                    <>
+                                        <div className={cx('user-info')}>
+                                            <span className={cx('user-name')}>{user && user.name}</span>
+                                            <TippyHeadless
+                                                placement="bottom"
+                                                interactive
+                                                delay={[200, 200]}
+                                                render={(attrs) => (
+                                                    <div className={cx('user-menu')} tabIndex="-1" {...attrs}>
+                                                        <PopperWrapper>
+                                                            {user?.isAdmin && (
+                                                                <Button to="/admin" hover normal uppercase>
+                                                                    Quản lý
+                                                                </Button>
+                                                            )}
+                                                            <Button hover normal uppercase onClick={handleLogout}>
+                                                                Đăng xuất
+                                                            </Button>
+                                                        </PopperWrapper>
+                                                    </div>
+                                                )}
+                                            >
+                                                <Image
+                                                    className={cx('user-avatar')}
+                                                    fallback="https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
+                                                    alt="Nguyễn Văn A"
+                                                    src="https://p16-sign-useast2a.tiktokcdn.com/tos-useast2a-avt-0068-giso/121c8f1f720a8b9a8b6729457abe2d42~c5_100x100.jpeg?x-expires=1699794000&x-signature=Imt8muc%2ByI8bmY0s54n9xfuzuWc%"
+                                                />
+                                            </TippyHeadless>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button to="/login" primary normal uppercase>
+                                            Đăng nhập
+                                        </Button>
+                                        <Button to="/register" primary normal uppercase>
+                                            Đăng ký
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <ul className={cx('navbar')}>
+                            <Link className={cx('navbar-item')} to={'/products'}>
+                                Sản phẩm
+                            </Link>
+                            {categories.map((item) => (
+                                <Link className={cx('navbar-item')} to={item.path}>
+                                    {item.title}
+                                </Link>
+                            ))}
+                        </ul>
+                    </div>
+                </header>
+            )}
+        </>
     )
 }
 

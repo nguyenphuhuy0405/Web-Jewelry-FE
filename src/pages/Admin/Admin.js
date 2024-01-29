@@ -24,6 +24,9 @@ import styles from './Admin.module.scss'
 import AdminUser from '~/component/AdminUser/AdminUser'
 import AdminOrder from '~/component/AdminOrder/AdminOrder'
 import AdminInventory from '~/component/AdminInventory/AdminInventory'
+import AdminProduct from '~/component/AdminProduct/AdminProduct'
+import HomeIcon from '@mui/icons-material/Home'
+import { useNavigate } from 'react-router-dom'
 
 const cx = classNames.bind(styles)
 
@@ -34,6 +37,12 @@ function Admin(props) {
     const { window } = props
     const [mobileOpen, setMobileOpen] = React.useState(false)
     const [isClosing, setIsClosing] = React.useState(false)
+
+    const navigate = useNavigate()
+
+    const handleBack = () => {
+        navigate('/')
+    }
 
     const handleDrawerClose = () => {
         setIsClosing(true)
@@ -55,6 +64,12 @@ function Admin(props) {
             <Toolbar />
             <Divider />
             <List component="nav" aria-label="main mailbox folders">
+                <ListItemButton onClick={handleBack}>
+                    <ListItemIcon>
+                        <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Trang chủ" />
+                </ListItemButton>
                 <ListItemButton selected={selectedIndex === 0} onClick={(event) => handleListItemClick(event, 0)}>
                     <ListItemIcon>
                         <PersonIcon />
@@ -100,6 +115,8 @@ function Admin(props) {
                 return <AdminOrder />
             case 2:
                 return <AdminInventory />
+            case 3:
+                return <AdminProduct />
             default:
                 return <></>
         }

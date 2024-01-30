@@ -86,17 +86,15 @@ function AdminInventory() {
     // console.log('data', data)
     console.log('selectedRow', selectedRow)
 
-    const handleOpenDelete = (id) => {
-        setSelectedRow(rows.find((item) => item._id === id))
-        setOpenDelete(true)
-    }
-    const handleCloseDelete = () => {
-        setSelectedRow(null)
-        setOpenDelete(false)
-    }
-
+    //Model Add
     const handleOpenAdd = () => setOpenAdd(true)
     const handleCloseAdd = () => setOpenAdd(false)
+    const handleAdd = () => {
+        console.log('>>>data: ', data)
+        createInventoryApi()
+    }
+
+    //Model Quantity
     const handleOpenQuantity = (id) => {
         setSelectedRow(rows.find((item) => item._id === id))
         setOpenQuantity(true)
@@ -109,20 +107,6 @@ function AdminInventory() {
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
-    }
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value)
-        setPage(0)
-    }
-
-    const handleAdd = () => {
-        console.log('>>>data: ', data)
-        createInventoryApi()
     }
 
     const handleIncrease = () => {
@@ -139,8 +123,28 @@ function AdminInventory() {
         updateInventoryApi(selectedRow?._id, updateQuantity)
     }
 
+    //Model Delete
+    const handleOpenDelete = (id) => {
+        setSelectedRow(rows.find((item) => item._id === id))
+        setOpenDelete(true)
+    }
+    const handleCloseDelete = () => {
+        setSelectedRow(null)
+        setOpenDelete(false)
+    }
+
     const handleDelete = () => {
         deleteInventoryApi(selectedRow?._id)
+    }
+
+    //Table
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage)
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value)
+        setPage(0)
     }
 
     useEffect(() => {

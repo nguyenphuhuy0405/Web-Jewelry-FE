@@ -80,10 +80,12 @@ export const createProduct = async (formData) => {
     }
 }
 
-export const updateProduct = async (id, data) => {
+export const updateProduct = async (id, formData) => {
     try {
-        const res = await axiosPrivate.put(`/api/product/${id}`, {
-            ...data,
+        const res = await axiosPrivate.put(`/api/product/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         })
         res.data.status = res.status
         console.log('data:', res.data)

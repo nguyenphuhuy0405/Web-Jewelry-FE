@@ -98,6 +98,7 @@ function AdminOrder() {
         selectedRow || {}
     console.log('>>>selectedRow: ', selectedRow)
 
+    //Model Detail
     const handleOpen = (id) => {
         setSelectedRow(rows.find((order) => order._id === id))
         setOpen(true)
@@ -115,6 +116,7 @@ function AdminOrder() {
         cancelOrderApi(id)
     }
 
+    //Table
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
     }

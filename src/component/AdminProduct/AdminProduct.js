@@ -15,6 +15,14 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import ImageList from '@mui/material/ImageList'
+import ImageListItem from '@mui/material/ImageListItem'
+import Skeleton from '@mui/material/Skeleton'
 
 import formatPrice from '~/hooks/formatPrice'
 import * as productServices from '~/services/productServices'
@@ -86,18 +94,39 @@ function AdminProduct() {
         brandId: '',
     })
     const [images, setImages] = useState([])
+    const [previews, setPreviews] = useState([])
 
-    console.log('categories: ', categories)
-    console.log('data: ', data)
-    console.log('images: ', images)
+    // State Modal Edit
+    const [openEdit, setOpenEdit] = useState(false)
+    const [errorEdit, setErrorEdit] = useState('')
+    const [selectedImage, setSelectedImage] = useState(1)
+
+    // State Modal Delete
+    const [openDelete, setOpenDelete] = useState(false)
+
+    console.log('>>>selectedRow: ', selectedRow)
+    console.log('>>>data: ', data)
+    console.log('>>>images: ', images)
+    // console.log('>>>selectedImage: ', typeof selectedImage, selectedImage)
+    console.log('>>>preview: ', previews)
 
     const handleImageChange = (e) => {
         const selectedImages = Array.from(e.target.files)
         setImages((prevImages) => [...prevImages, ...selectedImages])
     }
 
+    // Model Add
     const handleAdd = () => {
-        createProductsApi()
+        const formData = new FormData()
+        formData.append('title', data.title)
+        formData.append('description', data.description)
+        formData.append('price', data.price)
+        formData.append('categoryId', data.categoryId)
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i])
+        }
+        console.log('formData: ', formData)
+        createProductApi(formData)
     }
 
     const handleChange = (e) => {
@@ -113,10 +142,80 @@ function AdminProduct() {
             categoryId: '',
             brandId: '',
         })
+        setImages([])
+        setPreviews([])
         setError('')
         setOpenAdd(false)
     }
 
+    // Modal Edit
+    const handleOpenEdit = (id) => {
+        let row = rows.find((product) => product._id === id)
+        setSelectedRow(row)
+        setData({
+            title: row?.title,
+            description: row?.description,
+            price: row?.price,
+            categoryId: row?.categoryId,
+        })
+        setImages(row?.images)
+        setOpenEdit(true)
+    }
+    const handleCloseEdit = () => {
+        setData({
+            title: '',
+            description: '',
+            price: '',
+            categoryId: '',
+            brandId: '',
+        })
+        setImages([])
+        setPreviews([])
+        setSelectedImage(1)
+        setErrorEdit('')
+        setOpenEdit(false)
+    }
+
+    const handleEdit = () => {
+        const formData = new FormData()
+        formData.append('title', data.title)
+        formData.append('description', data.description)
+        formData.append('price', data.price)
+        formData.append('categoryId', data.categoryId)
+        console.log('selectedImage: ', selectedImage)
+        switch (selectedImage) {
+            case 1:
+                console.log('Để ảnh cũ')
+                break
+            case 2:
+                console.log('Tải ảnh mới')
+                for (let i = 0; i < images.length; i++) {
+                    formData.append('images', images[i])
+                }
+                break
+            default:
+                console.log('Không có lựa chọn này')
+                break
+        }
+        console.log('formData: ', formData)
+        updateProductApi(selectedRow._id, formData)
+    }
+
+    //Model Delete
+    const handleOpenDelete = (id) => {
+        setSelectedRow(rows.find((item) => item._id === id))
+        setOpenDelete(true)
+    }
+    const handleCloseDelete = () => {
+        setSelectedRow(null)
+        setOpenDelete(false)
+    }
+
+    const handleDelete = () => {
+        deleteProductApi(selectedRow?._id)
+    }
+
+    //Table
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
     }
@@ -126,6 +225,32 @@ function AdminProduct() {
         setPage(0)
     }
 
+    //Tạo Object URLs
+    useEffect(() => {
+        // Create an array to store Object URLs
+        const objectUrls = []
+
+        // Generate Object URLs for each image in the 'images' array
+        if (images && images.length > 0) {
+            const newPreviews = images.map((image) => {
+                if (image instanceof Blob || image instanceof File) {
+                    const objectUrl = URL.createObjectURL(image)
+                    objectUrls.push(objectUrl)
+                    return objectUrl
+                }
+                return null // Return null for non-Blob/File elements in the array
+            })
+
+            // Update the state with the new previews
+            setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews.filter((url) => url !== null)])
+        }
+
+        // Clean up Object URLs when the component is unmounted or 'images' change
+        return () => {
+            objectUrls.forEach((url) => URL.revokeObjectURL(url))
+        }
+    }, [images])
+
     useEffect(() => {
         Promise.all([getCategoriesApi(), getProductsApi()])
             .then((res) => {
@@ -134,6 +259,7 @@ function AdminProduct() {
             .catch((error) => console.log(`Error in promises ${error}`))
     }, [])
 
+    //Call API
     const getCategoriesApi = async () => {
         const res = await categoryServices.getCategories()
         if (res?.status === 200) {
@@ -149,22 +275,31 @@ function AdminProduct() {
         }
     }
 
-    const createProductsApi = async () => {
-        const formData = new FormData()
-        formData.append('title', data.title)
-        formData.append('description', data.description)
-        formData.append('price', data.price)
-        formData.append('categoryId', data.categoryId)
-        for (let i = 0; i < images.length; i++) {
-            formData.append('images', images[i])
-        }
-        console.log('formData: ', formData)
+    const createProductApi = async (formData) => {
         const res = await productServices.createProduct(formData)
         if (res?.status === 200) {
             setRows([...rows, res?.data])
             handleCloseAdd()
         } else {
             setError(res?.data?.message)
+        }
+    }
+
+    const updateProductApi = async (id, formData) => {
+        const res = await productServices.updateProduct(id, formData)
+        if (res?.status === 200) {
+            setRows(rows.map((row) => (row._id === id ? res?.data : row)))
+            handleCloseEdit()
+        } else {
+            setError(res?.data?.message)
+        }
+    }
+
+    const deleteProductApi = async (id) => {
+        const res = await productServices.deleteProduct(id)
+        if (res?.status === 200) {
+            setRows(rows.filter((row) => row._id !== id))
+            handleCloseDelete()
         }
     }
 
@@ -186,7 +321,7 @@ function AdminProduct() {
                         </Button>
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
-                                <Typography id="modal-modal-title" variant="h4" component="h4">
+                                <Typography variant="h4" component="h4">
                                     Thêm sản phẩm
                                 </Typography>
                                 <Grid
@@ -219,7 +354,7 @@ function AdminProduct() {
                                             onChange={handleChange}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={6}>
                                         <Button variant="contained" component="label">
                                             Tải ảnh lên
                                             <input
@@ -230,6 +365,24 @@ function AdminProduct() {
                                                 onChange={handleImageChange}
                                             />
                                         </Button>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ImageList sx={{ width: 100, height: 100 }} cols={1} rowHeight={100}>
+                                            {previews.length > 0 ? (
+                                                previews.map((previewUrl, index) => (
+                                                    <ImageListItem key={index}>
+                                                        <img
+                                                            srcSet={previewUrl}
+                                                            src={previewUrl}
+                                                            alt={`Preview ${index}`}
+                                                            loading="lazy"
+                                                        />
+                                                    </ImageListItem>
+                                                ))
+                                            ) : (
+                                                <Skeleton variant="rectangular" width={100} height={100} />
+                                            )}
+                                        </ImageList>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
@@ -251,11 +404,12 @@ function AdminProduct() {
                                             sx={{ width: '100%' }}
                                             onChange={handleChange}
                                         >
-                                            {categories.map((category) => (
-                                                <MenuItem key={category._id} value={category._id}>
-                                                    {category.title}
-                                                </MenuItem>
-                                            ))}
+                                            {categories.length > 0 &&
+                                                categories.map((category) => (
+                                                    <MenuItem key={category._id} value={category._id}>
+                                                        {category.title}
+                                                    </MenuItem>
+                                                ))}
                                         </TextField>
                                     </Grid>
                                     <Grid item xs={12}>
@@ -284,6 +438,192 @@ function AdminProduct() {
                             </Box>
                         </Modal>
                     </>
+
+                    {/* Modal Eidt */}
+                    <>
+                        <Modal open={openEdit} onClose={handleCloseEdit}>
+                            <Box sx={style}>
+                                <Typography variant="h4" component="h4">
+                                    Sửa thông tin sản phẩm
+                                </Typography>
+                                <Grid
+                                    container
+                                    rowSpacing={2}
+                                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                    sx={{ marginTop: '8px' }}
+                                >
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="title"
+                                            label="Tên sản phẩm"
+                                            variant="outlined"
+                                            sx={{ width: '100%' }}
+                                            required
+                                            value={data.title}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="description"
+                                            label="Mô tả"
+                                            variant="outlined"
+                                            sx={{ width: '100%' }}
+                                            multiline
+                                            minRows={4}
+                                            maxRows={4}
+                                            value={data.description}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <FormControl>
+                                            <FormLabel>Ảnh</FormLabel>
+                                            <RadioGroup
+                                                defaultValue={1}
+                                                name="radio-buttons-images"
+                                                value={selectedImage}
+                                                onChange={(e) => setSelectedImage(Number.parseInt(e.target.value))}
+                                            >
+                                                <FormControlLabel value={1} control={<Radio />} label="Để ảnh cũ" />
+                                                <FormControlLabel value={2} control={<Radio />} label="Tải ảnh mới" />
+                                                {selectedImage === 2 && (
+                                                    <Button variant="contained" component="label">
+                                                        Tải ảnh lên
+                                                        <input
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            multiple
+                                                            type="file"
+                                                            onChange={handleImageChange}
+                                                        />
+                                                    </Button>
+                                                )}
+                                            </RadioGroup>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <ImageList sx={{ width: 100, height: 100 }} cols={1} rowHeight={100}>
+                                            {selectedImage === 1 && images.length > 0 ? (
+                                                images.map((image, index) => (
+                                                    <ImageListItem key={index}>
+                                                        <img
+                                                            srcSet={
+                                                                process.env.REACT_APP_BASE_URL +
+                                                                `${image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`
+                                                            }
+                                                            src={
+                                                                process.env.REACT_APP_BASE_URL +
+                                                                `${image}?w=164&h=164&fit=crop&auto=format`
+                                                            }
+                                                            alt={`Preview ${index}`}
+                                                            loading="lazy"
+                                                        />
+                                                    </ImageListItem>
+                                                ))
+                                            ) : selectedImage === 2 && previews.length === 0 ? (
+                                                previews.map((previewUrl, index) => (
+                                                    <ImageListItem key={index}>
+                                                        <img
+                                                            srcSet={previewUrl}
+                                                            src={previewUrl}
+                                                            alt={`Preview ${index}`}
+                                                            loading="lazy"
+                                                        />
+                                                    </ImageListItem>
+                                                ))
+                                            ) : (
+                                                <Skeleton variant="rectangular" width={100} height={100} />
+                                            )}
+                                        </ImageList>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="price"
+                                            label="Giá bán"
+                                            variant="outlined"
+                                            required
+                                            sx={{ width: '100%' }}
+                                            value={data.price}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="categoryId"
+                                            required
+                                            select
+                                            label="Danh mục"
+                                            value={data.categoryId}
+                                            sx={{ width: '100%' }}
+                                            onChange={handleChange}
+                                        >
+                                            {categories.map((category) => (
+                                                <MenuItem key={category._id} value={category._id}>
+                                                    {category.title}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography color="error" variant="h6" component="h6">
+                                            {errorEdit}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button
+                                            variant="contained"
+                                            style={{ backgroundColor: 'gray' }}
+                                            onClick={handleCloseEdit}
+                                        >
+                                            Huỷ
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            sx={{ marginLeft: '16px' }}
+                                            onClick={handleEdit}
+                                        >
+                                            Lưu
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Modal>
+                    </>
+
+                    {/* Modal Delete */}
+                    <Modal open={openDelete} onClose={handleCloseDelete}>
+                        <Box sx={style}>
+                            <Typography variant="h4" component="h4">
+                                Bạn có chắc chắc muốn xoá?
+                            </Typography>
+                            <Grid
+                                container
+                                rowSpacing={2}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                sx={{ marginTop: '8px' }}
+                            >
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant="contained"
+                                        style={{ backgroundColor: 'gray' }}
+                                        onClick={handleCloseDelete}
+                                    >
+                                        Huỷ
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        sx={{ marginLeft: '16px' }}
+                                        onClick={handleDelete}
+                                    >
+                                        Xoá
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Modal>
 
                     {/* Table */}
                     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -346,13 +686,18 @@ function AdminProduct() {
                                                                 align={column.align}
                                                                 sx={{ fontSize: '14px' }}
                                                             >
-                                                                <Button variant="contained" color="primary">
+                                                                <Button
+                                                                    variant="contained"
+                                                                    color="primary"
+                                                                    onClick={() => handleOpenEdit(row._id)}
+                                                                >
                                                                     Sửa
                                                                 </Button>
                                                                 <Button
                                                                     variant="contained"
                                                                     color="error"
                                                                     sx={{ marginLeft: '10px' }}
+                                                                    onClick={() => handleOpenDelete(row._id)}
                                                                 >
                                                                     Xoá
                                                                 </Button>

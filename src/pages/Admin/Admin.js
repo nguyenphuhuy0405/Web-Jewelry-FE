@@ -27,6 +27,7 @@ import AdminInventory from '~/component/AdminInventory/AdminInventory'
 import AdminProduct from '~/component/AdminProduct/AdminProduct'
 import HomeIcon from '@mui/icons-material/Home'
 import { useNavigate } from 'react-router-dom'
+import AdminCategory from '~/component/AdminCategory/AdminCategory'
 
 const cx = classNames.bind(styles)
 
@@ -117,6 +118,8 @@ function Admin(props) {
                 return <AdminInventory />
             case 3:
                 return <AdminProduct />
+            case 4:
+                return <AdminCategory />
             default:
                 return <></>
         }

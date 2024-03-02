@@ -43,7 +43,7 @@ const columns = [
     {
         id: 'action',
         label: 'Thao tác',
-        minWidth: 130,
+        minWidth: 150,
         align: 'center',
         action: true,
     },

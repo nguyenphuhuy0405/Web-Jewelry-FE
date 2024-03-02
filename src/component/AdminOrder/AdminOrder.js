@@ -98,7 +98,7 @@ function AdminOrder() {
         selectedRow || {}
     console.log('>>>selectedRow: ', selectedRow)
 
-    //Model Detail
+    //Modal Detail
     const handleOpen = (id) => {
         setSelectedRow(rows.find((order) => order._id === id))
         setOpen(true)

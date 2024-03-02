@@ -58,7 +58,7 @@ const columns = [
     {
         id: 'action',
         label: 'Thao tác',
-        minWidth: 100,
+        minWidth: 150,
         align: 'center',
         action: true,
     },
@@ -104,6 +104,10 @@ function AdminProduct() {
     // State Modal Delete
     const [openDelete, setOpenDelete] = useState(false)
 
+    // Const
+    const selectedOldImages = 1
+    const selectedNewImages = 2
+
     console.log('>>>selectedRow: ', selectedRow)
     console.log('>>>data: ', data)
     console.log('>>>images: ', images)
@@ -115,7 +119,7 @@ function AdminProduct() {
         setImages((prevImages) => [...prevImages, ...selectedImages])
     }
 
-    // Model Add
+    // Modal Add
     const handleAdd = () => {
         const formData = new FormData()
         formData.append('title', data.title)
@@ -184,10 +188,10 @@ function AdminProduct() {
         formData.append('categoryId', data.categoryId)
         console.log('selectedImage: ', selectedImage)
         switch (selectedImage) {
-            case 1:
+            case selectedOldImages:
                 console.log('Để ảnh cũ')
                 break
-            case 2:
+            case selectedNewImages:
                 console.log('Tải ảnh mới')
                 for (let i = 0; i < images.length; i++) {
                     formData.append('images', images[i])
@@ -201,7 +205,7 @@ function AdminProduct() {
         updateProductApi(selectedRow._id, formData)
     }
 
-    //Model Delete
+    //Modal Delete
     const handleOpenDelete = (id) => {
         setSelectedRow(rows.find((item) => item._id === id))
         setOpenDelete(true)
@@ -439,7 +443,7 @@ function AdminProduct() {
                         </Modal>
                     </>
 
-                    {/* Modal Eidt */}
+                    {/* Modal Edit */}
                     <>
                         <Modal open={openEdit} onClose={handleCloseEdit}>
                             <Box sx={style}>
@@ -485,9 +489,17 @@ function AdminProduct() {
                                                 value={selectedImage}
                                                 onChange={(e) => setSelectedImage(Number.parseInt(e.target.value))}
                                             >
-                                                <FormControlLabel value={1} control={<Radio />} label="Để ảnh cũ" />
-                                                <FormControlLabel value={2} control={<Radio />} label="Tải ảnh mới" />
-                                                {selectedImage === 2 && (
+                                                <FormControlLabel
+                                                    value={selectedOldImages}
+                                                    control={<Radio />}
+                                                    label="Để ảnh cũ"
+                                                />
+                                                <FormControlLabel
+                                                    value={selectedNewImages}
+                                                    control={<Radio />}
+                                                    label="Tải ảnh mới"
+                                                />
+                                                {selectedImage === selectedNewImages && (
                                                     <Button variant="contained" component="label">
                                                         Tải ảnh lên
                                                         <input
@@ -504,7 +516,7 @@ function AdminProduct() {
                                     </Grid>
                                     <Grid item xs={6}>
                                         <ImageList sx={{ width: 100, height: 100 }} cols={1} rowHeight={100}>
-                                            {selectedImage === 1 && images.length > 0 ? (
+                                            {selectedImage === selectedOldImages && images.length > 0 ? (
                                                 images.map((image, index) => (
                                                     <ImageListItem key={index}>
                                                         <img
@@ -521,7 +533,7 @@ function AdminProduct() {
                                                         />
                                                     </ImageListItem>
                                                 ))
-                                            ) : selectedImage === 2 && previews.length === 0 ? (
+                                            ) : selectedImage === selectedNewImages && previews.length === 0 ? (
                                                 previews.map((previewUrl, index) => (
                                                     <ImageListItem key={index}>
                                                         <img

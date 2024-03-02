@@ -14,34 +14,20 @@ import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
 
-import * as inventoryServices from '~/services/inventoryServices'
-import * as productServices from '~/services/productServices'
+import * as categoryServices from '~/services/categoryServices'
 
 const columns = [
     { id: '_id', label: 'Id', minWidth: 50 },
-    { id: 'id', label: 'Mã sản phẩm', minWidth: 50 },
-    {
-        id: 'images',
-        label: 'Ảnh sản phẩm',
-        minWidth: 100,
-        image: true,
-    },
     {
         id: 'title',
-        label: 'Tên sản phẩm',
-        minWidth: 100,
-    },
-    {
-        id: 'quantity',
-        label: 'Số lượng còn',
-        minWidth: 50,
+        label: 'Tên danh mục',
+        minWidth: 300,
     },
     {
         id: 'action',
         label: 'Thao tác',
-        minWidth: 200,
+        minWidth: 150,
         align: 'center',
         action: true,
     },
@@ -58,69 +44,66 @@ const style = {
     p: 4,
 }
 
-function AdminInventory() {
+function AdminCategory() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const [rows, setRows] = useState([])
     const [selectedRow, setSelectedRow] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
+    console.log('>>>selectedRow: ', selectedRow)
 
-    //State Modal Add
-    const [products, setProducts] = useState([])
+    // State Modal Add
     const [openAdd, setOpenAdd] = useState(false)
-    const [data, setData] = useState({
-        productId: '',
-        quantity: '1',
-    })
     const [error, setError] = useState('')
+    const [data, setData] = useState({
+        title: '',
+    })
 
-    //State Modal Quantity - Decrease
-    const [openQuantity, setOpenQuantity] = useState(false)
-    const [quantity, setQuantity] = useState(1)
-    const [errorQuantity, setErrorQuantity] = useState('')
+    // State Modal Edit
+    const [openEdit, setOpenEdit] = useState(false)
+    const [errorEdit, setErrorEdit] = useState('')
 
-    //State Modal Delete
+    // State Modal Delete
     const [openDelete, setOpenDelete] = useState(false)
-    // console.log('rows', rows)
-    // console.log('products', products)
-    // console.log('data', data)
-    console.log('selectedRow', selectedRow)
 
     //Modal Add
-    const handleOpenAdd = () => setOpenAdd(true)
-    const handleCloseAdd = () => setOpenAdd(false)
     const handleAdd = () => {
-        console.log('>>>data: ', data)
-        createInventoryApi()
-    }
-
-    //Modal Quantity
-    const handleOpenQuantity = (id) => {
-        setSelectedRow(rows.find((item) => item._id === id))
-        setOpenQuantity(true)
-    }
-    const handleCloseQuantity = () => {
-        setSelectedRow(null)
-        setQuantity(1)
-        setOpenQuantity(false)
+        createCategoryApi(data)
     }
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
     }
 
-    const handleIncrease = () => {
-        let updateQuantity = Number.parseInt(selectedRow?.quantity) + Number.parseInt(quantity)
-        console.log('>>>quantity: ', quantity)
-        console.log('>>>updateQuantity: ', updateQuantity)
-        updateInventoryApi(selectedRow?._id, updateQuantity)
+    const handleOpenAdd = () => setOpenAdd(true)
+    const handleCloseAdd = () => {
+        setData({
+            title: '',
+        })
+        setError('')
+        setOpenAdd(false)
     }
 
-    const handleDecrease = () => {
-        let updateQuantity = Number.parseInt(selectedRow?.quantity) - Number.parseInt(quantity)
-        console.log('>>>quantity: ', quantity)
-        console.log('>>>updateQuantity: ', updateQuantity)
-        updateInventoryApi(selectedRow?._id, updateQuantity)
+    // Modal Edit
+    const handleOpenEdit = (id) => {
+        let row = rows.find((product) => product._id === id)
+        setSelectedRow(row)
+        setData({
+            title: row?.title,
+        })
+        setOpenEdit(true)
+    }
+    const handleCloseEdit = () => {
+        setData({
+            title: '',
+        })
+        setSelectedRow(null)
+        setErrorEdit('')
+        setOpenEdit(false)
+    }
+
+    const handleEdit = () => {
+        updateCategoryApi(selectedRow?._id, data)
     }
 
     //Modal Delete
@@ -134,7 +117,7 @@ function AdminInventory() {
     }
 
     const handleDelete = () => {
-        deleteInventoryApi(selectedRow?._id)
+        deleteCategoryApi(selectedRow?._id)
     }
 
     //Table
@@ -148,65 +131,43 @@ function AdminInventory() {
     }
 
     useEffect(() => {
-        Promise.all([getProductsApi(), getInventoriesApi()])
-            .then((res) => {
-                setLoading(false)
-            })
-            .catch((error) => console.log(`Error in promises ${error}`))
+        getCategoriesApi()
     }, [])
 
-    // Call API
-    const getProductsApi = async () => {
-        const res = await productServices.getProducts()
-        console.log('>>>res: ', res)
+    //Call API
+    const getCategoriesApi = async () => {
+        setLoading(true)
+        const res = await categoryServices.getCategories()
         if (res?.status === 200) {
-            setProducts(res?.data)
+            setRows(res?.data)
         }
-    }
-    const getInventoriesApi = async () => {
-        const res = await inventoryServices.getInventories()
-        if (res?.status === 200) {
-            let rows = res?.data.map((item) => {
-                return {
-                    ...item,
-                    id: item.productId._id,
-                    title: item.productId.title,
-                    images: item.productId.images,
-                }
-            })
-            setRows(rows)
-        }
+        setLoading(false)
     }
 
-    const createInventoryApi = async () => {
-        const res = await inventoryServices.createInventories(data.productId, data.quantity)
-        console.log('>>>res: ', res)
+    const createCategoryApi = async (data) => {
+        const res = await categoryServices.createCategory(data)
         if (res?.status === 200) {
-            setData({
-                productId: '',
-                quantity: '',
-            })
-            getInventoriesApi()
+            setRows([...rows, res?.data])
             handleCloseAdd()
         } else {
             setError(res?.data?.message)
         }
     }
 
-    const updateInventoryApi = async (id, quantity) => {
-        const res = await inventoryServices.updateInventory(id, quantity)
+    const updateCategoryApi = async (id, data) => {
+        const res = await categoryServices.updateCategory(id, data)
         if (res?.status === 200) {
-            setRows(rows.map((item) => (item._id === id ? { ...item, quantity } : item)))
-            handleCloseQuantity()
+            setRows(rows.map((row) => (row._id === id ? res?.data : row)))
+            handleCloseEdit()
         } else {
-            setErrorQuantity(res?.data?.message)
+            setErrorEdit(res?.data?.message)
         }
     }
 
-    const deleteInventoryApi = async (id) => {
-        const res = await inventoryServices.deleteInventory(id)
+    const deleteCategoryApi = async (id) => {
+        const res = await categoryServices.deleteCategory(id)
         if (res?.status === 200) {
-            setRows(rows.filter((item) => item._id !== id))
+            setRows(rows.filter((row) => row._id !== id))
             handleCloseDelete()
         }
     }
@@ -229,8 +190,8 @@ function AdminInventory() {
                         </Button>
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
-                                <Typography id="modal-modal-title" variant="h4" component="h4">
-                                    Tạo kho
+                                <Typography variant="h4" component="h4">
+                                    Thêm danh mục
                                 </Typography>
                                 <Grid
                                     container
@@ -240,29 +201,12 @@ function AdminInventory() {
                                 >
                                     <Grid item xs={12}>
                                         <TextField
-                                            name="productId"
-                                            select
-                                            label="Mã sản phẩm"
-                                            sx={{ width: '100%' }}
-                                            onChange={handleChange}
-                                        >
-                                            {products.map((product) => (
-                                                <MenuItem key={product._id} value={product._id}>
-                                                    {product.title}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            name="quantity"
-                                            label="Số lượng"
-                                            type="number"
+                                            name="title"
+                                            label="Tên sản phẩm"
                                             variant="outlined"
                                             sx={{ width: '100%' }}
-                                            inputProps={{ min: 1 }}
                                             required
-                                            value={data.quantity}
+                                            value={data.title}
                                             onChange={handleChange}
                                         />
                                     </Grid>
@@ -293,64 +237,56 @@ function AdminInventory() {
                         </Modal>
                     </>
 
-                    {/* Modal Quantity */}
-                    <Modal open={openQuantity} onClose={handleCloseQuantity}>
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h4" component="h4">
-                                Chỉnh số lượng
-                            </Typography>
-                            <Grid
-                                container
-                                rowSpacing={2}
-                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                sx={{ marginTop: '8px' }}
-                            >
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="quantity"
-                                        label="Số lượng"
-                                        type="number"
-                                        variant="outlined"
-                                        sx={{ width: '100%' }}
-                                        inputProps={{ min: 1 }}
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(e.target.value)}
-                                        required
-                                    />
+                    {/* Modal Edit */}
+                    <>
+                        <Modal open={openEdit} onClose={handleCloseEdit}>
+                            <Box sx={style}>
+                                <Typography variant="h4" component="h4">
+                                    Sửa thông tin sản phẩm
+                                </Typography>
+                                <Grid
+                                    container
+                                    rowSpacing={2}
+                                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                    sx={{ marginTop: '8px' }}
+                                >
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            name="title"
+                                            label="Tên sản phẩm"
+                                            variant="outlined"
+                                            sx={{ width: '100%' }}
+                                            required
+                                            value={data.title}
+                                            onChange={handleChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography color="error" variant="h6" component="h6">
+                                            {errorEdit}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Button
+                                            variant="contained"
+                                            style={{ backgroundColor: 'gray' }}
+                                            onClick={handleCloseEdit}
+                                        >
+                                            Huỷ
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            sx={{ marginLeft: '16px' }}
+                                            onClick={handleEdit}
+                                        >
+                                            Lưu
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Typography color="error" variant="h6" component="h6">
-                                        {errorQuantity}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button
-                                        variant="contained"
-                                        style={{ backgroundColor: 'gray' }}
-                                        onClick={handleCloseQuantity}
-                                    >
-                                        Huỷ
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={handleDecrease}
-                                        sx={{ marginLeft: '16px' }}
-                                    >
-                                        Giảm
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="success"
-                                        sx={{ marginLeft: '16px' }}
-                                        onClick={handleIncrease}
-                                    >
-                                        Tăng
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Modal>
+                            </Box>
+                        </Modal>
+                    </>
 
                     {/* Modal Delete */}
                     <Modal open={openDelete} onClose={handleCloseDelete}>
@@ -387,7 +323,7 @@ function AdminInventory() {
 
                     {/* Table */}
                     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
+                        <TableContainer sx={{ maxHeight: 440, width: '100%' }}>
                             <Table stickyHeader aria-label="sticky table">
                                 <TableHead>
                                     <TableRow>
@@ -409,21 +345,6 @@ function AdminInventory() {
                                                 {columns.map((column) => {
                                                     const value = row[column.id]
 
-                                                    if (column.image) {
-                                                        return (
-                                                            <TableCell
-                                                                key={column.id}
-                                                                align={column.align}
-                                                                sx={{ fontSize: '14px' }}
-                                                            >
-                                                                <img
-                                                                    src={process.env.REACT_APP_BASE_URL + value[0]}
-                                                                    alt="item"
-                                                                    width="70px"
-                                                                />
-                                                            </TableCell>
-                                                        )
-                                                    }
                                                     if (column.action) {
                                                         return (
                                                             <TableCell
@@ -434,9 +355,9 @@ function AdminInventory() {
                                                                 <Button
                                                                     variant="contained"
                                                                     color="primary"
-                                                                    onClick={() => handleOpenQuantity(row._id)}
+                                                                    onClick={() => handleOpenEdit(row._id)}
                                                                 >
-                                                                    Số lượng
+                                                                    Sửa
                                                                 </Button>
                                                                 <Button
                                                                     variant="contained"
@@ -449,6 +370,7 @@ function AdminInventory() {
                                                             </TableCell>
                                                         )
                                                     }
+
                                                     return (
                                                         <TableCell
                                                             key={column.id}
@@ -483,4 +405,4 @@ function AdminInventory() {
     )
 }
 
-export default AdminInventory
+export default AdminCategory

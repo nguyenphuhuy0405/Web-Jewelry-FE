@@ -12,6 +12,10 @@ import { UserContext } from '~/context/UserContext'
 const cx = classNames.bind(styles)
 
 function Checkout() {
+    //Const
+    const selectedCashPayment = 'Thanh toán khi nhận hàng'
+    const selectedOnlinePayment = 'Thanh toán trước'
+
     const navigate = useNavigate()
     const { id } = useParams()
     const { user } = useContext(UserContext)
@@ -19,7 +23,7 @@ function Checkout() {
     const [error, setError] = useState('')
     const [data, setData] = useState({
         cartId: id,
-        payment: 'Thanh toán khi nhận hàng',
+        payment: selectedCashPayment,
         name: user.name,
         address: user.address,
         phoneNumber: user.phoneNumber,
@@ -27,6 +31,9 @@ function Checkout() {
     })
     const [loading, setLoading] = useState(false)
     const { payment, name, address, phoneNumber, notes } = data
+
+    console.log('>>>payment: ', payment)
+
     useEffect(() => {
         getCartApi()
     }, [])
@@ -55,28 +62,39 @@ function Checkout() {
     }
     const handleCheckout = (e) => {
         e.preventDefault()
-        const fetchApi = async () => {
-            if (name === '' || address === '' || phoneNumber === '') {
-                setError('Please enter your information')
+        switch (payment) {
+            case selectedCashPayment:
+                orderFromCartApi()
+                break
+            case selectedOnlinePayment:
+                break
+            default:
+                setError('Please choose payment method')
+                break
+        }
+    }
+
+    const orderFromCartApi = async () => {
+        if (name === '' || address === '' || phoneNumber === '') {
+            setError('Please enter your information')
+        } else {
+            const res = await orderServices.orderFromCart(
+                data.cartId,
+                data.payment,
+                data.name,
+                data.address,
+                data.phoneNumber,
+                data.notes,
+            )
+            console.log('res: ', res)
+            if (res?.status === 200) {
+                navigate(`/bill/${res.data._id}`)
             } else {
-                const res = await orderServices.orderFromCart(
-                    data.cartId,
-                    data.payment,
-                    data.name,
-                    data.address,
-                    data.phoneNumber,
-                    data.notes,
-                )
-                console.log('res: ', res)
-                if (res?.status === 200) {
-                    navigate(`/bill/${res.data._id}`)
-                } else {
-                    setError(res?.data?.message)
-                }
+                setError(res?.data?.message)
             }
         }
-        fetchApi()
     }
+
     return (
         <>
             {loading ? (
@@ -190,9 +208,8 @@ function Checkout() {
                                                                 <input
                                                                     type="radio"
                                                                     name="payment"
-                                                                    value="Thanh toán khi nhận hàng"
+                                                                    value={selectedCashPayment}
                                                                     onChange={handleChange}
-                                                                    checked
                                                                 />
                                                                 Thanh toán khi nhận hàng
                                                             </div>
@@ -200,10 +217,13 @@ function Checkout() {
                                                                 <input
                                                                     type="radio"
                                                                     name="payment"
-                                                                    value="Thanh toán trước"
+                                                                    value={selectedOnlinePayment}
                                                                     onChange={handleChange}
                                                                 />
                                                                 Thanh toán trước
+                                                                {payment === selectedOnlinePayment && (
+                                                                    <div>QR Code</div>
+                                                                )}
                                                             </div>
                                                         </td>
                                                     </tr>

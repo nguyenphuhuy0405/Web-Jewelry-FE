@@ -9,7 +9,7 @@ export default axios.create({
 
 export const axiosPrivate = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
-    headers: { ['Authorization']: `Bearer ${accessToken}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
     withCredentials: true,
 })
 

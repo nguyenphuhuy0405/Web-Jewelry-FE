@@ -31,11 +31,8 @@ function CardProduct({ id, slug, title, price, img1, img2 }) {
                     <div className={cx('name')}>{title}</div>
                     <div className={cx('price')}>{formatPrice(price)}</div>
                     <div className={cx('action')}>
-                        <Button large primary onClick={(e) => handleAddToCart(e, id)}>
+                        <Button normal primary onClick={(e) => handleAddToCart(e, id)}>
                             Add to cart
-                        </Button>
-                        <Button large primary ml>
-                            Buy now
                         </Button>
                     </div>
                 </div>

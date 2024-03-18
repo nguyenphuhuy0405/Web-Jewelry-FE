@@ -23,6 +23,7 @@ function Bill() {
     const [loading, setLoading] = useState(false)
     const { payment, name, address, phoneNumber, notes } = data
     console.log('products: ', products)
+
     useEffect(() => {
         getOrderApi()
     }, [])

@@ -75,11 +75,6 @@ function ProductDetail() {
                                         Add to cart
                                     </Button>
                                 </div>
-                                <div className={cx('buy')}>
-                                    <Button primary large className={cx('btn-buy')}>
-                                        Buy now
-                                    </Button>
-                                </div>
                                 <div className={cx('description')}>
                                     {description && description.map((item, index) => <p key={index}>{item}</p>)}
                                 </div>

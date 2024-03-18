@@ -8,13 +8,63 @@ import formatPrice from '~/hooks/formatPrice'
 import * as cartServices from '~/services/cartServices'
 import * as orderServices from '~/services/orderServices'
 import { UserContext } from '~/context/UserContext'
+import Image from '~/component/Image/Image'
+import * as bankServices from '~/services/bankServices'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const cx = classNames.bind(styles)
+
+// async function checkPaid() {
+//     try {
+//         const linkCheckPaid =
+//             'https://script.googleusercontent.com/macros/echo?user_content_key=cKC_C5bSISlcwV_4VqPi1sB8i0ThXqHVu8eMHJL-GpPtIJTc9moz0j0fZfYjZnJpgjmFuYPqv9vV8bP9NybWEa7S3lSDgD0Mm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnO3xgyfgskHfrXCIybr0uv54ZFIe94pKOeAmFcWONRD53i4UFGj8UWJyLp0dU3ksNiPUUgU5AXB9vMFY2uNHBijjoDoz4vgX4Q&lib=MNBI0t6MGSSIW-YA-mt_hYo6SYQlYNf57'
+//     } catch {
+//         console.log('Loi')
+//     }
+// }
+async function isPaid(amount, description) {
+    try {
+        let today = new Date()
+        let yesterday = new Date(today)
+        yesterday.setDate(today.getDate() - 1)
+        // Hàm để định dạng số một chữ số thành hai chữ số bằng cách thêm "0" vào trước
+        const formatNumber = (num) => (num < 10 ? `0${num}` : num)
+        // Lấy thông tin ngày, tháng, năm của ngày hôm qua
+        const year = yesterday.getFullYear()
+        const month = formatNumber(yesterday.getMonth() + 1)
+        const day = formatNumber(yesterday.getDate())
+        const formattedYesterday = `${year}-${month}-${day}`
+
+        const res = await bankServices.getTransactions(formattedYesterday)
+
+        const results = res.records
+        console.log('results: ', results)
+
+        const findResult = results.find((item) => {
+            return item.amount >= amount && item.description.includes(description)
+        })
+        console.log('findResult: ', findResult)
+
+        if (findResult) {
+            return true
+        } else {
+            return false
+        }
+    } catch {
+        console.log('Loi')
+        return false
+    }
+}
 
 function Checkout() {
     //Const
     const selectedCashPayment = 'Thanh toán khi nhận hàng'
     const selectedOnlinePayment = 'Thanh toán trước'
+
+    const MY_BANK_INFO = {
+        BANK_ID: process.env.REACT_APP_MY_BANK_ID,
+        ACCOUNT_NO: process.env.REACT_APP_MY_BANK_ACCOUNT_NO,
+    }
 
     const navigate = useNavigate()
     const { id } = useParams()
@@ -30,7 +80,36 @@ function Checkout() {
         notes: '',
     })
     const [loading, setLoading] = useState(false)
+    const [loadingPaid, setLoadingPaid] = useState(false)
     const { payment, name, address, phoneNumber, notes } = data
+
+    const totalPrice = useMemo(() => {
+        return (
+            products.length > 0 &&
+            products.reduce((acc, product) => {
+                return acc + product.productId.price * product.quantity
+            }, 0)
+        )
+    }, [products])
+
+    //Tạo ID cho giao dịch
+    const transactionId = useMemo(() => {
+        // Tạo timestamp cho thời điểm hiện tại
+        const timestamp = new Date().getTime()
+
+        // Tạo số ngẫu nhiên (ví dụ: từ 1000 đến 9999)
+        const randomNum = Math.floor(Math.random() * 9000) + 1000
+
+        // Kết hợp timestamp và số ngẫu nhiên để tạo ID
+        const transactionId = `${timestamp}${randomNum}`
+
+        return transactionId
+    }, [])
+
+    // Sử dụng hàm để tạo thong tin cho giao dịch thanh toán
+    const transactionInfo = `DONHANG${transactionId}`
+
+    const qrCode = `https://img.vietqr.io/image/${MY_BANK_INFO.BANK_ID}-${MY_BANK_INFO.ACCOUNT_NO}-qr_only.png?amount=${totalPrice}&addInfo=${transactionInfo}`
 
     console.log('>>>payment: ', payment)
 
@@ -48,25 +127,23 @@ function Checkout() {
         setLoading(false)
     }
 
-    const totalPrice = useMemo(() => {
-        return (
-            products.length > 0 &&
-            products.reduce((acc, product) => {
-                return acc + product.productId.price * product.quantity
-            }, 0)
-        )
-    }, [products])
-
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
     }
-    const handleCheckout = (e) => {
+    const handleCheckout = async (e) => {
         e.preventDefault()
         switch (payment) {
             case selectedCashPayment:
                 orderFromCartApi()
                 break
             case selectedOnlinePayment:
+                setLoadingPaid(true)
+                if (await isPaid(totalPrice, transactionInfo)) {
+                    orderFromCartApi()
+                } else {
+                    alert('Thanh toán thất bại. Vui lý nhận lai sau')
+                }
+                setLoadingPaid(false)
                 break
             default:
                 setError('Please choose payment method')
@@ -208,6 +285,7 @@ function Checkout() {
                                                                 <input
                                                                     type="radio"
                                                                     name="payment"
+                                                                    checked={payment === selectedCashPayment}
                                                                     value={selectedCashPayment}
                                                                     onChange={handleChange}
                                                                 />
@@ -221,16 +299,29 @@ function Checkout() {
                                                                     onChange={handleChange}
                                                                 />
                                                                 Thanh toán trước
-                                                                {payment === selectedOnlinePayment && (
-                                                                    <div>QR Code</div>
-                                                                )}
                                                             </div>
+                                                            {payment === selectedOnlinePayment && (
+                                                                <div>
+                                                                    <Image src={qrCode} width="200px" height="200px" />
+                                                                    <p>
+                                                                        Số tiền chuyển khoản: {formatPrice(totalPrice)}
+                                                                    </p>
+                                                                    <p>Nội dung chuyển khoản: {transactionInfo}</p>
+                                                                </div>
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                             <button className={cx('btn-pay')} type="submit" onClick={handleCheckout}>
-                                                Đặt hàng
+                                                {payment === selectedCashPayment ? (
+                                                    <span>Đặt hàng</span>
+                                                ) : (
+                                                    <span className={cx('span-center')}>
+                                                        {loadingPaid && <CircularProgress color="inherit" size={20} />}
+                                                        Xác nhận tôi đã thanh toán
+                                                    </span>
+                                                )}
                                             </button>
                                         </div>
                                     </div>

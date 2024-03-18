@@ -59,7 +59,7 @@ export const register = async (name, email, password, address, phoneNumber) => {
 
 export const logout = async () => {
     try {
-        const res = await axios.get('/api/auth/logout', {
+        const res = await axiosPrivate.get('/api/auth/logout', {
             withCredentials: true,
         })
         res.data.status = res.status

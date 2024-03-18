@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect } from 'react'
-import Cookies from 'js-cookie'
-import * as userServices from '~/services/userServices'
+import { createContext, useState } from 'react'
+// import Cookies from 'js-cookie'
+import * as userServices from '../services/userServices'
 
 const UserContext = createContext({ name: '', auth: false, isAdmin: false })
 
@@ -20,16 +20,19 @@ function UserProvider({ children }) {
     }
 
     // Logout updates the user data to default
-    const logout = () => {
-        localStorage.removeItem('accessToken')
-        Cookies.remove('refreshToken')
-        setUser((user) => ({
-            name: '',
-            auth: false,
-            isAdmin: false,
-            address: '',
-            phoneNumber: '',
-        }))
+    const logout = async () => {
+        const res = await userServices.logout()
+        if (res.status === 200) {
+            localStorage.removeItem('accessToken')
+            // Cookies.remove('refreshToken')
+            setUser((user) => ({
+                name: '',
+                auth: false,
+                isAdmin: false,
+                address: '',
+                phoneNumber: '',
+            }))
+        }
     }
 
     return <UserContext.Provider value={{ user, setUser, login, logout }}>{children}</UserContext.Provider>

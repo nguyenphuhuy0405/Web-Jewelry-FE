@@ -323,7 +323,7 @@ function AdminOrder() {
                                                                         Chi tiết
                                                                     </Button>
                                                                     <Button
-                                                                        disabled={row['status'] === 'Đã giao hàng'}
+                                                                        disabled={row['status'] !== 'Đang xử lý'}
                                                                         variant="contained"
                                                                         color="success"
                                                                         sx={{ marginLeft: '10px' }}
@@ -332,7 +332,7 @@ function AdminOrder() {
                                                                         Xác nhận
                                                                     </Button>
                                                                     <Button
-                                                                        disabled={row['status'] === 'Đã huỷ'}
+                                                                        disabled={row['status'] !== 'Đang xử lý'}
                                                                         variant="contained"
                                                                         color="error"
                                                                         sx={{ marginLeft: '10px' }}

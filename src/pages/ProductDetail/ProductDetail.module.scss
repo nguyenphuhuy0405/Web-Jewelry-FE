@@ -1,13 +1,19 @@
 .wrapper {
-    padding: 40px 0 40px 70px;
+    @media screen and (min-width: 1023px) {
+        padding: 40px 0 40px 70px;
+    }
 }
 .slider-image {
-    padding: 40px;
+    @media screen and (min-width: 1023px) {
+        padding: 40px;
+    }
 }
 .image {
 }
 .info {
-    padding: 40px 70px 0 40px !important;
+    @media screen and (min-width: 1023px) {
+        padding: 40px 70px 0 40px !important;
+    }
     .name {
         text-align: left;
     }

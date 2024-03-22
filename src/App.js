@@ -17,7 +17,7 @@ function App() {
         const res = await userServices.getUserInfo()
         if (res?.status === 200) {
             setUser({
-                name: res.data.name,
+                name: res?.data?.name,
                 auth: true,
                 isAdmin: res.data.role === 'admin' ? true : false,
                 address: res.data.address,

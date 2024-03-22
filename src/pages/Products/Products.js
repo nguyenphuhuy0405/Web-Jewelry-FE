@@ -79,8 +79,8 @@ function Products() {
                 <div>Loading...</div>
             ) : (
                 <div className={cx('wrapper')}>
-                    <div className="row sm-gutter">
-                        <div className={`col l-12 m-12 c-12`}>
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                        <Grid xs={12} sm={12} md={12}>
                             <div className={cx('filter')}>
                                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                                     <InputLabel>Sắp xếp theo</InputLabel>
@@ -107,10 +107,10 @@ function Products() {
                                     </Button>
                                 </div>
                             </div>
-                        </div>
+                        </Grid>
 
                         {products.length > 0 ? (
-                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            <>
                                 {products.map((product) => (
                                     <Grid xs={6} sm={6} md={3} key={product._id}>
                                         <CardProduct
@@ -123,22 +123,24 @@ function Products() {
                                         />
                                     </Grid>
                                 ))}
-                            </Grid>
+                            </>
                         ) : (
                             <div>Chưa có sản phẩm</div>
                         )}
-                    </div>
 
-                    <Stack alignItems="center">
-                        <Pagination
-                            count={totalPage}
-                            color="primary"
-                            size="large"
-                            shape="rounded"
-                            page={currentPage}
-                            onChange={handleChange}
-                        />
-                    </Stack>
+                        <Grid xs={12} sm={12} md={12}>
+                            <Stack alignItems="center" sx={{ width: '100%' }}>
+                                <Pagination
+                                    count={totalPage}
+                                    color="primary"
+                                    size="large"
+                                    shape="rounded"
+                                    page={currentPage}
+                                    onChange={handleChange}
+                                />
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </div>
             )}
         </>

@@ -1,5 +1,8 @@
 .wrapper {
-    padding: 30px 70px;
+    width: 100%;
+    @media screen and (min-width: 1023px) {
+        padding: 30px 70px;
+    }
 }
 .filter {
     display: flex;

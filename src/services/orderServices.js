@@ -42,8 +42,9 @@ export const getOrders = async () => {
     }
 }
 
-export const orderFromCart = async (cartId, payment, name, address, phoneNumber, notes) => {
+export const orderFromCart = async (data) => {
     try {
+        const { cartId, payment, name, address, phoneNumber, notes } = data
         const res = await axiosPrivate.post(`/api/order/order-from-cart`, {
             cartId,
             payment,

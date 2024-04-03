@@ -8,65 +8,47 @@ import formatPrice from '~/hooks/formatPrice'
 import * as cartServices from '~/services/cartServices'
 import * as orderServices from '~/services/orderServices'
 import { UserContext } from '~/context/UserContext'
-import Image from '~/component/Image/Image'
 import * as bankServices from '~/services/bankServices'
-import CircularProgress from '@mui/material/CircularProgress'
+import { useLocation } from 'react-router-dom'
+const crypto = require('crypto')
 
 const cx = classNames.bind(styles)
 
-// async function checkPaid() {
-//     try {
-//         const linkCheckPaid =
-//             'https://script.googleusercontent.com/macros/echo?user_content_key=cKC_C5bSISlcwV_4VqPi1sB8i0ThXqHVu8eMHJL-GpPtIJTc9moz0j0fZfYjZnJpgjmFuYPqv9vV8bP9NybWEa7S3lSDgD0Mm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnO3xgyfgskHfrXCIybr0uv54ZFIe94pKOeAmFcWONRD53i4UFGj8UWJyLp0dU3ksNiPUUgU5AXB9vMFY2uNHBijjoDoz4vgX4Q&lib=MNBI0t6MGSSIW-YA-mt_hYo6SYQlYNf57'
-//     } catch {
-//         console.log('Loi')
-//     }
-// }
-async function isPaid(amount, description) {
-    try {
-        let today = new Date()
-        let yesterday = new Date(today)
-        yesterday.setDate(today.getDate() - 1)
-        // Hàm để định dạng số một chữ số thành hai chữ số bằng cách thêm "0" vào trước
-        const formatNumber = (num) => (num < 10 ? `0${num}` : num)
-        // Lấy thông tin ngày, tháng, năm của ngày hôm qua
-        const year = yesterday.getFullYear()
-        const month = formatNumber(yesterday.getMonth() + 1)
-        const day = formatNumber(yesterday.getDate())
-        const formattedYesterday = `${year}-${month}-${day}`
+function generateSignature(data) {
+    const { amount, cancelUrl, description, orderCode, returnUrl } = data
+    const formattedData = `amount=${amount}&cancelUrl=${cancelUrl}&description=${description}&orderCode=${orderCode}&returnUrl=${returnUrl}`
+    const sortedData = formattedData.split('&').sort().join('&')
 
-        const res = await bankServices.getTransactions(formattedYesterday)
+    // Tạo chữ ký HMAC_SHA256
+    const signature = crypto
+        .createHmac('sha256', process.env.REACT_APP_CHECKSUM_KEY_BANK)
+        .update(sortedData)
+        .digest('hex')
 
-        const results = res.records
-        console.log('results: ', results)
-
-        const findResult = results.find((item) => {
-            return item.amount >= amount && item.description.includes(description)
-        })
-        console.log('findResult: ', findResult)
-
-        if (findResult) {
-            return true
-        } else {
-            return false
-        }
-    } catch {
-        console.log('Loi')
-        return false
-    }
+    console.log('signature: ', signature)
+    return signature
 }
 
 function Checkout() {
     //Const
     const selectedCashPayment = 'Thanh toán khi nhận hàng'
     const selectedOnlinePayment = 'Thanh toán trước'
-
-    const MY_BANK_INFO = {
-        BANK_ID: process.env.REACT_APP_MY_BANK_ID,
-        ACCOUNT_NO: process.env.REACT_APP_MY_BANK_ACCOUNT_NO,
-    }
-
     const navigate = useNavigate()
+
+    //Get currentUrl
+    const currentUrl = window.location.href
+    const currentUrlWithoutQuery = currentUrl.split('?')[0]
+    console.log('currentPathWithoutQuery: ', currentUrlWithoutQuery)
+
+    //Get queryParams
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const idParam = queryParams.get('id') || null
+    const statusParam = queryParams.get('status') || null
+    console.log('idParam: ', idParam)
+    console.log('statusParam: ', statusParam)
+
+    //State
     const { id } = useParams()
     const { user } = useContext(UserContext)
     const [products, setProducts] = useState([])
@@ -80,7 +62,6 @@ function Checkout() {
         notes: '',
     })
     const [loading, setLoading] = useState(false)
-    const [loadingPaid, setLoadingPaid] = useState(false)
     const { payment, name, address, phoneNumber, notes } = data
 
     const totalPrice = useMemo(() => {
@@ -92,30 +73,30 @@ function Checkout() {
         )
     }, [products])
 
-    //Tạo ID cho giao dịch
-    const transactionId = useMemo(() => {
-        // Tạo timestamp cho thời điểm hiện tại
-        const timestamp = new Date().getTime()
-
-        // Tạo số ngẫu nhiên (ví dụ: từ 1000 đến 9999)
-        const randomNum = Math.floor(Math.random() * 9000) + 1000
-
-        // Kết hợp timestamp và số ngẫu nhiên để tạo ID
-        const transactionId = `${timestamp}${randomNum}`
-
-        return transactionId
+    //Tạo mã đơn hàng cho giao dịch
+    const orderCode = useMemo(() => {
+        const timestamp = Date.now().toString() // Lấy thời gian hiện tại dưới dạng chuỗi
+        const randomNum = Math.floor(Math.random() * 1000000000) // Tạo số ngẫu nhiên từ 0 đến 999999999
+        const uniqueId = timestamp + randomNum // Kết hợp thời gian và số ngẫu nhiên
+        return parseInt(uniqueId.substring(0, 10)) // Lấy 10 số cuối
     }, [])
+    console.log('>>>orderCode: ', orderCode)
 
-    // Sử dụng hàm để tạo thong tin cho giao dịch thanh toán
-    const transactionInfo = `DONHANG${transactionId}`
-
-    const qrCode = `https://img.vietqr.io/image/${MY_BANK_INFO.BANK_ID}-${MY_BANK_INFO.ACCOUNT_NO}-qr_only.png?amount=${totalPrice}&addInfo=${transactionInfo}`
+    // Tạo nội dung đơn hàng cho giao dịch
+    const orderDescription = `DONHANG${orderCode}`
 
     console.log('>>>payment: ', payment)
 
     useEffect(() => {
         getCartApi()
     }, [])
+
+    useEffect(() => {
+        console.log('get payment link info: ', idParam, statusParam)
+        if (idParam && statusParam === 'PAID') {
+            getPaymentLinkInfoApi(idParam)
+        }
+    }, [idParam, statusParam])
 
     const getCartApi = async () => {
         setLoading(true)
@@ -134,16 +115,14 @@ function Checkout() {
         e.preventDefault()
         switch (payment) {
             case selectedCashPayment:
-                orderFromCartApi()
+                if (name === '' || address === '' || phoneNumber === '') {
+                    setError('Please enter your information')
+                } else {
+                    orderFromCartApi(data)
+                }
                 break
             case selectedOnlinePayment:
-                setLoadingPaid(true)
-                if (await isPaid(totalPrice, transactionInfo)) {
-                    orderFromCartApi()
-                } else {
-                    alert('Thanh toán thất bại. Vui lý nhận lai sau')
-                }
-                setLoadingPaid(false)
+                createPaymentLinkApi()
                 break
             default:
                 setError('Please choose payment method')
@@ -151,26 +130,54 @@ function Checkout() {
         }
     }
 
-    const orderFromCartApi = async () => {
-        if (name === '' || address === '' || phoneNumber === '') {
-            setError('Please enter your information')
+    const orderFromCartApi = async (data) => {
+        const res = await orderServices.orderFromCart(data)
+        console.log('res: ', res)
+        if (res?.status === 200) {
+            navigate(`/bill/${res.data._id}`)
         } else {
-            const res = await orderServices.orderFromCart(
-                data.cartId,
-                data.payment,
-                data.name,
-                data.address,
-                data.phoneNumber,
-                data.notes,
-            )
-            console.log('res: ', res)
-            if (res?.status === 200) {
-                navigate(`/bill/${res.data._id}`)
-            } else {
-                setError(res?.data?.message)
-            }
+            setError(res?.data?.message)
         }
     }
+
+    const createPaymentLinkApi = async () => {
+        const dataPayment = {
+            orderCode,
+            amount: totalPrice,
+            description: orderDescription,
+            buyerName: name,
+            buyerPhone: phoneNumber,
+            items: [],
+            cancelUrl: `${currentUrlWithoutQuery}`,
+            returnUrl: `${currentUrlWithoutQuery}`,
+        }
+        //Thêm chữ ký HMAC_SHA256
+        dataPayment.signature = generateSignature(dataPayment)
+        console.log('dataPayment: ', dataPayment)
+        const res = await bankServices.createPaymentLink(dataPayment)
+        console.log('createPaymentLink res: ', res)
+        if (res?.data?.checkoutUrl) {
+            console.log('createPaymentLink res.data.checkoutUrl: ', res?.data?.checkoutUrl)
+            window.location.href = res?.data?.checkoutUrl
+        }
+    }
+
+    const getPaymentLinkInfoApi = async () => {
+        const res = await bankServices.getPaymentLinkInfo(idParam)
+        console.log('api getPaymentLinkInfo data: ', res.data)
+        if (res?.data?.amountPaid >= totalPrice && res?.data?.status === 'PAID') {
+            console.log('orderFromCartApi: ')
+            orderFromCartApi({
+                ...data,
+                payment: selectedOnlinePayment,
+            })
+        }
+    }
+
+    // const getBankHistoryApi = async () => {
+    //     const res = await bankServices.getBankHistory()
+    //     console.log('getBankHistoryApi data: ', res.data)
+    // }
 
     return (
         <>
@@ -289,7 +296,7 @@ function Checkout() {
                                                                     value={selectedCashPayment}
                                                                     onChange={handleChange}
                                                                 />
-                                                                Thanh toán khi nhận hàng
+                                                                {selectedCashPayment}
                                                             </div>
                                                             <div>
                                                                 <input
@@ -298,30 +305,14 @@ function Checkout() {
                                                                     value={selectedOnlinePayment}
                                                                     onChange={handleChange}
                                                                 />
-                                                                Thanh toán trước
+                                                                Thanh toán trước qua mã QR
                                                             </div>
-                                                            {payment === selectedOnlinePayment && (
-                                                                <div>
-                                                                    <Image src={qrCode} width="200px" height="200px" />
-                                                                    <p>
-                                                                        Số tiền chuyển khoản: {formatPrice(totalPrice)}
-                                                                    </p>
-                                                                    <p>Nội dung chuyển khoản: {transactionInfo}</p>
-                                                                </div>
-                                                            )}
                                                         </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                             <button className={cx('btn-pay')} type="submit" onClick={handleCheckout}>
-                                                {payment === selectedCashPayment ? (
-                                                    <span>Đặt hàng</span>
-                                                ) : (
-                                                    <span className={cx('span-center')}>
-                                                        {loadingPaid && <CircularProgress color="inherit" size={20} />}
-                                                        Xác nhận tôi đã thanh toán
-                                                    </span>
-                                                )}
+                                                <span>Đặt hàng</span>
                                             </button>
                                         </div>
                                     </div>

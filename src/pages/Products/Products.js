@@ -24,7 +24,7 @@ function Products() {
     const [searchValue, setSearchValue] = useState(null)
     const [loading, setLoading] = useState(false)
     const { id } = useParams()
-    console.log('>>>id: ', id)
+    console.log('>>>products', products)
 
     const handleChangeFilter = (e) => {
         switch (e.target.value) {

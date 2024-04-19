@@ -174,11 +174,6 @@ function Checkout() {
         }
     }
 
-    // const getBankHistoryApi = async () => {
-    //     const res = await bankServices.getBankHistory()
-    //     console.log('getBankHistoryApi data: ', res.data)
-    // }
-
     return (
         <>
             {loading ? (

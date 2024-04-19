@@ -80,7 +80,7 @@ export const logout = async () => {
     }
 }
 
-export const getUserInfo = async () => {
+export const getUser = async () => {
     try {
         const res = await axiosPrivate.get('/api/user/info')
         res.data.status = res.status

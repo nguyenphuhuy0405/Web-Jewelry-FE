@@ -1,4 +1,4 @@
-.wrapper {
+.container {
     @media screen and (min-width: 1023px) {
         padding: 40px 0 40px 70px;
     }
@@ -14,12 +14,15 @@
     @media screen and (min-width: 1023px) {
         padding: 40px 70px 0 40px !important;
     }
+    text-align: left;
     .name {
-        text-align: left;
     }
     .price {
-        text-align: left;
         font-size: 2rem;
+    }
+    .stock {
+        font-size: 1.4rem;
+        color: #666;
     }
     .action {
         display: flex;
@@ -40,7 +43,18 @@
     .description {
         text-align: left;
         margin-top: 50px;
-        max-height: 300px;
-        overflow: auto;
+        .title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .content {
+            max-height: 300px;
+            overflow: auto;
+        }
     }
+}
+
+.comment {
+    padding: 0px 20px;
 }

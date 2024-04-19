@@ -149,10 +149,9 @@ function AdminInventory() {
 
     useEffect(() => {
         Promise.all([getProductsApi(), getInventoriesApi()])
-            .then((res) => {
-                setLoading(false)
-            })
+            .then((res) => {})
             .catch((error) => console.log(`Error in promises ${error}`))
+        setLoading(false)
     }, [])
 
     // Call API
@@ -169,11 +168,12 @@ function AdminInventory() {
             let rows = res?.data.map((item) => {
                 return {
                     ...item,
-                    id: item.productId._id,
-                    title: item.productId.title,
-                    images: item.productId.images,
+                    id: item?.productId?._id,
+                    title: item?.productId?.title,
+                    images: item?.productId?.images,
                 }
             })
+            console.log('>>>rows: ', rows)
             setRows(rows)
         }
     }

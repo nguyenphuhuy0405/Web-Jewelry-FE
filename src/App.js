@@ -14,9 +14,10 @@ function App() {
     //Get user info when refresh website
     const getUserApi = async () => {
         setLoading(true)
-        const res = await userServices.getUserInfo()
+        const res = await userServices.getUser()
         if (res?.status === 200) {
             setUser({
+                id: res?.data?._id,
                 name: res?.data?.name,
                 auth: true,
                 isAdmin: res.data.role === 'admin' ? true : false,

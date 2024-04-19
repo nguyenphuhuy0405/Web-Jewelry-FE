@@ -23,7 +23,9 @@ export const getCart = async () => {
 
 export const addToCart = async (id) => {
     try {
-        const res = await axiosPrivate.post(`/api/cart/${id}`)
+        const res = await axiosPrivate.post(`/api/cart`, {
+            productId: id,
+        })
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data
@@ -68,7 +70,9 @@ export const updateCart = async (productId, quantity) => {
 
 export const removeToCart = async (id) => {
     try {
-        const res = await axiosPrivate.delete(`/api/cart/${id}`)
+        const res = await axiosPrivate.delete(`/api/cart`, {
+            productId: id,
+        })
         console.log('data:', res.data)
         res.data.status = res.status
         return res.data

@@ -32,7 +32,7 @@ function CardProduct({ id, slug, title, price, img1, img2 }) {
                     <div className={cx('price')}>{formatPrice(price)}</div>
                     <div className={cx('action')}>
                         <Button normal primary onClick={(e) => handleAddToCart(e, id)}>
-                            Add to cart
+                            Thêm vào giỏ hàng
                         </Button>
                     </div>
                 </div>

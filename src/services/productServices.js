@@ -34,7 +34,7 @@ export const getProducts = async (page, filter, search, categoryId) => {
     }
 }
 
-export const getProductDetail = async (slug) => {
+export const getProduct = async (slug) => {
     try {
         const res = await axios.get(`/api/product/${slug}`)
         res.data.status = res.status
@@ -108,6 +108,79 @@ export const updateProduct = async (id, formData) => {
 export const deleteProduct = async (id) => {
     try {
         const res = await axiosPrivate.delete(`/api/product/${id}`)
+        res.data.status = res.status
+        console.log('data:', res.data)
+        return res.data
+    } catch (error) {
+        let res = {}
+        if (error.response) {
+            res.data = error.response.data
+            res.status = error.response.status
+            res.headers = error.response.headers
+        } else if (error.request) {
+            res.request = error.request
+        } else {
+            res.message = error.message
+        }
+        return res
+    }
+}
+
+export const comment = async (data) => {
+    try {
+        const res = await axiosPrivate.post(`/api/product/comment`, {
+            productId: data?.productId,
+            star: data?.star,
+            content: data?.content,
+        })
+        res.data.status = res.status
+        console.log('data:', res.data)
+        return res.data
+    } catch (error) {
+        let res = {}
+        if (error.response) {
+            res.data = error.response.data
+            res.status = error.response.status
+            res.headers = error.response.headers
+        } else if (error.request) {
+            res.request = error.request
+        } else {
+            res.message = error.message
+        }
+        return res
+    }
+}
+
+export const updateComment = async (data) => {
+    try {
+        const res = await axiosPrivate.put(`/api/product/comment`, {
+            commentId: data?.commentId,
+            star: data?.star,
+            content: data?.content,
+        })
+        res.data.status = res.status
+        console.log('data:', res.data)
+        return res.data
+    } catch (error) {
+        let res = {}
+        if (error.response) {
+            res.data = error.response.data
+            res.status = error.response.status
+            res.headers = error.response.headers
+        } else if (error.request) {
+            res.request = error.request
+        } else {
+            res.message = error.message
+        }
+        return res
+    }
+}
+
+export const deleteComment = async (data) => {
+    try {
+        const res = await axiosPrivate.delete(`/api/product/comment`, {
+            commentId: data?.commentId,
+        })
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data

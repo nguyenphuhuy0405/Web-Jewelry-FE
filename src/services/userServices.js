@@ -189,3 +189,49 @@ export const deleteUser = async (id) => {
         return res
     }
 }
+
+export const forgetPassword = async (email) => {
+    try {
+        const res = await axios.post('/api/auth/password-reset', {
+            email: email,
+        })
+        res.data.status = res.status
+        console.log('data:', res.data)
+        return res.data
+    } catch (error) {
+        let res = {}
+        if (error.response) {
+            res.data = error.response.data
+            res.status = error.response.status
+            res.headers = error.response.headers
+        } else if (error.request) {
+            res.request = error.request
+        } else {
+            res.message = error.message
+        }
+        return res
+    }
+}
+
+export const resetPassword = async (token, password) => {
+    try {
+        const res = await axios.post(`/api/auth/password-reset/${token}`, {
+            password: password,
+        })
+        res.data.status = res.status
+        console.log('data:', res.data)
+        return res.data
+    } catch (error) {
+        let res = {}
+        if (error.response) {
+            res.data = error.response.data
+            res.status = error.response.status
+            res.headers = error.response.headers
+        } else if (error.request) {
+            res.request = error.request
+        } else {
+            res.message = error.message
+        }
+        return res
+    }
+}

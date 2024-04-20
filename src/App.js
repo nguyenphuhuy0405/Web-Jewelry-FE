@@ -3,10 +3,10 @@ import { publicRoutes, privateRoutes } from './routes/routes'
 import { Fragment, useContext, useEffect, useState } from 'react'
 
 import './App.css'
-import { DefaultLayout } from '~/layouts'
+import { DefaultLayout } from './layouts'
 import PrivateRoutes from './routes/PrivateRoutes'
-import * as userServices from '~/services/userServices'
-import { UserContext } from '~/context/UserContext'
+import * as userServices from './services/userServices'
+import { UserContext } from './context/UserContext'
 
 function App() {
     const { setUser, logout } = useContext(UserContext)

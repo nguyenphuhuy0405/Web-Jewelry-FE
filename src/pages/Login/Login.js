@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react'
-import PendingIcon from '@mui/icons-material/Pending'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames/bind'
+import { Link } from 'react-router-dom'
 
 import { UserContext } from '~/context/UserContext'
 import * as userService from '~/services/userServices'
@@ -85,10 +86,13 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                <Link to={'/forget-password'}>
+                    <p className={cx('forgot-password')}>Quên mật khẩu?</p>
+                </Link>
                 <p className={cx('error')}>{error}</p>
                 <button type="submit" onClick={handleSubmit} className={cx('btn-submit')}>
-                    {loading && <PendingIcon fontSize="medium" />}
-                    Đăng nhập
+                    {loading && <CircularProgress />}
+                    <span>Đăng nhập</span>
                 </button>
             </form>
         </div>

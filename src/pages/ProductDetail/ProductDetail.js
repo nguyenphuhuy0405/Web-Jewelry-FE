@@ -31,10 +31,11 @@ function ProductDetail() {
     const [data, setData] = useState({
         star: 5,
         content: '',
-        productId: product?._id,
+        productId: '',
     })
     const { star, content } = data
     console.log('product: ', product)
+    console.log('data: ', data)
 
     const navigate = useNavigate()
 
@@ -69,9 +70,10 @@ function ProductDetail() {
         if (res.status > 400) {
             setProduct(null)
         } else {
-            setProduct(res.data)
+            setProduct(res?.data)
+            setData({ ...data, productId: res?.data?._id })
         }
-        getInventoryApi(res.data._id)
+        getInventoryApi(res?.data?._id)
     }
 
     const getInventoryApi = async (productId) => {

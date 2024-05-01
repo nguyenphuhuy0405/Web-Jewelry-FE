@@ -15,8 +15,6 @@ function CardProduct({ id, slug, title, price, img1, img2 }) {
         const res = await cartServices.addToCart(productId)
         if (res.status === 200) {
             navigate('/cart')
-        } else {
-            console.log('res: ', res)
         }
     }
 

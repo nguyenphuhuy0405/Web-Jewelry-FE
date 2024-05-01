@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import styles from './ForgetPassword.module.scss'
@@ -12,7 +11,6 @@ function ForgetPassword() {
     const [email, setEmail] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()

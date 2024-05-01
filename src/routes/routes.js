@@ -12,6 +12,8 @@ import {
     BillPage,
     ForgetPasswordPage,
     ResetPasswordPage,
+    ProfilePage,
+    ChangePasswordPage,
 } from '~/pages'
 
 export const publicRoutes = [
@@ -66,6 +68,14 @@ export const publicRoutes = [
     {
         path: '/reset-password/:token',
         component: ResetPasswordPage,
+    },
+    {
+        path: '/profile',
+        component: ProfilePage,
+    },
+    {
+        path: '/change-password',
+        component: ChangePasswordPage,
     },
 ]
 

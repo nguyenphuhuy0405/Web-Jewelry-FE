@@ -20,9 +20,9 @@ function App() {
                 id: res?.data?._id,
                 name: res?.data?.name,
                 auth: true,
-                isAdmin: res.data.role === 'admin' ? true : false,
-                address: res.data.address,
-                phoneNumber: res.data.phoneNumber,
+                isAdmin: res?.data?.role === 'admin' ? true : false,
+                address: res?.data?.address,
+                phoneNumber: res?.data?.phoneNumber,
             })
         } else {
             logout()

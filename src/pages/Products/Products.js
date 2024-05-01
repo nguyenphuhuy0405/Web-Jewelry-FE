@@ -112,7 +112,7 @@ function Products() {
                         {products.length > 0 ? (
                             <>
                                 {products.map((product) => (
-                                    <Grid xs={6} sm={6} md={3} key={product._id}>
+                                    <Grid xs={6} sm={4} md={3} key={product._id}>
                                         <CardProduct
                                             id={product._id}
                                             slug={product.slug}

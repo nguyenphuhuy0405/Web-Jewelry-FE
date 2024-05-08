@@ -79,7 +79,7 @@ function Header() {
                                                         <PopperWrapper>
                                                             {user?.isAdmin && (
                                                                 <Button to="/admin" hover normal uppercase>
-                                                                    Quản lý
+                                                                    Quản trị hệ thống
                                                                 </Button>
                                                             )}
                                                             <Button to="/profile" hover normal uppercase>

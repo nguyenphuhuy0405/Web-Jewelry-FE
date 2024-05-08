@@ -156,7 +156,7 @@ export default function AdminUser() {
                                             <TableCell
                                                 key={index}
                                                 align={column.align}
-                                                style={{ minWidth: column.minWidth, fontSize: '14px' }}
+                                                style={{ minWidth: column.minWidth }}
                                             >
                                                 {column.label}
                                             </TableCell>

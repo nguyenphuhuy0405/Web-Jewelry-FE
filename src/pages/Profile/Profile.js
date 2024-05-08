@@ -26,7 +26,7 @@ function Profile() {
 
     useEffect(() => {
         getUserInfoApi()
-    }, [])
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const updateUserInfoApi = async (data) => {
         const res = await userServices.updateUserInfo(data)
@@ -53,7 +53,7 @@ function Profile() {
     return (
         <div className={cx('wrapper')}>
             <Paper style={{ padding: '20px', textAlign: 'center' }}>
-                <Typography variant="h4">Thông tin cá nhân</Typography>
+                <Typography variant="h6">Thông tin cá nhân</Typography>
                 <Grid2 container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid2
                         item
@@ -69,13 +69,15 @@ function Profile() {
                         <table className={cx('table')}>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Tên hiển thị:</Typography>
+                                    <Typography variant="h8">Tên hiển thị:</Typography>
                                 </td>
                                 <td>
                                     <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
                                         label="Tên hiển thị"
                                         variant="outlined"
-                                        sx={{ minWidth: '250px' }}
                                         name="name"
                                         value={name}
                                         onChange={handleChange}
@@ -84,13 +86,15 @@ function Profile() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Địa chỉ:</Typography>
+                                    <Typography variant="h8">Địa chỉ:</Typography>
                                 </td>
                                 <td>
                                     <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
                                         label="Địa chỉ"
                                         variant="outlined"
-                                        sx={{ minWidth: '250px' }}
                                         name="address"
                                         value={address}
                                         onChange={handleChange}
@@ -99,10 +103,10 @@ function Profile() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Mật khẩu:</Typography>
+                                    <Typography variant="h8">Mật khẩu:</Typography>
                                 </td>
                                 <td>
-                                    <Button primary normal to={'/change-password'} style={{ maxWidth: '250px' }}>
+                                    <Button primary normal to={'/change-password'}>
                                         Thay đổi mật khẩu
                                     </Button>
                                 </td>

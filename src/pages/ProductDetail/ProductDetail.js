@@ -62,7 +62,7 @@ function ProductDetail() {
         setLoading(true)
         getProductApi(slug)
         setLoading(false)
-    }, [slug])
+    }, [slug]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const getProductApi = async (slug) => {
         const res = await productServices.getProduct(slug)
@@ -159,7 +159,7 @@ function ProductDetail() {
                                             value={content}
                                             label="Bình luận"
                                             placeholder="Nhập bình luận"
-                                            style={{ padding: '10px 0', width: '100%', fontSize: '1.6rem' }}
+                                            style={{ padding: '10px 0', width: '100%' }}
                                             multiline
                                             onChange={handleChange}
                                         />

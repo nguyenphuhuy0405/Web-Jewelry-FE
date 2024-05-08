@@ -42,7 +42,7 @@
         align-items: center;
         justify-content: center;
         margin-left: 24px;
-        font-size: 1.6rem;
+        font-size: 16px;
         font-weight: 500;
         .user-name {
             color: var(--white-color);
@@ -70,10 +70,10 @@
     &-item {
         padding: 8px 16px;
         text-transform: uppercase;
-        font-size: 1.6rem;
+        font-size: 16px;
         color: var(--white-color);
         @media screen and (max-width: 740px) {
-            font-size: 1.2rem;
+            font-size: 12px;
         }
     }
     &-item:hover {

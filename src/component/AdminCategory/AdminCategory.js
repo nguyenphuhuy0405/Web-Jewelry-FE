@@ -190,7 +190,7 @@ function AdminCategory() {
                         </Button>
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
-                                <Typography variant="h4" component="h4">
+                                <Typography variant="h6" component="h6">
                                     Thêm danh mục
                                 </Typography>
                                 <Grid
@@ -211,7 +211,7 @@ function AdminCategory() {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography color="error" variant="h6" component="h6">
+                                        <Typography color="error" variant="h8" component="h8">
                                             {error}
                                         </Typography>
                                     </Grid>
@@ -241,7 +241,7 @@ function AdminCategory() {
                     <>
                         <Modal open={openEdit} onClose={handleCloseEdit}>
                             <Box sx={style}>
-                                <Typography variant="h4" component="h4">
+                                <Typography variant="h6" component="h6">
                                     Sửa thông tin sản phẩm
                                 </Typography>
                                 <Grid
@@ -262,7 +262,7 @@ function AdminCategory() {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography color="error" variant="h6" component="h6">
+                                        <Typography color="error" variant="h8" component="h8">
                                             {errorEdit}
                                         </Typography>
                                     </Grid>
@@ -291,7 +291,7 @@ function AdminCategory() {
                     {/* Modal Delete */}
                     <Modal open={openDelete} onClose={handleCloseDelete}>
                         <Box sx={style}>
-                            <Typography variant="h4" component="h4">
+                            <Typography variant="h6" component="h6">
                                 Bạn có chắc chắc muốn xoá?
                             </Typography>
                             <Grid

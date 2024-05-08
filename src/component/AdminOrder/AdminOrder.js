@@ -184,7 +184,7 @@ function AdminOrder() {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h4" component="h4">
+                            <Typography id="modal-modal-title" variant="h8" component="h8">
                                 Thông tin đơn hàng
                             </Typography>
                             <Grid
@@ -194,48 +194,48 @@ function AdminOrder() {
                                 sx={{ marginTop: '8px' }}
                             >
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Mã đơn hàng: {_id}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Tên: {name}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Số điện thoại: {phoneNumber}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Địa chỉ: {address}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Trang thái: {status}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Giao hàng: {shipping}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Phí ship: {shippingPrice}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Phương thức thanh toán: {payment}
                                     </Typography>
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Sản phẩm:
                                     </Typography>
                                     <table style={{ width: '100%', fontSize: '14px' }}>
@@ -253,12 +253,12 @@ function AdminOrder() {
                                     </table>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Tổng tiền: {totalPrice}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="h6" component="h6">
+                                    <Typography variant="h8" component="h8">
                                         Ghi chú: {notes}
                                     </Typography>
                                 </Grid>

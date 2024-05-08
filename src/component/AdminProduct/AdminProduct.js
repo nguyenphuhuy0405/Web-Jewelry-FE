@@ -325,7 +325,7 @@ function AdminProduct() {
                         </Button>
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
-                                <Typography variant="h4" component="h4">
+                                <Typography variant="h6" component="h6">
                                     Thêm sản phẩm
                                 </Typography>
                                 <Grid
@@ -417,7 +417,7 @@ function AdminProduct() {
                                         </TextField>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography color="error" variant="h6" component="h6">
+                                        <Typography color="error" variant="h8" component="h8">
                                             {error}
                                         </Typography>
                                     </Grid>
@@ -447,7 +447,7 @@ function AdminProduct() {
                     <>
                         <Modal open={openEdit} onClose={handleCloseEdit}>
                             <Box sx={style}>
-                                <Typography variant="h4" component="h4">
+                                <Typography variant="h6" component="h6">
                                     Sửa thông tin sản phẩm
                                 </Typography>
                                 <Grid
@@ -578,7 +578,7 @@ function AdminProduct() {
                                         </TextField>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography color="error" variant="h6" component="h6">
+                                        <Typography color="error" variant="h8" component="h8">
                                             {errorEdit}
                                         </Typography>
                                     </Grid>
@@ -607,7 +607,7 @@ function AdminProduct() {
                     {/* Modal Delete */}
                     <Modal open={openDelete} onClose={handleCloseDelete}>
                         <Box sx={style}>
-                            <Typography variant="h4" component="h4">
+                            <Typography variant="h6" component="h6">
                                 Bạn có chắc chắc muốn xoá?
                             </Typography>
                             <Grid

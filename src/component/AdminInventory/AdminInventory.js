@@ -229,7 +229,7 @@ function AdminInventory() {
                         </Button>
                         <Modal open={openAdd} onClose={handleCloseAdd}>
                             <Box sx={style}>
-                                <Typography id="modal-modal-title" variant="h4" component="h4">
+                                <Typography id="modal-modal-title" variant="h6" component="h6">
                                     Tạo kho
                                 </Typography>
                                 <Grid
@@ -267,7 +267,7 @@ function AdminInventory() {
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Typography color="error" variant="h6" component="h6">
+                                        <Typography color="error" variant="h8" component="h8">
                                             {error}
                                         </Typography>
                                     </Grid>
@@ -296,7 +296,7 @@ function AdminInventory() {
                     {/* Modal Quantity */}
                     <Modal open={openQuantity} onClose={handleCloseQuantity}>
                         <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h4" component="h4">
+                            <Typography id="modal-modal-title" variant="h6" component="h6">
                                 Chỉnh số lượng
                             </Typography>
                             <Grid
@@ -319,7 +319,7 @@ function AdminInventory() {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography color="error" variant="h6" component="h6">
+                                    <Typography color="error" variant="h8" component="h8">
                                         {errorQuantity}
                                     </Typography>
                                 </Grid>
@@ -355,7 +355,7 @@ function AdminInventory() {
                     {/* Modal Delete */}
                     <Modal open={openDelete} onClose={handleCloseDelete}>
                         <Box sx={style}>
-                            <Typography variant="h4" component="h4">
+                            <Typography variant="h6" component="h6">
                                 Bạn có chắc chắc muốn xoá?
                             </Typography>
                             <Grid

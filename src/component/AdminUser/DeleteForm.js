@@ -20,7 +20,7 @@ function DeleteForm({ closeEvent, data, getUserApi }) {
     }
     return (
         <Box>
-            <Typography variant="h4" component="h4">
+            <Typography variant="h6" component="h6">
                 Bạn có chắc chắc muốn xoá?
             </Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ marginTop: '8px' }}>

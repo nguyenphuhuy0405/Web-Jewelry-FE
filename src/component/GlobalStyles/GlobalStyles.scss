@@ -1,5 +1,5 @@
 @import 'normalize.css';
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans:wght@300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
 :root {
     //Color
@@ -11,8 +11,8 @@
     --text-color: #333;
     --gray-color: rgba(22, 24, 35, 0.5);
     //Font family
-    --font-family: 'Amiri', sans-serif;
-    --text-font-family: 'ITC Caslon 224 std', sans-serif;
+    --font-family: 'Oswald', sans-serif;
+    --text-font-family: 'Oswald', sans-serif;
     //Default layout
     --default-header-height: 120px;
 }
@@ -22,12 +22,12 @@
     padding: 0;
 }
 html {
-    font-size: 62.5%;
+    // font-size: 62.5%;
     scroll-behavior: smooth;
 }
 body {
     font-family: var(--font-family);
-    font-size: 1.6rem;
+    font-size: 16px;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
 }
@@ -51,30 +51,6 @@ li {
     list-style: none;
 }
 
-//Custom font family
-//Font embed
-@font-face {
-    font-family: var(--text-font-family);
-    src: url('/assets/font/ITC Caslon 224 Std Book.ttf');
-    font-weight: 100;
-}
-@font-face {
-    font-family: var(--text-font-family);
-    src: url('/assets/font/ITC Caslon 224 Std Medium.ttf');
-    font-weight: 300;
-}
-@font-face {
-    font-family: var(--text-font-family);
-    src: url('/assets/font/ITC Caslon 224 Std Bold.ttf');
-    font-weight: 500;
-}
-@font-face {
-    font-family: var(--text-font-family);
-    src: url('/assets/font/ITC Caslon 224 Std Black.ttf');
-    font-weight: 700;
-}
-
-//Custom scrollbar
 //Custom scrollbar
 html ::-webkit-scrollbar {
     border-radius: 0px;

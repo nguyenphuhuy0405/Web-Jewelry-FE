@@ -4,8 +4,6 @@ import {
     NotFoundPage,
     CartPage,
     CollectionsPage,
-    LoginPage,
-    RegisterPage,
     ProductDetailPage,
     AdminPage,
     CheckoutPage,
@@ -14,6 +12,8 @@ import {
     ResetPasswordPage,
     ProfilePage,
     ChangePasswordPage,
+    SignInPage,
+    SignUpPage,
 } from '~/pages'
 
 export const publicRoutes = [
@@ -39,11 +39,13 @@ export const publicRoutes = [
     },
     {
         path: '/login',
-        component: LoginPage,
+        component: SignInPage,
+        layout: null,
     },
     {
         path: '/register',
-        component: RegisterPage,
+        component: SignUpPage,
+        layout: null,
     },
     {
         path: '*',

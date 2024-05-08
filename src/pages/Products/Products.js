@@ -7,11 +7,12 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import Grid from '@mui/material/Unstable_Grid2'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 import styles from './Products.module.scss'
 import CardProduct from '~/component/CardProduct/CardProduct'
 import * as productServices from '~/services/productServices'
-import Button from '~/component/Button/Button'
 import { useParams } from 'react-router'
 
 const cx = classNames.bind(styles)
@@ -82,7 +83,7 @@ function Products() {
                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                         <Grid xs={12} sm={12} md={12}>
                             <div className={cx('filter')}>
-                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                <FormControl sx={{ m: 1, minWidth: 120 }} size="medium">
                                     <InputLabel>Sắp xếp theo</InputLabel>
                                     <Select value={filter} label="Age" onChange={handleChangeFilter}>
                                         <MenuItem value="">
@@ -94,18 +95,15 @@ function Products() {
                                         <MenuItem value={'priceDesc'}>Sắp xếp theo giá từ cao đến thấp</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <div className={cx('search')}>
-                                    <input
-                                        className={cx('searchInput')}
-                                        placeholder="Nhập từ khoá..."
-                                        type="text"
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                    <Button normal className={cx('searchBtn')} onClick={handleSearch}>
-                                        Tìm kiếm
-                                    </Button>
-                                </div>
+                                <TextField
+                                    label="Nhập từ khoá tìm kiếm"
+                                    type="search"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <Button type="submit" onClick={handleSearch} variant="contained" sx={{ mt: 3, mb: 2 }}>
+                                    Tìm kiếm
+                                </Button>
                             </div>
                         </Grid>
 

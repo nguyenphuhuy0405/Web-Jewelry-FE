@@ -27,7 +27,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
     }
     return (
         <Box>
-            <Typography id="modal-modal-title" variant="h4" component="h4">
+            <Typography id="modal-modal-title" variant="h6" component="h6">
                 Sửa thông tin người dùng
             </Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ marginTop: '8px' }}>
@@ -65,7 +65,7 @@ function EditForm({ closeEvent, data, getUserApi }) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography color="error" variant="h6" component="h6">
+                    <Typography color="error" variant="h8" component="h8">
                         {error}
                     </Typography>
                 </Grid>

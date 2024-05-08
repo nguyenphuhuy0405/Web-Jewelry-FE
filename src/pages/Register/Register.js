@@ -48,7 +48,7 @@ function Register() {
     return (
         <div className={cx('wrapper')}>
             <Paper style={{ padding: '20px', textAlign: 'center' }}>
-                <Typography variant="h4">Đăng ký ở đây</Typography>
+                <Typography variant="h6">Đăng ký ở đây</Typography>
                 <Grid2 container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid2
                         item
@@ -64,7 +64,7 @@ function Register() {
                         <table className={cx('table')}>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Họ và tên:</Typography>
+                                    <Typography variant="h8">Họ và tên:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -80,7 +80,7 @@ function Register() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Tên đăng nhập:</Typography>
+                                    <Typography variant="h8">Tên đăng nhập:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -96,7 +96,7 @@ function Register() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Mật khẩu:</Typography>
+                                    <Typography variant="h8">Mật khẩu:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -112,7 +112,7 @@ function Register() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Địa chỉ:</Typography>
+                                    <Typography variant="h8">Địa chỉ:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -128,7 +128,7 @@ function Register() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Số điện thoại:</Typography>
+                                    <Typography variant="h8">Số điện thoại:</Typography>
                                 </td>
                                 <td>
                                     <TextField

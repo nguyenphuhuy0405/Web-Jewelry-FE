@@ -41,7 +41,7 @@ function ChangePassword() {
     return (
         <div className={cx('wrapper')}>
             <Paper style={{ padding: '20px', textAlign: 'center' }}>
-                <Typography variant="h4">Thay đổi mật khẩu</Typography>
+                <Typography variant="h6">Thay đổi mật khẩu</Typography>
                 <Grid2 container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid2
                         item
@@ -57,7 +57,7 @@ function ChangePassword() {
                         <table className={cx('table')}>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Mật khẩu cũ:</Typography>
+                                    <Typography variant="h8">Mật khẩu cũ:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -73,7 +73,7 @@ function ChangePassword() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Mật khẩu mới:</Typography>
+                                    <Typography variant="h8">Mật khẩu mới:</Typography>
                                 </td>
                                 <td>
                                     <TextField
@@ -89,7 +89,7 @@ function ChangePassword() {
                             </tr>
                             <tr>
                                 <td>
-                                    <Typography variant="h5">Nhập lại mật khẩu mới:</Typography>
+                                    <Typography variant="h8">Nhập lại mật khẩu mới:</Typography>
                                 </td>
                                 <td>
                                     <TextField

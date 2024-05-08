@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
-import Button from '~/component/Button/Button'
+import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import { Paper, Typography, TextField } from '@mui/material'
@@ -65,30 +65,34 @@ function Login() {
 
     return (
         <div className={cx('wrapper')}>
-            <Paper style={{ padding: '20px', textAlign: 'center' }}>
-                <Typography variant="h4">Đăng nhập ở đây</Typography>
-                <Grid2 container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    <Grid2
-                        item
-                        xs={12}
-                        sm={8}
-                        md={4}
-                        xsOffset={0}
-                        smOffset={2}
-                        mdOffset={4}
-                        justify="center"
-                        alignItems="center"
+            <Grid2 container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid2
+                    item
+                    xs={12}
+                    sm={8}
+                    md={4}
+                    xsOffset={0}
+                    smOffset={2}
+                    mdOffset={4}
+                    justify="center"
+                    alignItems="center"
+                >
+                    <Paper
+                        style={{
+                            padding: '20px',
+                            textAlign: 'center',
+                            margin: '20px auto',
+                            boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)',
+                        }}
                     >
+                        <Typography variant="h4">Đăng nhập ở đây</Typography>
                         <table className={cx('table')}>
                             <tr>
-                                <td>
-                                    <Typography variant="h5">Tên đăng nhập:</Typography>
-                                </td>
-                                <td>
+                                <td align="center">
                                     <TextField
                                         label="Email"
                                         variant="outlined"
-                                        sx={{ minWidth: '250px' }}
+                                        sx={{ minWidth: '300px', fontSize: '18px' }}
                                         type="email"
                                         name="email"
                                         value={email}
@@ -97,14 +101,11 @@ function Login() {
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <Typography variant="h5">Mật khẩu:</Typography>
-                                </td>
-                                <td>
+                                <td align="center">
                                     <TextField
                                         label="Mật khẩu"
                                         variant="outlined"
-                                        sx={{ minWidth: '250px' }}
+                                        sx={{ minWidth: '300px', fontSize: '18px' }}
                                         type="password"
                                         name="password"
                                         value={password}
@@ -113,19 +114,19 @@ function Login() {
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={2} align="right">
+                                <td align="right">
                                     <Link to={'/forget-password'}>
                                         <p style={{ color: 'blue' }}>Quên mật khẩu?</p>
                                     </Link>
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={2} align="center">
+                                <td align="center">
                                     <Button
-                                        primary
-                                        normal
+                                        variant="contained"
+                                        startIcon={loading && <CircularProgress />}
                                         onClick={handleSubmit}
-                                        leftIcon={loading && <CircularProgress />}
+                                        size="large"
                                     >
                                         Đăng nhập
                                     </Button>
@@ -133,9 +134,9 @@ function Login() {
                             </tr>
                             <p style={{ color: 'red' }} value={error}></p>
                         </table>
-                    </Grid2>
+                    </Paper>
                 </Grid2>
-            </Paper>
+            </Grid2>
         </div>
     )
 }

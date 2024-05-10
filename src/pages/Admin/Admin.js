@@ -25,7 +25,9 @@ import AdminUser from '~/component/AdminUser/AdminUser'
 import AdminOrder from '~/component/AdminOrder/AdminOrder'
 import AdminInventory from '~/component/AdminInventory/AdminInventory'
 import AdminProduct from '~/component/AdminProduct/AdminProduct'
+import AdminAnalyze from '~/component/AdminAnalyze/AdminAnalyze'
 import HomeIcon from '@mui/icons-material/Home'
+import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import { useNavigate } from 'react-router-dom'
 import AdminCategory from '~/component/AdminCategory/AdminCategory'
 
@@ -33,8 +35,15 @@ const cx = classNames.bind(styles)
 
 const drawerWidth = 240
 
+const ADMIN_ANALYZE_INDEX = 0
+const ADMIN_USER_INDEX = 1
+const ADMIN_ORDER_INDEX = 2
+const ADMIN_INVENTORY_INDEX = 3
+const ADMIN_PRODUCT_INDEX = 4
+const ADMIN_CATEGORY_INDEX = 5
+
 function Admin(props) {
-    const [selectedIndex, setSelectedIndex] = useState(0)
+    const [selectedIndex, setSelectedIndex] = useState(ADMIN_ANALYZE_INDEX)
     const { window } = props
     const [mobileOpen, setMobileOpen] = React.useState(false)
     const [isClosing, setIsClosing] = React.useState(false)
@@ -62,40 +71,72 @@ function Admin(props) {
 
     const drawer = (
         <div>
-            <Toolbar />
-            <Divider />
             <List component="nav" aria-label="main mailbox folders">
-                <ListItemButton onClick={handleBack}>
+                <Toolbar
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        px: [1],
+                    }}
+                >
+                    <ListItemButton onClick={handleBack}>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Trang Chủ" />
+                    </ListItemButton>
+                </Toolbar>
+                <Divider />
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_ANALYZE_INDEX}
+                    onClick={(event) => handleListItemClick(event, ADMIN_ANALYZE_INDEX)}
+                >
                     <ListItemIcon>
-                        <HomeIcon />
+                        <LeaderboardIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Trang chủ" />
+                    <ListItemText primary="Thống kê" />
                 </ListItemButton>
-                <ListItemButton selected={selectedIndex === 0} onClick={(event) => handleListItemClick(event, 0)}>
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_USER_INDEX}
+                    onClick={(event) => handleListItemClick(event, ADMIN_USER_INDEX)}
+                >
                     <ListItemIcon>
                         <PersonIcon />
                     </ListItemIcon>
                     <ListItemText primary="Người dùng" />
                 </ListItemButton>
-                <ListItemButton selected={selectedIndex === 1} onClick={(event) => handleListItemClick(event, 1)}>
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_ORDER_INDEX}
+                    onClick={(event) => handleListItemClick(event, ADMIN_ORDER_INDEX)}
+                >
                     <ListItemIcon>
                         <ReceiptIcon />
                     </ListItemIcon>
                     <ListItemText primary="Đơn hàng" />
                 </ListItemButton>
-                <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_INVENTORY_INDEX}
+                    onClick={(event) => handleListItemClick(event, ADMIN_INVENTORY_INDEX)}
+                >
                     <ListItemIcon>
                         <InventoryIcon />
                     </ListItemIcon>
                     <ListItemText primary="Kho" />
                 </ListItemButton>
-                <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_PRODUCT_INDEX}
+                    onClick={(event) => handleListItemClick(event, ADMIN_PRODUCT_INDEX)}
+                >
                     <ListItemIcon>
                         <AppsIcon />
                     </ListItemIcon>
                     <ListItemText primary="Sản phẩm" />
                 </ListItemButton>
-                <ListItemButton selected={selectedIndex === 4} onClick={(event) => handleListItemClick(event, 4)}>
+                <ListItemButton
+                    selected={selectedIndex === ADMIN_CATEGORY_INDEX}
+                    onClick={(event) => handleListItemClick(event, 4)}
+                >
                     <ListItemIcon>
                         <ListIcon />
                     </ListItemIcon>
@@ -110,15 +151,17 @@ function Admin(props) {
 
     const renderPage = (selectedIndex) => {
         switch (selectedIndex) {
-            case 0:
+            case ADMIN_ANALYZE_INDEX:
+                return <AdminAnalyze />
+            case ADMIN_USER_INDEX:
                 return <AdminUser />
-            case 1:
+            case ADMIN_ORDER_INDEX:
                 return <AdminOrder />
-            case 2:
+            case ADMIN_INVENTORY_INDEX:
                 return <AdminInventory />
-            case 3:
+            case ADMIN_PRODUCT_INDEX:
                 return <AdminProduct />
-            case 4:
+            case ADMIN_CATEGORY_INDEX:
                 return <AdminCategory />
             default:
                 return <></>

@@ -135,7 +135,7 @@ function Admin(props) {
                 </ListItemButton>
                 <ListItemButton
                     selected={selectedIndex === ADMIN_CATEGORY_INDEX}
-                    onClick={(event) => handleListItemClick(event, 4)}
+                    onClick={(event) => handleListItemClick(event, ADMIN_CATEGORY_INDEX)}
                 >
                     <ListItemIcon>
                         <ListIcon />

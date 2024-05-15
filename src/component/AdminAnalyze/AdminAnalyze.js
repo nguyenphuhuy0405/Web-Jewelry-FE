@@ -134,13 +134,13 @@ function AdminAnalyze() {
                             {data?.totalOrders || 0}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            Ngày 30 Tháng 4 Năm 2024
+                            {date || 'Thời gian tìm'}
                         </Typography>
                     </Paper>
                 </Grid>
 
                 {/* Card */}
-                <Grid item xs={12} md={6} lg={3}>
+                <Grid item xs={12} md={6} lg={6}>
                     <Paper
                         sx={{
                             p: 2,
@@ -156,7 +156,29 @@ function AdminAnalyze() {
                             {data?.totalSales ? formatPrice(data?.totalSales) : 0}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            Ngày 30 Tháng 4 Năm 2024
+                            {date || 'Thời gian tìm'}
+                        </Typography>
+                    </Paper>
+                </Grid>
+
+                {/* Card */}
+                <Grid item xs={12} md={6} lg={3}>
+                    <Paper
+                        sx={{
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            minHeight: 140,
+                        }}
+                    >
+                        <Typography component="h2" variant="h6" color="primary" gutterBottom>
+                            Đơn hàng đã hoàn thành
+                        </Typography>
+                        <Typography component="p" variant="h4" color="primary">
+                            {data?.totalOrderFinish || 0}
+                        </Typography>
+                        <Typography color="text.secondary" sx={{ flex: 1 }}>
+                            {date || 'Thời gian tìm'}
                         </Typography>
                     </Paper>
                 </Grid>
@@ -178,7 +200,7 @@ function AdminAnalyze() {
                             {data?.totalOrderConfirm || 0}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            Ngày 30 Tháng 4 Năm 2024
+                            {date || 'Thời gian tìm'}
                         </Typography>
                     </Paper>
                 </Grid>
@@ -200,7 +222,7 @@ function AdminAnalyze() {
                             {data?.totalOrderNotConfirm || 0}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            Ngày 30 Tháng 4 Năm 2024
+                            {date || 'Thời gian tìm'}
                         </Typography>
                     </Paper>
                 </Grid>
@@ -222,13 +244,13 @@ function AdminAnalyze() {
                             {data?.totalOrderCancel || 0}
                         </Typography>
                         <Typography color="text.secondary" sx={{ flex: 1 }}>
-                            Ngày 30 Tháng 4 Năm 2024
+                            {date || 'Thời gian tìm'}
                         </Typography>
                     </Paper>
                 </Grid>
 
                 {/* Pie Chart */}
-                <Grid item xs={12} md={12} lg={6}>
+                <Grid item xs={12} md={12} lg={12}>
                     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                         <Typography component="h2" variant="h6" color="primary" gutterBottom>
                             Biểu đồ tròn trạng thái đơn hàng
@@ -245,6 +267,7 @@ function AdminAnalyze() {
                                             color: 'gray',
                                         },
                                         { id: 2, value: data?.totalOrderCancel, label: 'Bị huỷ', color: 'red' },
+                                        { id: 3, value: data?.totalOrderFinish, label: 'Đã hoàn thành', color: 'blue' },
                                     ],
                                 },
                             ]}

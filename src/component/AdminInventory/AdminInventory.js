@@ -16,6 +16,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 
+import fuseSearch from '~/hooks/fuseSearch'
 import * as inventoryServices from '~/services/inventoryServices'
 import * as productServices from '~/services/productServices'
 
@@ -61,9 +62,11 @@ const style = {
 function AdminInventory() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [initRows, setRowsInit] = useState([])
     const [rows, setRows] = useState([])
     const [selectedRow, setSelectedRow] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [search, setSearch] = useState(null)
 
     //State Modal Add
     const [products, setProducts] = useState([])
@@ -85,6 +88,7 @@ function AdminInventory() {
     // console.log('products', products)
     // console.log('data', data)
     console.log('selectedRow', selectedRow)
+    console.log('search', search)
 
     //Modal Add
     const handleOpenAdd = () => setOpenAdd(true)
@@ -147,6 +151,27 @@ function AdminInventory() {
         setPage(0)
     }
 
+    const handleChangeSearch = (e) => {
+        setSearch(e.target.value)
+        if (e.target.value === '') {
+            console.log('reset')
+            setRows(initRows)
+        }
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault()
+        if (search.length > 0) {
+            const options = {
+                keys: ['id', 'title'],
+            }
+            const items = fuseSearch(rows, options, search)
+            setRows(items)
+        } else {
+            setRows(initRows)
+        }
+    }
+
     useEffect(() => {
         Promise.all([getProductsApi(), getInventoriesApi()])
             .then((res) => {})
@@ -174,6 +199,7 @@ function AdminInventory() {
                 }
             })
             console.log('>>>rows: ', rows)
+            setRowsInit(rows)
             setRows(rows)
         }
     }
@@ -217,81 +243,198 @@ function AdminInventory() {
                 <div>Loading...</div>
             ) : (
                 <>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <TextField
+                                label="Nhập tên khách hàng hoặc email cần tìm"
+                                type="search"
+                                value={search}
+                                onChange={handleChangeSearch}
+                                size="small"
+                            />
+                            <Button variant="contained" onClick={handleSearch} sx={{ marginLeft: '8px' }}>
+                                Tìm kiếm
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <Button
+                                variant="contained"
+                                startIcon={<AddIcon />}
+                                onClick={handleOpenAdd}
+                                sx={{ marginBottom: '16px' }}
+                            >
+                                Thêm mới
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            {/* Table */}
+                            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                                <TableContainer sx={{ maxHeight: 440 }}>
+                                    <Table stickyHeader aria-label="sticky table">
+                                        <TableHead>
+                                            <TableRow>
+                                                {columns.map((column, index) => (
+                                                    <TableCell
+                                                        key={index}
+                                                        align={column.align}
+                                                        style={{ minWidth: column.minWidth, fontSize: '14px' }}
+                                                    >
+                                                        {column.label}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows
+                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                .map((row) => {
+                                                    return (
+                                                        <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
+                                                            {columns.map((column) => {
+                                                                const value = row[column.id]
+
+                                                                if (column.image) {
+                                                                    return (
+                                                                        <TableCell
+                                                                            key={column.id}
+                                                                            align={column.align}
+                                                                            sx={{ fontSize: '14px' }}
+                                                                        >
+                                                                            <img
+                                                                                src={
+                                                                                    process.env.REACT_APP_BASE_URL +
+                                                                                    value[0]
+                                                                                }
+                                                                                alt="item"
+                                                                                width="70px"
+                                                                            />
+                                                                        </TableCell>
+                                                                    )
+                                                                }
+                                                                if (column.action) {
+                                                                    return (
+                                                                        <TableCell
+                                                                            key={column.id}
+                                                                            align={column.align}
+                                                                            sx={{ fontSize: '14px' }}
+                                                                        >
+                                                                            <Button
+                                                                                variant="contained"
+                                                                                color="primary"
+                                                                                onClick={() =>
+                                                                                    handleOpenQuantity(row._id)
+                                                                                }
+                                                                            >
+                                                                                Số lượng
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="contained"
+                                                                                color="error"
+                                                                                sx={{ marginLeft: '10px' }}
+                                                                                onClick={() =>
+                                                                                    handleOpenDelete(row._id)
+                                                                                }
+                                                                            >
+                                                                                Xoá
+                                                                            </Button>
+                                                                        </TableCell>
+                                                                    )
+                                                                }
+                                                                return (
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        align={column.align}
+                                                                        sx={{ fontSize: '14px' }}
+                                                                    >
+                                                                        {column.format && typeof value === 'number'
+                                                                            ? column.format(value)
+                                                                            : value}
+                                                                    </TableCell>
+                                                                )
+                                                            })}
+                                                        </TableRow>
+                                                    )
+                                                })}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <TablePagination
+                                    rowsPerPageOptions={[10, 25, 100]}
+                                    component="div"
+                                    count={rows.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            </Paper>
+                        </Grid>
+                    </Grid>
                     {/* Modal Add */}
-                    <>
-                        <Button
-                            variant="contained"
-                            startIcon={<AddIcon />}
-                            onClick={handleOpenAdd}
-                            sx={{ marginBottom: '16px' }}
-                        >
-                            Thêm mới
-                        </Button>
-                        <Modal open={openAdd} onClose={handleCloseAdd}>
-                            <Box sx={style}>
-                                <Typography id="modal-modal-title" variant="h6" component="h6">
-                                    Tạo kho
-                                </Typography>
-                                <Grid
-                                    container
-                                    rowSpacing={2}
-                                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                                    sx={{ marginTop: '8px' }}
-                                >
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            name="productId"
-                                            select
-                                            label="Mã sản phẩm"
-                                            sx={{ width: '100%' }}
-                                            onChange={handleChange}
-                                        >
-                                            {products.map((product) => (
-                                                <MenuItem key={product._id} value={product._id}>
-                                                    {product.title}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            name="quantity"
-                                            label="Số lượng"
-                                            type="number"
-                                            variant="outlined"
-                                            sx={{ width: '100%' }}
-                                            inputProps={{ min: 1 }}
-                                            required
-                                            value={data.quantity}
-                                            onChange={handleChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography color="error" variant="h8" component="h8">
-                                            {error}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Button
-                                            variant="contained"
-                                            style={{ backgroundColor: 'gray' }}
-                                            onClick={handleCloseAdd}
-                                        >
-                                            Huỷ
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="success"
-                                            sx={{ marginLeft: '16px' }}
-                                            onClick={handleAdd}
-                                        >
-                                            Thêm
-                                        </Button>
-                                    </Grid>
+                    <Modal open={openAdd} onClose={handleCloseAdd}>
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h6">
+                                Tạo kho
+                            </Typography>
+                            <Grid
+                                container
+                                rowSpacing={2}
+                                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                                sx={{ marginTop: '8px' }}
+                            >
+                                <Grid item xs={12}>
+                                    <TextField
+                                        name="productId"
+                                        select
+                                        label="Mã sản phẩm"
+                                        sx={{ width: '100%' }}
+                                        onChange={handleChange}
+                                    >
+                                        {products.map((product) => (
+                                            <MenuItem key={product._id} value={product._id}>
+                                                {product.title}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
-                            </Box>
-                        </Modal>
-                    </>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        name="quantity"
+                                        label="Số lượng"
+                                        type="number"
+                                        variant="outlined"
+                                        sx={{ width: '100%' }}
+                                        inputProps={{ min: 1 }}
+                                        required
+                                        value={data.quantity}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography color="error" variant="h8" component="h8">
+                                        {error}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant="contained"
+                                        style={{ backgroundColor: 'gray' }}
+                                        onClick={handleCloseAdd}
+                                    >
+                                        Huỷ
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="success"
+                                        sx={{ marginLeft: '16px' }}
+                                        onClick={handleAdd}
+                                    >
+                                        Thêm
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Modal>
 
                     {/* Modal Quantity */}
                     <Modal open={openQuantity} onClose={handleCloseQuantity}>
@@ -384,99 +527,6 @@ function AdminInventory() {
                             </Grid>
                         </Box>
                     </Modal>
-
-                    {/* Table */}
-                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column, index) => (
-                                            <TableCell
-                                                key={index}
-                                                align={column.align}
-                                                style={{ minWidth: column.minWidth, fontSize: '14px' }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
-                                                {columns.map((column) => {
-                                                    const value = row[column.id]
-
-                                                    if (column.image) {
-                                                        return (
-                                                            <TableCell
-                                                                key={column.id}
-                                                                align={column.align}
-                                                                sx={{ fontSize: '14px' }}
-                                                            >
-                                                                <img
-                                                                    src={process.env.REACT_APP_BASE_URL + value[0]}
-                                                                    alt="item"
-                                                                    width="70px"
-                                                                />
-                                                            </TableCell>
-                                                        )
-                                                    }
-                                                    if (column.action) {
-                                                        return (
-                                                            <TableCell
-                                                                key={column.id}
-                                                                align={column.align}
-                                                                sx={{ fontSize: '14px' }}
-                                                            >
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    onClick={() => handleOpenQuantity(row._id)}
-                                                                >
-                                                                    Số lượng
-                                                                </Button>
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="error"
-                                                                    sx={{ marginLeft: '10px' }}
-                                                                    onClick={() => handleOpenDelete(row._id)}
-                                                                >
-                                                                    Xoá
-                                                                </Button>
-                                                            </TableCell>
-                                                        )
-                                                    }
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            align={column.align}
-                                                            sx={{ fontSize: '14px' }}
-                                                        >
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
-                                                                : value}
-                                                        </TableCell>
-                                                    )
-                                                })}
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
                 </>
             )}
         </>

@@ -141,7 +141,9 @@ function Bill() {
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <Button normal>Quay về cửa hàng</Button>
+                                            <Button normal to={'/'}>
+                                                Quay về cửa hàng
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>

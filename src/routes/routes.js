@@ -14,6 +14,7 @@ import {
     ChangePasswordPage,
     SignInPage,
     SignUpPage,
+    OrderPage,
 } from '~/pages'
 
 export const publicRoutes = [
@@ -78,6 +79,10 @@ export const publicRoutes = [
     {
         path: '/change-password',
         component: ChangePasswordPage,
+    },
+    {
+        path: '/order',
+        component: OrderPage,
     },
 ]
 

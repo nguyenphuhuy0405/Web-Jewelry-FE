@@ -1,7 +1,11 @@
 import axios from 'axios'
 import useRefreshToken from '~/hooks/useRefreshToken'
 
-let accessToken = localStorage.getItem('accessToken')
+function getLocalAccessToken() {
+    let accessToken = window.localStorage.getItem('accessToken')
+    console.log('accessToken: ', accessToken)
+    return accessToken
+}
 
 export default axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
@@ -9,15 +13,14 @@ export default axios.create({
 
 export const axiosPrivate = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: { Authorization: `Bearer ${getLocalAccessToken()}` },
     withCredentials: true,
 })
 
 axiosPrivate.interceptors.request.use(
     async (config) => {
-        if (!accessToken) {
-            accessToken = localStorage.getItem('accessToken')
-            config.headers['Authorization'] = `Bearer ${accessToken}`
+        if (!getLocalAccessToken()) {
+            config.headers['Authorization'] = `Bearer ${getLocalAccessToken()}`
         }
         return config
     },

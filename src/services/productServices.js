@@ -1,6 +1,6 @@
 import axios, { axiosPrivate } from '~/utils/axios'
 
-export const getProducts = async (page, filter, search, categoryId) => {
+export const getProducts = async (page, filter, categoryId) => {
     try {
         let query = ''
         if (page) {
@@ -9,9 +9,9 @@ export const getProducts = async (page, filter, search, categoryId) => {
         if (filter) {
             query += `&_sort=&field=${filter.name}&type=${filter.value}`
         }
-        if (search) {
-            query += `&q=${search}`
-        }
+        // if (search) {
+        //     query += `&q=${search}`
+        // }
         if (categoryId) {
             query += `&categoryId=${categoryId}`
         }

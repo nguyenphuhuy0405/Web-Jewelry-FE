@@ -13,6 +13,9 @@ import AddIcon from '@mui/icons-material/Add'
 import Modal from '@mui/material/Modal'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Grid from '@mui/material/Grid'
+import fuseSearch from '~/hooks/fuseSearch'
 
 import * as userServices from '~/services/userServices'
 import EditForm from './EditForm'
@@ -62,12 +65,14 @@ const style = {
 export default function AdminUser() {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [initRows, setInitRows] = useState([])
     const [rows, setRows] = useState([])
     const [loading, setLoading] = useState(false)
     const [openEdit, setOpenEdit] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
     const [openAdd, setOpenAdd] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null)
+    const [search, setSearch] = useState(null)
     const handleOpenAdd = () => setOpenAdd(true)
     const handleCloseAdd = () => setOpenAdd(false)
 
@@ -96,6 +101,26 @@ export default function AdminUser() {
         setPage(0)
     }
 
+    const handleChangeSearch = (e) => {
+        setSearch(e.target.value)
+        if (e.target.value === '') {
+            setRows(initRows)
+        }
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault()
+        if (search.length > 0) {
+            const options = {
+                keys: ['name', 'email'],
+            }
+            const items = fuseSearch(rows, options, search)
+            setRows(items)
+        } else {
+            setRows(initRows)
+        }
+    }
+
     useEffect(() => {
         getUserApi()
     }, [])
@@ -106,6 +131,7 @@ export default function AdminUser() {
         const res = await userServices.getUsers()
         if (res?.status === 200) {
             console.log('>>>res: ', res?.data)
+            setInitRows(res?.data)
             setRows(res?.data)
         }
         setLoading(false)
@@ -118,14 +144,110 @@ export default function AdminUser() {
             ) : (
                 <>
                     {/* Modal Add */}
-                    <Button
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        onClick={handleOpenAdd}
-                        sx={{ marginBottom: '16px' }}
-                    >
-                        Thêm mới
-                    </Button>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <TextField
+                                label="Nhập tên khách hàng hoặc email cần tìm"
+                                type="search"
+                                value={search}
+                                onChange={handleChangeSearch}
+                                size="small"
+                            />
+                            <Button variant="contained" onClick={handleSearch} sx={{ marginLeft: '8px' }}>
+                                Tìm kiếm
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenAdd}>
+                                Thêm mới
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            {/* Table */}
+                            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                                <TableContainer sx={{ maxHeight: 440 }}>
+                                    <Table stickyHeader aria-label="sticky table">
+                                        <TableHead>
+                                            <TableRow>
+                                                {columns.map((column, index) => (
+                                                    <TableCell
+                                                        key={index}
+                                                        align={column.align}
+                                                        style={{ minWidth: column.minWidth }}
+                                                    >
+                                                        {column.label}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rows
+                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                .map((row) => {
+                                                    return (
+                                                        <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
+                                                            {columns.map((column) => {
+                                                                const value = row[column.id]
+                                                                if (column.action) {
+                                                                    return (
+                                                                        <TableCell
+                                                                            key={column.id}
+                                                                            align={column.align}
+                                                                            sx={{ fontSize: '14px' }}
+                                                                        >
+                                                                            <Button
+                                                                                variant="contained"
+                                                                                color="primary"
+                                                                                startIcon={<EditIcon />}
+                                                                                onClick={() => handleOpenEdit(row?._id)}
+                                                                            >
+                                                                                Sửa
+                                                                            </Button>
+                                                                            <Button
+                                                                                variant="contained"
+                                                                                color="error"
+                                                                                startIcon={<DeleteIcon />}
+                                                                                onClick={() =>
+                                                                                    handleOpenDelete(row?._id)
+                                                                                }
+                                                                                sx={{ marginLeft: '10px' }}
+                                                                            >
+                                                                                Xoá
+                                                                            </Button>
+                                                                        </TableCell>
+                                                                    )
+                                                                }
+                                                                return (
+                                                                    <TableCell
+                                                                        key={column.id}
+                                                                        align={column.align}
+                                                                        sx={{ fontSize: '14px' }}
+                                                                    >
+                                                                        {column.format && typeof value === 'number'
+                                                                            ? column.format(value)
+                                                                            : value}
+                                                                    </TableCell>
+                                                                )
+                                                            })}
+                                                        </TableRow>
+                                                    )
+                                                })}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                                <TablePagination
+                                    rowsPerPageOptions={[10, 25, 100]}
+                                    component="div"
+                                    count={rows.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            </Paper>
+                        </Grid>
+                    </Grid>
+
                     <Modal open={openAdd} onClose={handleCloseAdd}>
                         <Box sx={style}>
                             <AddForm closeEvent={handleCloseAdd} getUserApi={getUserApi} />
@@ -145,85 +267,6 @@ export default function AdminUser() {
                             <DeleteForm closeEvent={handleCloseDelete} data={selectedRow} getUserApi={getUserApi} />
                         </Box>
                     </Modal>
-
-                    {/* Table */}
-                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer sx={{ maxHeight: 440 }}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column, index) => (
-                                            <TableCell
-                                                key={index}
-                                                align={column.align}
-                                                style={{ minWidth: column.minWidth }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row?._id}>
-                                                {columns.map((column) => {
-                                                    const value = row[column.id]
-                                                    if (column.action) {
-                                                        return (
-                                                            <TableCell
-                                                                key={column.id}
-                                                                align={column.align}
-                                                                sx={{ fontSize: '14px' }}
-                                                            >
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="primary"
-                                                                    startIcon={<EditIcon />}
-                                                                    onClick={() => handleOpenEdit(row?._id)}
-                                                                >
-                                                                    Sửa
-                                                                </Button>
-                                                                <Button
-                                                                    variant="contained"
-                                                                    color="error"
-                                                                    startIcon={<DeleteIcon />}
-                                                                    onClick={() => handleOpenDelete(row?._id)}
-                                                                    sx={{ marginLeft: '10px' }}
-                                                                >
-                                                                    Xoá
-                                                                </Button>
-                                                            </TableCell>
-                                                        )
-                                                    }
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            align={column.align}
-                                                            sx={{ fontSize: '14px' }}
-                                                        >
-                                                            {column.format && typeof value === 'number'
-                                                                ? column.format(value)
-                                                                : value}
-                                                        </TableCell>
-                                                    )
-                                                })}
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
                 </>
             )}
         </>

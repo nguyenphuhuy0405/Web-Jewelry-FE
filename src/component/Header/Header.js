@@ -85,6 +85,9 @@ function Header() {
                                                             <Button to="/profile" hover normal uppercase>
                                                                 Thông tin tài khoản
                                                             </Button>
+                                                            <Button to="/order" hover normal uppercase>
+                                                                Đơn hàng của tôi
+                                                            </Button>
                                                             <Button hover normal uppercase onClick={handleLogout}>
                                                                 Đăng xuất
                                                             </Button>

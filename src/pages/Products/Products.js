@@ -9,6 +9,7 @@ import Select from '@mui/material/Select'
 import Grid from '@mui/material/Unstable_Grid2'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
+import fuseSearch from '~/hooks/fuseSearch'
 
 import styles from './Products.module.scss'
 import CardProduct from '~/component/CardProduct/CardProduct'
@@ -22,10 +23,12 @@ function Products() {
     const [currentPage, setCurrentPage] = useState(1)
     const [filter, setFilter] = useState(null)
     const [search, setSearch] = useState(null)
-    const [searchValue, setSearchValue] = useState(null)
+    const [searchProducts, setSearchProducts] = useState([])
     const [loading, setLoading] = useState(false)
     const { id } = useParams()
+    console.log('>>>search', search)
     console.log('>>>products', products)
+    console.log('>>>searchProducts', searchProducts)
 
     const handleChangeFilter = (e) => {
         switch (e.target.value) {
@@ -51,28 +54,41 @@ function Products() {
         setCurrentPage(value)
     }
 
+    const handleChangeSearch = (e) => {
+        setSearch(e.target.value)
+        if (e.target.value === '') {
+            setSearchProducts(products)
+        }
+    }
+
     const handleSearch = (e) => {
         e.preventDefault()
-        const formatSearch = search
-            .toLowerCase() //Thay viết hoa thành viết thường
-            .replace(/\s+/g, '-') //Thay thế khoảng trắng bằng dấu "-"
-            .replace(/[\u0300-\u036f]/g, '') //Thay có dấu tiếng việt thành không dấu
-        setSearchValue(formatSearch)
+        if (search.length > 0) {
+            const options = {
+                keys: ['title'],
+            }
+            const items = fuseSearch(products, options, search)
+            setSearchProducts(items)
+        } else {
+            setSearchProducts(products)
+        }
     }
 
     useEffect(() => {
-        const getProductsApi = async () => {
-            setLoading(true)
-            let res = await productServices.getProducts(currentPage, filter, searchValue, id)
-            console.log('res: ', res)
-            if (res?.data) {
-                setProducts(res.data)
-                setTotalPage(res.totalPage)
-            }
-            setLoading(false)
-        }
         getProductsApi()
-    }, [currentPage, filter, searchValue, id])
+    }, [currentPage, filter, id])
+
+    const getProductsApi = async () => {
+        setLoading(true)
+        let res = await productServices.getProducts(currentPage, filter, id)
+        console.log('res: ', res)
+        if (res?.data) {
+            setProducts(res.data)
+            setSearchProducts(res.data)
+            setTotalPage(res.totalPage)
+        }
+        setLoading(false)
+    }
 
     return (
         <>
@@ -80,14 +96,14 @@ function Products() {
                 <div>Loading...</div>
             ) : (
                 <div className={cx('wrapper')}>
-                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
                         <Grid xs={12} sm={12} md={12}>
                             <div className={cx('filter')}>
-                                <FormControl sx={{ m: 1, minWidth: 120 }} size="medium">
+                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                                     <InputLabel>Sắp xếp theo</InputLabel>
                                     <Select value={filter} label="Age" onChange={handleChangeFilter}>
                                         <MenuItem value="">
-                                            <em>None</em>
+                                            <em>Gốc</em>
                                         </MenuItem>
                                         <MenuItem value={'nameAsc'}>Sắp xếp theo tên từ a - z</MenuItem>
                                         <MenuItem value={'nameDesc'}>Sắp xếp theo tên từ z - a</MenuItem>
@@ -98,18 +114,24 @@ function Products() {
                                 <TextField
                                     label="Nhập từ khoá tìm kiếm"
                                     type="search"
+                                    size="small"
                                     value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={handleChangeSearch}
                                 />
-                                <Button type="submit" onClick={handleSearch} variant="contained" sx={{ mt: 3, mb: 2 }}>
+                                <Button
+                                    type="submit"
+                                    onClick={handleSearch}
+                                    variant="contained"
+                                    sx={{ marginLeft: '8px' }}
+                                >
                                     Tìm kiếm
                                 </Button>
                             </div>
                         </Grid>
 
-                        {products.length > 0 ? (
+                        {searchProducts.length > 0 ? (
                             <>
-                                {products.map((product) => (
+                                {searchProducts.map((product) => (
                                     <Grid xs={6} sm={4} md={3} key={product._id}>
                                         <CardProduct
                                             id={product._id}

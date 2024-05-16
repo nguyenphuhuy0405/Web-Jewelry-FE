@@ -78,7 +78,7 @@ const columns = [
     {
         id: 'action',
         label: 'Thao tác',
-        minWidth: 200,
+        minWidth: 150,
         align: 'center',
         action: true,
     },
@@ -294,7 +294,6 @@ function AdminOrder() {
                                                                             <TableCell
                                                                                 key={column.id}
                                                                                 align={column.align}
-                                                                                sx={{ fontSize: '14px' }}
                                                                             >
                                                                                 <Button
                                                                                     variant="contained"

@@ -1,7 +1,8 @@
 .wrapper {
     width: 100%;
-    @media screen and (min-width: 1023px) {
-        padding: 30px 70px;
+    padding: 30px 70px;
+    @media only screen and (max-width: 1023px) {
+        padding: 10px;
     }
 }
 .filter {

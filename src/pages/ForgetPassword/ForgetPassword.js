@@ -28,7 +28,7 @@ function ForgetPassword() {
 
     return (
         <div className={cx('wrapper')}>
-            <form className={cx('form-login')}>
+            <form className={cx('form')}>
                 <h3>Quên mật khẩu</h3>
                 <label htmlFor="email" className={cx('label')}>
                     Vui lòng nhập email của bạn để đặt lại mật khẩu

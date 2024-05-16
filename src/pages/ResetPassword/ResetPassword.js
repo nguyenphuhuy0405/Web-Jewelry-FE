@@ -33,10 +33,10 @@ function ResetPassword() {
 
     return (
         <div className={cx('wrapper')}>
-            <form className={cx('form-login')}>
+            <form className={cx('form')}>
                 <h3>Cài lại mật khẩu</h3>
                 <label htmlFor="email" className={cx('label')}>
-                    Nhập mật khẩu mới
+                    Nhập mật khẩu mới cho tài khoản của bạn
                 </label>
                 <input
                     className={cx('input')}

@@ -2,6 +2,14 @@
     position: relative;
     padding: 100px 70px;
     width: 100%;
+    /*Mobile: width < 740px  */
+    @media only screen and (max-width: 46.1875em) {
+        padding: 10px;
+    }
+    /* Table: width >= 740px and width < 1024 */
+    @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+        padding: 20px;
+    }
 }
 .name {
     font-family: var(--text-font-family);

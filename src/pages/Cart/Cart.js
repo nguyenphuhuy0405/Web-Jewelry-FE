@@ -65,15 +65,16 @@ function Cart() {
         await updateCartApi()
     }
 
-    const handleRemove = async (event, productId) => {
-        event.preventDefault()
-        const deleteCartApi = async () => {
-            const res = await cartServices.removeToCart(productId)
-            if (res.status === 200) {
-                setProducts(products.filter((product) => product.productId._id !== productId))
-            }
+    const handleRemove = (e, productId) => {
+        e.preventDefault()
+        deleteCartApi(productId)
+    }
+
+    const deleteCartApi = async (productId) => {
+        const res = await cartServices.removeToCart(productId)
+        if (res.status === 200) {
+            setProducts(products.filter((product) => product.productId._id !== productId))
         }
-        await deleteCartApi()
     }
 
     return (

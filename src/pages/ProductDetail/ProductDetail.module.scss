@@ -1,6 +1,7 @@
 .container {
-    @media screen and (min-width: 1023px) {
-        padding: 40px 0 40px 70px;
+    padding: 40px 0 40px 70px;
+    @media only screen and (max-width: 1023px) {
+        padding: 10px;
     }
 }
 .slider-image {

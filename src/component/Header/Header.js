@@ -3,6 +3,19 @@ import { Link } from 'react-router-dom'
 import TippyHeadless from '@tippyjs/react/headless'
 import { useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
+import MenuIcon from '@mui/icons-material/Menu'
+import CloseIcon from '@mui/icons-material/Close'
+import {
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Box,
+    Drawer,
+    Divider,
+} from '@mui/material'
 
 import { UserContext } from '~/context/UserContext'
 import { Wrapper as PopperWrapper } from '~/component/Popper/Popper'
@@ -18,8 +31,12 @@ function Header() {
     const { user, logout } = useContext(UserContext)
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(false)
-
+    const [open, setOpen] = useState(false)
     let navigate = useNavigate()
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen)
+    }
 
     console.log('>>>> user: ', user)
     console.log('>>>categoryItems', categories)
@@ -63,6 +80,7 @@ function Header() {
                                     />
                                 </Link>
                             </div>
+
                             <div className={cx('action')}>
                                 <Button to="/products" small leftIcon={<SearchIcon />} />
                                 <Button to="/cart" small ml leftIcon={<CartIcon />} />
@@ -115,6 +133,18 @@ function Header() {
                                     </>
                                 )}
                             </div>
+
+                            {/* Only Mobile & Table action*/}
+                            <div className={cx('mobile-action')}>
+                                <IconButton
+                                    aria-label="menu"
+                                    onClick={toggleDrawer(true)}
+                                    sx={{ color: 'white' }}
+                                    size="large"
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </div>
                         </div>
 
                         <ul className={cx('navbar')}>
@@ -127,6 +157,82 @@ function Header() {
                                 </Link>
                             ))}
                         </ul>
+
+                        <Drawer open={open} onClose={toggleDrawer(false)}>
+                            <Box role="presentation" onClick={toggleDrawer(false)} width="100vw">
+                                <List>
+                                    <ListItem disablePadding>
+                                        <ListItemButton component="a" onClick={toggleDrawer(false)}>
+                                            <ListItemIcon>
+                                                <CloseIcon />
+                                            </ListItemIcon>
+                                        </ListItemButton>
+                                    </ListItem>
+                                    {user?.auth === true ? (
+                                        <>
+                                            {user.isAdmin === true && (
+                                                <ListItem disablePadding>
+                                                    <ListItemButton component="a" href="/admin">
+                                                        <ListItemText primary="Quản trị hệ thống" />
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            )}
+                                            <ListItem disablePadding>
+                                                <ListItemButton component="a" href="/profile">
+                                                    <ListItemText primary="Thông tin tài khoản" />
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem disablePadding>
+                                                <ListItemButton component="a" href="/order">
+                                                    <ListItemText primary="Đơn hàng của tôi" />
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem disablePadding>
+                                                <ListItemButton component="button" onClick={handleLogout}>
+                                                    <ListItemText primary="Đăng xuất" />
+                                                </ListItemButton>
+                                            </ListItem>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ListItem disablePadding>
+                                                <ListItemButton component="a" href="/login">
+                                                    <ListItemText primary="Đăng nhập" />
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem disablePadding>
+                                                <ListItemButton component="a" href="/register">
+                                                    <ListItemText primary="Đăng ký" />
+                                                </ListItemButton>
+                                            </ListItem>
+                                        </>
+                                    )}
+                                    <ListItem disablePadding>
+                                        <ListItemButton component="a" href="/products">
+                                            <ListItemText primary="Tìm kiếm" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <ListItem disablePadding>
+                                        <ListItemButton component="a" href="/cart">
+                                            <ListItemText primary="Giỏ hàng" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <Divider />
+                                    <ListItem disablePadding>
+                                        <ListItemButton component="a" href="/products">
+                                            <ListItemText primary="Sản phẩm" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    {categories.map((item, index) => (
+                                        <ListItem disablePadding key={index}>
+                                            <ListItemButton component="a" href={item?.path}>
+                                                <ListItemText primary={item?.title} />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Box>
+                        </Drawer>
                     </div>
                 </header>
             )}

@@ -8,7 +8,7 @@ import * as cartServices from '~/services/cartServices'
 
 const cx = classNames.bind(styles)
 
-function CardProduct({ id, slug, title, price, img1, img2 }) {
+function CardProduct({ id, slug, title, price, img1 }) {
     const navigate = useNavigate()
     const handleAddToCart = async (event, productId) => {
         event.preventDefault()
@@ -21,7 +21,6 @@ function CardProduct({ id, slug, title, price, img1, img2 }) {
             <Link to={`/products/${slug}`}>
                 <div className={cx('img-wrapper')}>
                     <img src={process.env.REACT_APP_BASE_URL + img1} alt="img" className={cx('img', 'img1')} />
-                    <img src={process.env.REACT_APP_BASE_URL + img2} alt="img" className={cx('img', 'img2')} />
                 </div>
                 <div className={cx('info')}>
                     <div className={cx('name')}>{title}</div>

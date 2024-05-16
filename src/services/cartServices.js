@@ -70,9 +70,7 @@ export const updateCart = async (productId, quantity) => {
 
 export const removeToCart = async (id) => {
     try {
-        const res = await axiosPrivate.delete(`/api/cart`, {
-            productId: id,
-        })
+        const res = await axiosPrivate.delete(`/api/cart/${id}`)
         console.log('data:', res.data)
         res.data.status = res.status
         return res.data

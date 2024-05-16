@@ -15,6 +15,10 @@
     --text-font-family: 'Oswald', sans-serif;
     //Default layout
     --default-header-height: 120px;
+    /* Table & Mobile: width < 1024 */
+    @media only screen and (max-width: 63.9375em) {
+        --default-header-height: 70px;
+    }
 }
 * {
     box-sizing: border-box;

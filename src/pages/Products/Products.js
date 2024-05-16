@@ -97,9 +97,9 @@ function Products() {
             ) : (
                 <div className={cx('wrapper')}>
                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 2 }}>
-                        <Grid xs={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                             <div className={cx('filter')}>
-                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                <FormControl sx={{ m: 1, minWidth: 80 }} size="small">
                                     <InputLabel>Sắp xếp theo</InputLabel>
                                     <Select value={filter} label="Age" onChange={handleChangeFilter}>
                                         <MenuItem value="">
@@ -132,14 +132,13 @@ function Products() {
                         {searchProducts.length > 0 ? (
                             <>
                                 {searchProducts.map((product) => (
-                                    <Grid xs={6} sm={4} md={3} key={product._id}>
+                                    <Grid item xs={6} sm={4} md={3} key={product._id}>
                                         <CardProduct
                                             id={product._id}
                                             slug={product.slug}
                                             title={product.title}
                                             price={product.price}
                                             img1={product.images[0]}
-                                            img2={product.images[1]}
                                         />
                                     </Grid>
                                 ))}
@@ -148,7 +147,7 @@ function Products() {
                             <div>Chưa có sản phẩm</div>
                         )}
 
-                        <Grid xs={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                             <Stack alignItems="center" sx={{ width: '100%' }}>
                                 <Pagination
                                     count={totalPage}

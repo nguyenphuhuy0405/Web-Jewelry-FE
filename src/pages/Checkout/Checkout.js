@@ -10,7 +10,7 @@ import * as orderServices from '~/services/orderServices'
 import { UserContext } from '~/context/UserContext'
 import * as bankServices from '~/services/bankServices'
 import { useLocation } from 'react-router-dom'
-const crypto = require('crypto')
+import crypto from 'crypto-browserify'
 
 const cx = classNames.bind(styles)
 

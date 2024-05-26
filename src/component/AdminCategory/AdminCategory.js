@@ -326,7 +326,7 @@ function AdminCategory() {
                                 <Grid item xs={12}>
                                     <TextField
                                         name="title"
-                                        label="Tên sản phẩm"
+                                        label="Tên loại sản phẩm"
                                         variant="outlined"
                                         sx={{ width: '100%' }}
                                         required
@@ -376,7 +376,7 @@ function AdminCategory() {
                                     <Grid item xs={12}>
                                         <TextField
                                             name="title"
-                                            label="Tên sản phẩm"
+                                            label="Tên loại sản phẩm"
                                             variant="outlined"
                                             sx={{ width: '100%' }}
                                             required

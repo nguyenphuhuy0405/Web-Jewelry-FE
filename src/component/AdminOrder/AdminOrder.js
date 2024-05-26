@@ -89,6 +89,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
+    overflow: 'auto',
+    maxHeight: '95vh',
     width: 400,
     bgcolor: 'background.paper',
     borderRadius: '10px',
@@ -103,12 +105,25 @@ function AdminOrder() {
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null)
-    const { _id, name, phoneNumber, address, status, shipping, shippingPrice, payment, products, totalPrice, notes } =
-        selectedRow || {}
+    const {
+        _id,
+        name,
+        phoneNumber,
+        address,
+        status,
+        shipping,
+        shippingPrice,
+        payment,
+        products,
+        totalPrice,
+        notes,
+        createdAt,
+    } = selectedRow || {}
     const [search, setSearch] = useState(null)
     console.log('>>>rows: ', rows)
     console.log('>>>selectedRow: ', selectedRow)
     console.log('>>>products: ', products)
+    console.log('>>>createAt: ', createdAt)
 
     //Modal Detail
     const handleOpen = (id) => {
@@ -287,6 +302,8 @@ function AdminOrder() {
                                                                         case 'Đã hoàn thành':
                                                                             stylesStatus = stylesFinish
                                                                             break
+                                                                        default:
+                                                                            break
                                                                     }
 
                                                                     if (column.action) {
@@ -295,53 +312,63 @@ function AdminOrder() {
                                                                                 key={column.id}
                                                                                 align={column.align}
                                                                             >
-                                                                                <Button
-                                                                                    variant="contained"
-                                                                                    color="primary"
-                                                                                    onClick={() => handleOpen(row._id)}
-                                                                                >
-                                                                                    Chi tiết
-                                                                                </Button>
-                                                                                <Button
-                                                                                    disabled={
-                                                                                        row['status'] !== 'Đang xử lý'
-                                                                                    }
-                                                                                    variant="contained"
-                                                                                    color="success"
-                                                                                    sx={{ marginLeft: '10px' }}
-                                                                                    onClick={() =>
-                                                                                        handleConfirm(row._id)
-                                                                                    }
-                                                                                >
-                                                                                    Xác nhận
-                                                                                </Button>
-                                                                                <Button
-                                                                                    disabled={
-                                                                                        row['status'] !== 'Đã giao hàng'
-                                                                                    }
-                                                                                    variant="contained"
-                                                                                    color="primary"
-                                                                                    sx={{ marginLeft: '10px' }}
-                                                                                    onClick={() =>
-                                                                                        handleFinish(row._id)
-                                                                                    }
-                                                                                >
-                                                                                    Hoàn thành
-                                                                                </Button>
-                                                                                <Button
-                                                                                    disabled={
-                                                                                        row['status'] ===
-                                                                                        'Đã hoàn thành'
-                                                                                    }
-                                                                                    variant="contained"
-                                                                                    color="error"
-                                                                                    sx={{ marginLeft: '10px' }}
-                                                                                    onClick={() =>
-                                                                                        handleCancel(row._id)
-                                                                                    }
-                                                                                >
-                                                                                    Huỷ
-                                                                                </Button>
+                                                                                <Grid container spacing={1}>
+                                                                                    <Grid item xs={12}>
+                                                                                        <Button
+                                                                                            variant="contained"
+                                                                                            color="primary"
+                                                                                            onClick={() =>
+                                                                                                handleOpen(row._id)
+                                                                                            }
+                                                                                        >
+                                                                                            Chi tiết
+                                                                                        </Button>
+                                                                                        <Button
+                                                                                            disabled={
+                                                                                                row['status'] !==
+                                                                                                'Đang xử lý'
+                                                                                            }
+                                                                                            variant="contained"
+                                                                                            color="success"
+                                                                                            sx={{ marginLeft: '10px' }}
+                                                                                            onClick={() =>
+                                                                                                handleConfirm(row._id)
+                                                                                            }
+                                                                                        >
+                                                                                            Xác nhận
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                    <Grid item xs={12}>
+                                                                                        <Button
+                                                                                            disabled={
+                                                                                                row['status'] !==
+                                                                                                'Đã giao hàng'
+                                                                                            }
+                                                                                            variant="contained"
+                                                                                            color="primary"
+                                                                                            sx={{ marginLeft: '10px' }}
+                                                                                            onClick={() =>
+                                                                                                handleFinish(row._id)
+                                                                                            }
+                                                                                        >
+                                                                                            Hoàn thành
+                                                                                        </Button>
+                                                                                        <Button
+                                                                                            disabled={
+                                                                                                row['status'] ===
+                                                                                                'Đã hoàn thành'
+                                                                                            }
+                                                                                            variant="contained"
+                                                                                            color="error"
+                                                                                            sx={{ marginLeft: '10px' }}
+                                                                                            onClick={() =>
+                                                                                                handleCancel(row._id)
+                                                                                            }
+                                                                                        >
+                                                                                            Huỷ
+                                                                                        </Button>
+                                                                                    </Grid>
+                                                                                </Grid>
                                                                             </TableCell>
                                                                         )
                                                                     }
@@ -400,26 +427,32 @@ function AdminOrder() {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h8" component="h8">
+                            <Typography id="modal-modal-title" variant="h6" component="h6" align="center">
                                 Thông tin đơn hàng
                             </Typography>
+
                             <Grid
                                 container
                                 rowSpacing={2}
                                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                                 sx={{ marginTop: '8px' }}
                             >
-                                <Grid item xs={12}>
+                                <Grid item xs={6}>
                                     <Typography variant="h8" component="h8">
                                         Mã đơn hàng: {_id}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={6}>
+                                    <Typography variant="h8" component="h8" align="right">
+                                        Ngày mua: {createdAt && createdAt.slice(0, 10)}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
                                     <Typography variant="h8" component="h8">
                                         Tên: {name}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={6}>
                                     <Typography variant="h8" component="h8">
                                         Số điện thoại: {phoneNumber}
                                     </Typography>
@@ -431,46 +464,49 @@ function AdminOrder() {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography variant="h8" component="h8">
-                                        Trang thái: {status}
+                                        Trạng thái: {status}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={6}>
                                     <Typography variant="h8" component="h8">
                                         Giao hàng: {shipping}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="h8" component="h8">
-                                        Phí ship: {shippingPrice}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={6}>
                                     <Typography variant="h8" component="h8">
                                         Phương thức thanh toán: {payment}
                                     </Typography>
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <Typography variant="h8" component="h8">
-                                        Sản phẩm:
-                                    </Typography>
-                                    <table style={{ width: '100%', fontSize: '14px' }}>
+                                    <table className={cx('table-detail')}>
                                         <tr>
                                             <th>Tên sản phẩm</th>
                                             <th>Số lượng</th>
+                                            <th>Giá tiền</th>
+                                            <th>Tổng tiền</th>
                                         </tr>
                                         {products &&
                                             products.map((product) => (
                                                 <tr>
                                                     <td>{product?.productId?.title}</td>
                                                     <td>{product?.quantity}</td>
+                                                    <td>{formatPrice(product?.productId?.price)}</td>
+                                                    <td>
+                                                        {formatPrice(product?.quantity * product?.productId?.price)}
+                                                    </td>
                                                 </tr>
                                             ))}
                                     </table>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Typography variant="h8" component="h8">
-                                        Tổng tiền: {totalPrice}
+                                        Phí ship: {formatPrice(shippingPrice)}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="h8" component="h8">
+                                        Tổng tiền: {formatPrice(totalPrice)}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12}>

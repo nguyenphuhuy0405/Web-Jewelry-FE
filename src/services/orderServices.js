@@ -42,9 +42,9 @@ export const getMyOrders = async () => {
     }
 }
 
-export const getOrders = async () => {
+export const getOrders = async (query) => {
     try {
-        const res = await axiosPrivate.get(`/api/order`)
+        const res = await axiosPrivate.get(`/api/order?${query}`)
         res.data.status = res.status
         console.log('data:', res.data)
         return res.data

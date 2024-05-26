@@ -13,7 +13,9 @@ function CardProduct({ id, slug, title, price, img1 }) {
     const handleAddToCart = async (event, productId) => {
         event.preventDefault()
         const res = await cartServices.addToCart(productId)
-        navigate('/cart')
+        if (res?.status === 200) {
+            navigate('/cart')
+        }
     }
 
     return (

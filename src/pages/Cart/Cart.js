@@ -45,8 +45,9 @@ function Cart() {
         products.find((product) => {
             if (product.productId._id === productId) {
                 console.log('quantity: ', quantity)
-                product.quantity = quantity
+                return (product.quantity = quantity)
             }
+            return null
         })
     }
 

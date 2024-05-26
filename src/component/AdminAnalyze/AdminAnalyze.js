@@ -3,7 +3,6 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -61,6 +60,8 @@ function AdminAnalyze() {
                         <input type="year" id="year" name="year" value={date} onChange={handleChangeDate} />
                     </>
                 )
+            default:
+                return null
         }
     }
 
@@ -73,7 +74,8 @@ function AdminAnalyze() {
     }, [query])
 
     const getOrdersApi = async () => {
-        const res = await orderServices.getOrders()
+        let query = `limit=${10}`
+        const res = await orderServices.getOrders(query)
         if (res?.status === 200) {
             setRows(res?.data)
         }

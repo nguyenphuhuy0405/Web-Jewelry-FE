@@ -76,6 +76,7 @@ function Products() {
 
     useEffect(() => {
         getProductsApi()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, filter, id])
 
     const getProductsApi = async () => {

@@ -111,11 +111,12 @@ function AdminProduct() {
     const selectedOldImages = 1
     const selectedNewImages = 2
 
-    console.log('>>>selectedRow: ', selectedRow)
-    console.log('>>>data: ', data)
+    // console.log('>>>rows: ', rows)
+    // console.log('>>>selectedRow: ', selectedRow)
+    // console.log('>>>data: ', data)
     console.log('>>>images: ', images)
-    // console.log('>>>selectedImage: ', typeof selectedImage, selectedImage)
-    console.log('>>>preview: ', previews)
+    // // console.log('>>>selectedImage: ', typeof selectedImage, selectedImage)
+    console.log('>>>previews: ', previews)
 
     const handleImageChange = (e) => {
         const selectedImages = Array.from(e.target.files)
@@ -266,14 +267,16 @@ function AdminProduct() {
                     objectUrls.push(objectUrl)
                     return objectUrl
                 }
-                return null // Return null for non-Blob/File elements in the array
+                return null
             })
+
+            console.log('newPreviews: ', newPreviews)
 
             // Update the state with the new previews
             setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews.filter((url) => url !== null)])
         }
 
-        // Clean up Object URLs when the component is unmounted or 'images' change
+        // Clean up
         return () => {
             objectUrls.forEach((url) => URL.revokeObjectURL(url))
         }
@@ -339,7 +342,7 @@ function AdminProduct() {
             ) : (
                 <>
                     <Grid container spacing={1}>
-                        <Grid item sx={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                             <TextField
                                 label="Nhập tên sản phẩm hoặc mã sản phẩm"
                                 type="search"
@@ -351,7 +354,7 @@ function AdminProduct() {
                                 Tìm kiếm
                             </Button>
                         </Grid>
-                        <Grid item sx={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                             <Button
                                 variant="contained"
                                 startIcon={<AddIcon />}
@@ -361,7 +364,7 @@ function AdminProduct() {
                                 Thêm mới
                             </Button>
                         </Grid>
-                        <Grid item sx={12} sm={12} md={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                             {/* Table */}
                             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                                 <TableContainer sx={{ maxHeight: 440 }}>
@@ -397,8 +400,9 @@ function AdminProduct() {
                                                                         >
                                                                             <img
                                                                                 src={
+                                                                                    value &&
                                                                                     process.env.REACT_APP_BASE_URL +
-                                                                                    value[0]
+                                                                                        value[0]
                                                                                 }
                                                                                 alt="item"
                                                                                 width="70px"
@@ -418,7 +422,7 @@ function AdminProduct() {
                                                                             align={column.align}
                                                                             sx={{ fontSize: '14px' }}
                                                                         >
-                                                                            {category.title}
+                                                                            {category?.title}
                                                                         </TableCell>
                                                                     )
                                                                 }
@@ -545,7 +549,7 @@ function AdminProduct() {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <ImageList sx={{ width: 100, height: 100 }} cols={1} rowHeight={100}>
-                                        {previews.length > 0 ? (
+                                        {previews && previews.length > 0 ? (
                                             previews.map((previewUrl, index) => (
                                                 <ImageListItem key={index}>
                                                     <img
@@ -581,7 +585,8 @@ function AdminProduct() {
                                         sx={{ width: '100%' }}
                                         onChange={handleChange}
                                     >
-                                        {categories.length > 0 &&
+                                        {categories &&
+                                            categories.length > 0 &&
                                             categories.map((category) => (
                                                 <MenuItem key={category._id} value={category._id}>
                                                     {category.title}
@@ -688,7 +693,7 @@ function AdminProduct() {
                                     </Grid>
                                     <Grid item xs={6}>
                                         <ImageList sx={{ width: 100, height: 100 }} cols={1} rowHeight={100}>
-                                            {selectedImage === selectedOldImages && images.length > 0 ? (
+                                            {selectedImage === selectedOldImages && images && images.length > 0 ? (
                                                 images.map((image, index) => (
                                                     <ImageListItem key={index}>
                                                         <img
@@ -705,7 +710,9 @@ function AdminProduct() {
                                                         />
                                                     </ImageListItem>
                                                 ))
-                                            ) : selectedImage === selectedNewImages && previews.length === 0 ? (
+                                            ) : selectedImage === selectedNewImages &&
+                                              previews &&
+                                              previews.length > 0 ? (
                                                 previews.map((previewUrl, index) => (
                                                     <ImageListItem key={index}>
                                                         <img

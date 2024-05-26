@@ -26,6 +26,7 @@ function Bill() {
 
     useEffect(() => {
         getOrderApi()
+        // eslint-disable-next-line
     }, [])
 
     const getOrderApi = async () => {

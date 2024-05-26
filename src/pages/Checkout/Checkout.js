@@ -96,6 +96,7 @@ function Checkout() {
         if (idParam && statusParam === 'PAID') {
             getPaymentLinkInfoApi(idParam)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idParam, statusParam])
 
     const getCartApi = async () => {

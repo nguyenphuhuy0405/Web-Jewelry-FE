@@ -48,6 +48,7 @@ const columns = [
         label: 'Trạng thái',
         minWidth: 40,
         align: 'right',
+        status: true,
     },
     {
         id: 'payment',
@@ -297,7 +298,10 @@ function Order() {
                                                                     Chi tiết
                                                                 </Button>
                                                                 <Button
-                                                                    disabled={row['status'] === 'Đã hoàn thành'}
+                                                                    disabled={
+                                                                        row['status'] === 'Đã hoàn thành' ||
+                                                                        row['payment'] === 'Thanh toán trước'
+                                                                    }
                                                                     variant="contained"
                                                                     color="error"
                                                                     sx={{ marginLeft: '10px' }}
@@ -325,7 +329,7 @@ function Order() {
                                                         <TableCell
                                                             key={column.id}
                                                             align={column.align}
-                                                            sx={stylesStatus}
+                                                            sx={column.status ? stylesStatus : ''}
                                                         >
                                                             {column.format && typeof value === 'number'
                                                                 ? column.format(value)

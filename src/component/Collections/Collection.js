@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 function Collections() {
     return (
         <div className={cx('wrapper')}>
-            <h2 className={cx('name')}>Sản phẩm nổi bật</h2>
+            <h2 className={cx('name')}>Bộ sưu tập</h2>
             <ul className={cx('list')}>
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                     <Grid xs={12} sm={6} md={6}>

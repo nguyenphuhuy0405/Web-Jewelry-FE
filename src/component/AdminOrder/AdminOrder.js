@@ -52,19 +52,20 @@ const columns = [
     {
         id: 'phoneNumber',
         label: 'Số điện thoại',
-        minWidth: 30,
+        minWidth: 50,
         align: 'right',
     },
     {
         id: 'status',
         label: 'Trạng thái',
-        minWidth: 30,
+        minWidth: 150,
         align: 'right',
+        status: true,
     },
     {
         id: 'payment',
         label: 'Phương thức thanh toán',
-        minWidth: 30,
+        minWidth: 70,
         align: 'right',
     },
     {
@@ -78,7 +79,7 @@ const columns = [
     {
         id: 'action',
         label: 'Thao tác',
-        minWidth: 150,
+        minWidth: 100,
         align: 'center',
         action: true,
     },
@@ -290,7 +291,7 @@ function AdminOrder() {
                                                                     const value = row[column.id]
                                                                     let stylesStatus
                                                                     switch (row['status']) {
-                                                                        case 'Đang xử lý':
+                                                                        case 'Đang xử lý':
                                                                             stylesStatus = stylesPending
                                                                             break
                                                                         case 'Đã giao hàng':
@@ -391,7 +392,7 @@ function AdminOrder() {
                                                                         <TableCell
                                                                             key={column.id}
                                                                             align={column.align}
-                                                                            sx={stylesStatus}
+                                                                            sx={column.status ? stylesStatus : ''}
                                                                         >
                                                                             {column.format && typeof value === 'number'
                                                                                 ? column.format(value)
